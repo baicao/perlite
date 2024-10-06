@@ -68,6 +68,8 @@ function parseContent($requestFile)
 	$Parsedown = new PerliteParsedown();
 	$Parsedown->setSafeMode($htmlSafeMode);
 	$Parsedown->setBreaksEnabled($lineBreaks);
+
+	
 	$cleanFile = '';
 
 	// call menu again to refresh the array
@@ -88,33 +90,35 @@ function parseContent($requestFile)
 
 	// Relative or absolute pathes
 	if ($relPathes) {
+		$mdpath =  $path;
+		$path = $startDir . $path;
+	} else {
 		$path = $startDir;
 		$mdpath = '';
-	} else {
-		$mdpath =  $path;
-		$path = $startDir . $path;	
 	}
-
-	// fix links (not used)
-	// $oldPath = $startDir . $path;
-
-	// // fix relativ links in parent folders
-	// $pattern = array('/(\[\[)(\.\.\/.*)(\]\])/');
-	// $content = fixLinks($pattern, $content, $oldPath, false);
-
-	// // // fix relativ links in same folders
-	//  $pattern = array('/(\[\[)+([^\/]+?)(\]\])/');
-	//  $content = fixLinks($pattern, $content, $path, true);
-
-	// // fix relativ links in subfolder and same folders
-	// $pattern = array('/(\[\[)(?!Demo Documents\/)(.+)(\]\])/');
-	// $content = fixLinks($pattern, $content, $path, true);
-
 
 	$linkFileTypes = implode('|', $allowedFileLinkTypes);
 
 	$allowedImageTypes = '(\.png|\.jpg|\.jpeg|\.svg|\.gif|\.bmp|\.tif|\.tiff|\.webp)';
 
+	// 处理 ![[]] 语法
+	$pattern = '/\!\[\[(.*?)\]\]/';
+	$content = preg_replace_callback($pattern, function($matches) use ($rootDir, $Parsedown) {
+		$innerContent = $matches[1];
+		
+		// 分离文件路径、引用标记和别名
+		$parts = explode('|', $innerContent);
+		$filePath = $parts[0];
+		$alias = isset($parts[1]) ? $parts[1] : '';
+
+		// 进一步分离文件路径和引用标记
+		$filePathParts = explode('#', $filePath);
+		$actualFilePath = $filePathParts[0];
+		$reference = isset($filePathParts[1]) ? $filePathParts[1] : '';
+		
+		// 对于非 header 文件，返回原始的 [[]] 格式
+		return '[[' . $innerContent . ']]';
+	}, $content);
 
 	// embedded pdf links
 	$replaces = '<embed src="' . $path . '/\\2" type="application/pdf" style="min-height:100vh;width:100%">';
@@ -208,80 +212,6 @@ function parseContent($requestFile)
 
 }
 
-
-// translate relativ links (not used)
-// function fixLinks($pattern, $content, $path, $sameFolder) {
-
-// 	return preg_replace_callback($pattern, 
-// 	function($matches) use ($path, $sameFolder) {
-
-// 		$newAbPath = $path;
-// 		echo "path: " . $path;
-// 		echo "<br>";
-// 		$pathSplit = explode("/",$path);
-// 		$linkFilePart = $matches[2];
-// 		$esapeSequence = "#regex_run#";
-// 		echo '$matches[1]: ' . $matches[1];
-// 		echo '<br>';
-// 		echo '$matches[2]: ' . $linkFilePart;
-// 		echo '<br>';
-
-// 		$linkDesc = "";
-
-// 		# handle custom link comments and sizes
-// 		$splitLink = explode("|", $matches[2]);
-// 		if (count($splitLink) > 1) {
-// 			$linkFilePart = $splitLink[0];
-// 			array_shift($splitLink);
-// 			$linkDesc = '|' .implode("|", $splitLink);
-// 		}
-
-
-// 		// do extra stuff to get the absolute path
-// 		if ($sameFolder == false) {
-// 			$countDirs = count(explode("../",$linkFilePart));
-// 			$countDirs = $countDirs -1;
-// 			$newPath = array_splice($pathSplit, 1, -$countDirs);			
-// 			$newAbPath = implode('/', $newPath);
-// 			echo "new file path: " . $newAbPath;
-// 			echo "<br>";
-// 			echo "old file path: " . $linkFilePart;
-// 			echo "<br>";
-// 		}
-
-// 		if (substr($newAbPath,0,1) == '/') {
-// 			$newAbPath = substr($newAbPath,1);
-// 		}
-
-
-// 		$origPath = explode('/', $linkFilePart);
-// 		array_pop($origPath);
-// 		$origPath = implode('/', $origPath);
-// 		//check if its already an absolut path
-// 		echo "new file path: " . $newAbPath;
-// 		echo "<br>";
-// 		echo "old file path: " . $origPath;
-// 		echo "<br>";
-
-
-// 		if (count_chars($origPath) >= count_chars($newAbPath)) {
-
-// 			$urlPath = $linkFilePart;
-
-// 		} else {
-
-// 			$linkFile = str_replace("../","",$linkFilePart);
-// 			$urlPath = $newAbPath. '/'. $linkFile;
-// 		}
-
-
-// 		return '[['.$urlPath.$linkDesc.']]';
-// 	}
-// ,$content);
-// }
-
-
-
 //internal links
 // can be simplified (no need of path translation)
 function translateLink($pattern, $content, $path, $sameFolder)
@@ -326,6 +256,7 @@ function translateLink($pattern, $content, $path, $sameFolder)
 
 
 			$urlPath = $newAbPath . '/' . $linkFile;
+			$urlPath = preg_replace('/\.md$/', '', $urlPath);
 			if (substr($urlPath, 0, 1) != '/') {
 				$urlPath = '/' . $urlPath;
 			}
@@ -360,21 +291,68 @@ function translateLink($pattern, $content, $path, $sameFolder)
 // read content from file
 function getContent($requestFile)
 {
-	global $avFiles;
-	global $path;
-	global $cleanFile;
-	global $rootDir;
-	$content = '';
+    global $avFiles, $path, $cleanFile, $rootDir;
+    $content = '';
 
-	// check if file is in array
-	if (in_array($requestFile, $avFiles, true)) {
-		$cleanFile = $requestFile;
-		$n = strrpos($requestFile, "/");
-		$path = substr($requestFile, 0, $n);
-		$content .= file_get_contents($rootDir . $requestFile . '.md', true);
-	}
+    if (in_array($requestFile, $avFiles, true)) {
+        $cleanFile = $requestFile;
+        $n = strrpos($requestFile, "/");
+        $path = substr($requestFile, 0, $n);
+        $originalContent = file_get_contents($rootDir . $requestFile . '.md', true);
 
-	return $content;
+        // 首先处理 header
+        $headerPattern = '/\!\[\[(.*?header.*?)\]\]/';
+        preg_match($headerPattern, $originalContent, $headerMatches);
+        
+        if (!empty($headerMatches)) {
+            $headerContent = '';
+            $innerContent = $headerMatches[1];
+            $parts = explode('|', $innerContent);
+            $filePath = $parts[0];
+
+            $filePathParts = explode('#', $filePath);
+            $actualFilePath = $filePathParts[0];
+            $reference = isset($filePathParts[1]) ? $filePathParts[1] : '';
+
+            $headerPath = $rootDir . '/' . trim($actualFilePath, '/') . '.md';
+            
+            if (file_exists($headerPath)) {
+                $headerContent = file_get_contents($headerPath);
+                
+                if ($reference) {
+                    $patterns = [
+                        '/\^' . preg_quote($reference, '/') . '\s*(.*?)(\n(?=\^)|$)/s',
+                        '/\^' . preg_quote($reference, '/') . '(.*?)(\n|$)/s',
+                        '/\^' . preg_quote($reference, '/') . '(.+)/'
+                    ];
+                    
+                    foreach ($patterns as $pattern) {
+                        if (preg_match($pattern, $headerContent, $refMatch)) {
+                            $headerContent = trim($refMatch[1]);
+                            break;
+                        }
+                    }
+                }
+                
+                // 移除所有的 ^ 引用标记
+                $headerContent = preg_replace('/\^[a-zA-Z0-9]+\s*/', '', $headerContent);
+            }
+
+            // 将 header 内容添加到原始内容的开头，并移除原始的 ![[]] 语法
+            $originalContent = $headerContent . "\n\n" . preg_replace($headerPattern, '', $originalContent, 1);
+        }
+
+        // 处理其他的 ![[]] 语法
+        $pattern = '/\!\[\[(.*?)\]\]/';
+        $content = preg_replace_callback($pattern, function($matches) use ($rootDir) {
+            // 这里可以添加处理其他 ![[]] 语法的逻辑
+            // 现在我们只是保持原样
+            return $matches[0];
+        }, $originalContent);
+
+        $content = $originalContent;
+    }
+
+    return $content;
 }
-
 ?>

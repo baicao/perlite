@@ -61,8 +61,7 @@ $index = empty(getenv('HOME_FILE')) ? "README" : getenv('HOME_FILE');
 $font_size = empty(getenv('FONT_SIZE')) ? "15" : getenv('FONT_SIZE');
 
 // Set safe mode from environment variable
-$htmlSafeMode = empty(getenv('HTML_SAFE_MODE')) ? true : filter_var(getenv('HTML_SAFE_MODE'), FILTER_VALIDATE_BOOLEAN);
-
+$htmlSafeMode = empty(getenv('HTML_SAFE_MODE')) ? false : filter_var(getenv('HTML_SAFE_MODE'), FILTER_VALIDATE_BOOLEAN);
 
 // Custom Site Section
 
