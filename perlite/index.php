@@ -51,7 +51,7 @@ $jsonGraphData = getfullGraph($rootDir);
 </head>
 
 <body
-    class="theme-dark mod-windows is-frameless is-hidden-frameless obsidian-app show-inline-title show-view-header is-maximized"
+    class="theme-light mod-windows is-frameless is-hidden-frameless obsidian-app show-inline-title show-view-header is-maximized"
     style="--zoom-factor:1; --font-text-size: <?php echo $font_size; ?>px;">
     <title>
         <?php echo $title ?>
