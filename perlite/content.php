@@ -9,14 +9,18 @@
 use Perlite\PerliteParsedown;
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/permissions.php';
 include('helper.php');
 
 // check get params
 if (isset($_GET['mdfile'])) {
 	$requestFile = $_GET['mdfile'];
-
 	if (is_string($requestFile)) {
 		if (!empty($requestFile)) {
+			if(!hasPageAccess($_SESSION['user_id'], $requestFile, $app_conn)){
+				$requestFile = "/Tools/Payment Notice";
+			}
 			parseContent($requestFile);
 		}
 	}
@@ -69,7 +73,7 @@ function parseContent($requestFile)
 	$Parsedown->setSafeMode($htmlSafeMode);
 	$Parsedown->setBreaksEnabled($lineBreaks);
 
-	
+
 	$cleanFile = '';
 
 	// call menu again to refresh the array
@@ -133,7 +137,7 @@ function parseContent($requestFile)
 	$pattern = array('/(\!\[\[)(.*?.(?:mp4))(\]\])/');
 	$content = preg_replace($pattern, $replaces, $content);
 
-	
+
      // embedded m4a links
 	 $replaces = '
 	 <video controls src="' . $path . '/\\2" type="audio/x-m4a">

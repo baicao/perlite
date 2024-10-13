@@ -7,6 +7,7 @@
  */
 
 use Perlite\PerliteParsedown;
+require_once __DIR__ .'/config.php';
 
 //
 // default settings and variables
@@ -616,3 +617,4 @@ function loadSettings($rootDir)
 
 	return $themes . $defaultSettings;
 }
+
