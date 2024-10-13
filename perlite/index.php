@@ -8,11 +8,28 @@
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
-require 'helper.php';
+require_once __DIR__ . '/helper.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/permissions.php';
 
 $title = $siteTitle;
 $menu = menu($rootDir);
 $jsonGraphData = getfullGraph($rootDir);
+
+
+// 获取当前请求的页面
+$current_page = isset($_GET['link']) ? $_GET['link'] : '/Chang Edu Home';
+// 如果不是访问 "Chang Edu Home.md"，则检查用户是否已登录
+if (isset($_GET['link']) && $current_page !== '/Chang Edu Home'){
+    if (!isset($_SESSION['user_id']) || 
+    !isset($_SESSION['last_activity']) ||
+     (time() - $_SESSION['last_activity'] > $_SESSION['expire_time'])) {
+        session_unset();
+        session_destroy();
+        header("Location: login.php");
+        exit();
+    }
+} 
 
 
 ?>
@@ -120,7 +137,8 @@ $jsonGraphData = getfullGraph($rootDir);
                                 <path d="M12 12v3"></path>
                             </svg></div>
                     </div>
-                    <div class="side-dock-actions">
+                    <!-- 随机打开一片note，不需要 -->
+                    <!-- <div class="side-dock-actions">
                         <div class="clickable-icon side-dock-ribbon-action" aria-label="Open random note"
                             data-tooltip-position="right" data-tooltip-delay="300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -136,8 +154,9 @@ $jsonGraphData = getfullGraph($rootDir);
                                     d="M9 8C9 8.55228 8.55228 9 8 9C7.44772 9 7 8.55228 7 8C7 7.44772 7.44772 7 8 7C8.55228 7 9 7.44772 9 8Z" />
                             </svg>
                         </div>
-                    </div>
-                    <div class="side-dock-settings">
+                    </div> -->
+                    <!-- 设置皮肤和交互的，不需要 -->
+                    <!-- <div class="side-dock-settings">
                         <div class="clickable-icon side-dock-ribbon-action" aria-label="Help"
                             aria-label-position="right"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -159,7 +178,7 @@ $jsonGraphData = getfullGraph($rootDir);
                                 </path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg></div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="workspace-split mod-horizontal mod-left-split" style="width: 450px;">
                     <hr class="workspace-leaf-resize-handle left-dock">
@@ -379,7 +398,7 @@ $jsonGraphData = getfullGraph($rootDir);
                                         </div>
 
                                         <div class="view-actions">
-                                            <a class="clickable-icon view-action" aria-label="Click to edit"><svg
+                                            <!-- <a class="clickable-icon view-action" aria-label="Click to edit"><svg
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -387,7 +406,7 @@ $jsonGraphData = getfullGraph($rootDir);
                                                     <path d="M12 20h9"></path>
                                                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z">
                                                     </path>
-                                                </svg></a>
+                                                </svg></a> -->
                                             <a class="clickable-icon view-action" aria-label="Copy URL">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
