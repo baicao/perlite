@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Perlite\\' => array($baseDir . '/.src'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
 );

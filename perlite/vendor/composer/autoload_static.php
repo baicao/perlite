@@ -10,6 +10,7 @@ class ComposerStaticInit49760f5a39ccaa8600b88f06b4cfa48e
         'P' => 
         array (
             'Perlite\\' => 8,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
     );
 
@@ -17,6 +18,10 @@ class ComposerStaticInit49760f5a39ccaa8600b88f06b4cfa48e
         'Perlite\\' => 
         array (
             0 => __DIR__ . '/../..' . '/.src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
     );
 
