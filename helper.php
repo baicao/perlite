@@ -17,7 +17,7 @@ require_once __DIR__ .'/config.php';
 $avFiles = array();
 
 // replace with your Vault Folder
-$rootDir = empty(getenv('NOTES_PATH')) ? 'Demo' : getenv('NOTES_PATH');
+$rootDir = empty(getenv('NOTES_PATH')) ? 'ChangEduHome' : getenv('NOTES_PATH');
 
 // replace with your Vault Name
 $vaultName = $rootDir;
@@ -26,15 +26,15 @@ $vaultName = $rootDir;
 $hideFolders = getenv('HIDE_FOLDERS');
 
 // use absolut paths instead of relative paths
-$relPathes = empty(getenv('ABSOLUTE_PATHS')) ? false : filter_var(getenv('ABSOLUTE_PATHS'), FILTER_VALIDATE_BOOLEAN);
+// $relPathes = empty(getenv('ABSOLUTE_PATHS')) ? false : filter_var(getenv('ABSOLUTE_PATHS'), FILTER_VALIDATE_BOOLEAN);
+$relPathes = false;
 
 // Meta Tags infos
-$siteTitle = empty(getenv('SITE_TITLE')) ? 'Perlite' : getenv('SITE_TITLE');
+$siteTitle = empty(getenv('SITE_TITLE')) ? SITE_TITLE : getenv('SITE_TITLE');
 $siteType = empty(getenv('SITE_TYPE')) ? 'article' : getenv('SITE_TYPE');
-$siteImage = empty(getenv('SITE_IMAGE')) ? 'https://raw.githubusercontent.com/secure-77/Perlite/main/screenshots/screenshot.png' : getenv('SITE_IMAGE');
-$siteURL = empty(getenv('SITE_URL')) ? 'https://perlite.secure77.de' : getenv('SITE_URL');
-$siteDescription = empty(getenv('SITE_DESC')) ? 'A web based markdown viewer optimized for Obsidian Notes' : getenv('SITE_DESC');
-$siteName = empty(getenv('SITE_NAME')) ? 'Perlite Demo' : getenv('SITE_NAME');
+$siteURL = empty(getenv('SITE_URL')) ? SITE_URL : getenv('SITE_URL');
+$siteDescription = empty(getenv('SITE_DESC')) ? SITE_TITLE : getenv('SITE_DESC');
+$siteName = empty(getenv('SITE_NAME')) ? SITE_TITLE : getenv('SITE_NAME');
 $siteTwitter = empty(getenv('SITE_TWITTER')) ? '@obsdmd' : getenv('SITE_TWITTER');
 
 // Temp PATH for graph linking temp files
@@ -56,10 +56,10 @@ $showTOC = empty(getenv('SHOW_TOC')) ? "true" : getenv('SHOW_TOC');
 $showLocalGraph = empty(getenv('SHOW_LOCAL_GRAPH')) ? "true" : getenv('SHOW_TOC');
 
 // Set home page from environment variable
-$index = empty(getenv('HOME_FILE')) ? "README" : getenv('HOME_FILE');
+$index = empty(getenv('HOME_FILE')) ? "Chang Edu Home" : getenv('HOME_FILE');
 
 // set default font size
-$font_size = empty(getenv('FONT_SIZE')) ? "15" : getenv('FONT_SIZE');
+$font_size = empty(getenv('FONT_SIZE')) ? "16" : getenv('FONT_SIZE');
 
 // Set safe mode from environment variable
 $htmlSafeMode = empty(getenv('HTML_SAFE_MODE')) ? false : filter_var(getenv('HTML_SAFE_MODE'), FILTER_VALIDATE_BOOLEAN);
@@ -545,7 +545,6 @@ function loadSettings($rootDir)
 	global $index;
 	global $siteTitle;
 	global $siteType;
-	global $siteImage;
 	global $siteURL;
 	global $siteDescription;
 	global $siteName;
@@ -596,7 +595,6 @@ function loadSettings($rootDir)
 		'<!--  Essential META Tags -->
     <meta property="og:title" content="' . $siteTitle . '">
     <meta property="og:type" content="' . $siteType . '" />
-    <meta property="og:image" content="' . $siteImage . '">
     <meta property="og:url" content="' . $siteURL . '">
     <meta name="twitter:card" content="summary_large_image">
 

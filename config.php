@@ -14,9 +14,13 @@ if ($app_conn->connect_error) {
     die("Connection to app database failed: " . $app_conn->connect_error);
 }
 
+// define('SITE_URL', 'http://localhost:8080/'); // 替换为您的实际域名
+define('SITE_URL', 'https://175.178.124.115/'); // 替换为您的实际域名
+
+
+define('SITE_TITLE', 'Chang Edu'); // 替换为您的实际域名
 
 // 邮件设置
-define('SITE_URL', 'http://localhost:8080/'); // 替换为您的实际域名
 define('EMAIL_FROM', 'ChangEdu'); // 替换为您的发件邮箱地址
 
 // SMTP设置
@@ -29,8 +33,14 @@ define('SMTP_PASSWORD', 'kergxquzhkzebdbe'); // 您的QQ邮箱SMTP授权码
 
 function log_message($message) {
     $unique_id = isset($_SESSION['unique_id']) ? $_SESSION['unique_id'] : 'unknown';
-    $log_entry = "[" . $unique_id . "] " . $message;
+    $log_entry = "[" . $unique_id . "] " . $message. "\r\n";
     // 将日志写入文件或其他日志存储
-    file_put_contents('login_debug.log', $log_entry . PHP_EOL, FILE_APPEND);
+    $result = file_put_contents('login_debug.log', $log_entry . PHP_EOL, FILE_APPEND);
+    if ($result === false) {
+        error_log("Failed to write to log file", 0);
+    }
+    // error_log($log_entry, 3, "/home/lighthouse/test/perlite/login_debug.log");
+    // error_log($log_entry, 3, "login_debug.log");
+
 }
 ?>

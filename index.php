@@ -17,19 +17,14 @@ $menu = menu($rootDir);
 $jsonGraphData = getfullGraph($rootDir);
 
 
-// 获取当前请求的页面
-$current_page = isset($_GET['link']) ? $_GET['link'] : '/Chang Edu Home';
-// 如果不是访问 "Chang Edu Home.md"，则检查用户是否已登录
-if (isset($_GET['link']) && $current_page !== '/Chang Edu Home'){
-    if (!isset($_SESSION['user_id']) || 
-    !isset($_SESSION['last_activity']) ||
-     (time() - $_SESSION['last_activity'] > $_SESSION['expire_time'])) {
-        session_unset();
-        session_destroy();
-        header("Location: login.php");
-        exit();
-    }
-} 
+if (!isset($_SESSION['user_id']) || 
+!isset($_SESSION['last_activity']) ||
+ (time() - $_SESSION['last_activity'] > $_SESSION['expire_time'])) {
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit();
+}
 
 
 ?>

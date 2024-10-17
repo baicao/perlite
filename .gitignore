@@ -34,3 +34,4 @@ perlite/login_debug.log
 .DS_Store
 ChangEduHome/
 doc/密码.md
+login_debug.log

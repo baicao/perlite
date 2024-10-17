@@ -64,9 +64,7 @@ function getContent(str, home = false, popHover = false, anchor = "") {
     document.getElementsByClassName("modal-body")[0].innerHTML = "";
     return;
   } else {
-
     requestPath = "content.php?mdfile=" + str;
-
     if (home) {
       if ($("div.no-mobile").css("display") == "none") {
         return
@@ -80,7 +78,10 @@ function getContent(str, home = false, popHover = false, anchor = "") {
 
     $.ajax({
       url: requestPath, success: function (result) {
-
+        if (result == "Login in first") {
+          window.location.href = 'login.php';
+          return;
+        }
         if (popHover == false) {
 
           // set content
