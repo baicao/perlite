@@ -13,11 +13,10 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/permissions.php';
 include('helper.php');
 
-// 检查用户是否已登录
+
 if (!isset($_SESSION['user_id'])) {
-    // 用户未登录，重定向到登录页面
-    header("Location: login.php");
-    exit();
+	echo 'Login in first';
+	exit;
 }
 
 // check get params
@@ -28,18 +27,12 @@ if (isset($_GET['mdfile'])) {
 			if(!hasPageAccess($_SESSION['user_id'], $requestFile, $app_conn)){
 				$requestFile = "/Tools/Payment Notice";
 			}
+			log_message("Request file: " . $requestFile);
 			parseContent($requestFile);
 		}
 	}
 }
 
-// parse content for about modal
-if (isset($_GET['about'])) {
-
-	if (is_string($_GET['about'])) {
-		parseContent('/' . $about);
-	}
-}
 
 // search request
 if (isset($_GET['search'])) {
