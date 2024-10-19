@@ -82,6 +82,7 @@ function parseContent($requestFile)
 
 
 	// get and parse the content, return if no content is there
+	
 	$content = getContent($requestFile);
 	if ($content === '') {
 		return;
@@ -297,65 +298,63 @@ function getContent($requestFile)
 {
     global $avFiles, $path, $cleanFile, $rootDir;
     $content = '';
+   
+	$cleanFile = $requestFile;
+	$n = strrpos($requestFile, "/");
+	$path = substr($requestFile, 0, $n);
+	$originalContent = file_get_contents($rootDir . $requestFile . '.md', true);
 
-    if (in_array($requestFile, $avFiles, true)) {
-        $cleanFile = $requestFile;
-        $n = strrpos($requestFile, "/");
-        $path = substr($requestFile, 0, $n);
-        $originalContent = file_get_contents($rootDir . $requestFile . '.md', true);
+	// 首先处理 header
+	$headerPattern = '/\!\[\[(.*?header.*?)\]\]/';
+	preg_match($headerPattern, $originalContent, $headerMatches);
+	
+	if (!empty($headerMatches)) {
+		$headerContent = '';
+		$innerContent = $headerMatches[1];
+		$parts = explode('|', $innerContent);
+		$filePath = $parts[0];
 
-        // 首先处理 header
-        $headerPattern = '/\!\[\[(.*?header.*?)\]\]/';
-        preg_match($headerPattern, $originalContent, $headerMatches);
-        
-        if (!empty($headerMatches)) {
-            $headerContent = '';
-            $innerContent = $headerMatches[1];
-            $parts = explode('|', $innerContent);
-            $filePath = $parts[0];
+		$filePathParts = explode('#', $filePath);
+		$actualFilePath = $filePathParts[0];
+		$reference = isset($filePathParts[1]) ? $filePathParts[1] : '';
 
-            $filePathParts = explode('#', $filePath);
-            $actualFilePath = $filePathParts[0];
-            $reference = isset($filePathParts[1]) ? $filePathParts[1] : '';
+		$headerPath = $rootDir . '/' . trim($actualFilePath, '/') . '.md';
+		
+		if (file_exists($headerPath)) {
+			$headerContent = file_get_contents($headerPath);
+			
+			if ($reference) {
+				$patterns = [
+					'/\^' . preg_quote($reference, '/') . '\s*(.*?)(\n(?=\^)|$)/s',
+					'/\^' . preg_quote($reference, '/') . '(.*?)(\n|$)/s',
+					'/\^' . preg_quote($reference, '/') . '(.+)/'
+				];
+				
+				foreach ($patterns as $pattern) {
+					if (preg_match($pattern, $headerContent, $refMatch)) {
+						$headerContent = trim($refMatch[1]);
+						break;
+					}
+				}
+			}
+			
+			// 移除所有的 ^ 引用标记
+			$headerContent = preg_replace('/\^[a-zA-Z0-9]+\s*/', '', $headerContent);
+		}
 
-            $headerPath = $rootDir . '/' . trim($actualFilePath, '/') . '.md';
-            
-            if (file_exists($headerPath)) {
-                $headerContent = file_get_contents($headerPath);
-                
-                if ($reference) {
-                    $patterns = [
-                        '/\^' . preg_quote($reference, '/') . '\s*(.*?)(\n(?=\^)|$)/s',
-                        '/\^' . preg_quote($reference, '/') . '(.*?)(\n|$)/s',
-                        '/\^' . preg_quote($reference, '/') . '(.+)/'
-                    ];
-                    
-                    foreach ($patterns as $pattern) {
-                        if (preg_match($pattern, $headerContent, $refMatch)) {
-                            $headerContent = trim($refMatch[1]);
-                            break;
-                        }
-                    }
-                }
-                
-                // 移除所有的 ^ 引用标记
-                $headerContent = preg_replace('/\^[a-zA-Z0-9]+\s*/', '', $headerContent);
-            }
+		// 将 header 内容添加到原始内容的开头，并移除原始的 ![[]] 语法
+		$originalContent = $headerContent . "\n\n" . preg_replace($headerPattern, '', $originalContent, 1);
+	}
 
-            // 将 header 内容添加到原始内容的开头，并移除原始的 ![[]] 语法
-            $originalContent = $headerContent . "\n\n" . preg_replace($headerPattern, '', $originalContent, 1);
-        }
+	// 处理其他的 ![[]] 语法
+	$pattern = '/\!\[\[(.*?)\]\]/';
+	$content = preg_replace_callback($pattern, function($matches) use ($rootDir) {
+		// 这里可以添加处理其他 ![[]] 语法的逻辑
+		// 现在我们只是保持原样
+		return $matches[0];
+	}, $originalContent);
 
-        // 处理其他的 ![[]] 语法
-        $pattern = '/\!\[\[(.*?)\]\]/';
-        $content = preg_replace_callback($pattern, function($matches) use ($rootDir) {
-            // 这里可以添加处理其他 ![[]] 语法的逻辑
-            // 现在我们只是保持原样
-            return $matches[0];
-        }, $originalContent);
-
-        $content = $originalContent;
-    }
+	$content = $originalContent;
 
     return $content;
 }
