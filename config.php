@@ -15,13 +15,15 @@ if ($app_conn->connect_error) {
 }
 
 
-$client_ip = get_client_ip();
-if($client_ip == "127.0.0.1"){
+$ip_list = get_client_ip();
+$private_ip = $ip_list[0];
+$public_ip = $ip_list[1];
+if($private_ip == "127.0.0.1"){
     define('LOG_FILE', "login_debug.log"); 
 }else{
     define('LOG_FILE', "/home/lighthouse/test/perlite/login_debug.log"); 
 }
-define('SITE_URL', 'https://'.$client_ip.'/');
+define('SITE_URL', 'https://'.$public_ip.'/');
 define('SITE_TITLE', 'Chang Edu'); // 替换为您的实际域名
 
 // 邮件设置
@@ -34,20 +36,24 @@ define('SMTP_USERNAME', '909019241@qq.com'); // 您的QQ邮箱地址
 define('SMTP_PASSWORD', 'kergxquzhkzebdbe'); // 您的QQ邮箱SMTP授权码
 
 function get_client_ip() {
-    $ip = '';
-
+    $private_ip = '';
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         // 来自共享互联网的 IP
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
+        $private_ip = $_SERVER['HTTP_CLIENT_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         // 检查通过代理服务器的 IP
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        $private_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
     } else {
         // 直接访问的 IP
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $private_ip = $_SERVER['REMOTE_ADDR'];
+    }
+    if($private_ip == "127.0.0.1"){
+        $public_ip = "127.0.0.1";
+    }else{
+        $public_ip = "175.178.124.115";
     }
 
-    return $ip;
+    return [$private_ip, $public_ip];
 }
 
 function log_message($message) {
