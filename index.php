@@ -14,7 +14,6 @@ require_once __DIR__ . '/permissions.php';
 
 $title = $siteTitle;
 $menu = menu($rootDir);
-$jsonGraphData = getfullGraph($rootDir);
 
 
 if (!isset($_SESSION['user_id']) || 
@@ -52,10 +51,9 @@ if (!isset($_SESSION['user_id']) ||
    
     <script src=".js/jquery.min.js"></script>
     <script src=".js/highlight.min.js"></script>
-    <script src=".js/vis-network.min.js"></script>
     <script src=".js/katex.min.js"></script>
     <script src=".js/auto-render.min.js"></script>
-    <script src=".js/vis-network.min.js"></script>
+    <!-- <script src=".js/vis-network.min.js"></script> -->
     <!-- <script src=".js/mermaid.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11.2.1/dist/mermaid.min.js"></script>
 
@@ -73,90 +71,7 @@ if (!isset($_SESSION['user_id']) ||
         <div class="titlebar-inner">
             <div class="titlebar-button-container mod-left">
                 <div class="titlebar-button mod-logo">
-                <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-                    width="128.000000pt" height="128.000000pt" viewBox="0 0 128.000000 128.000000"
-                    preserveAspectRatio="xMidYMid meet" class="logo-full">
-                    <metadata>
-                    Created by potrace 1.16, written by Peter Selinger 2001-2019
-                    </metadata>
-                    <g transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
-                    fill="#000000" stroke="none">
-                    <path d="M0 640 l0 -640 640 0 640 0 0 640 0 640 -640 0 -640 0 0 -640z m751
-                    516 c26 -6 26 -6 17 -63 -5 -31 -14 -63 -20 -70 -6 -7 -30 -13 -54 -13 -37 0
-                    -44 3 -44 20 0 11 5 20 12 20 9 0 9 3 0 12 -31 31 3 111 45 103 10 -2 30 -6
-                    44 -9z m-132 -33 c17 -59 14 -73 -13 -73 -20 0 -25 6 -28 32 -2 17 -9 33 -16
-                    36 -9 3 -11 -6 -6 -36 5 -34 3 -40 -14 -44 -18 -5 -22 1 -31 44 -15 66 -15 66
-                    17 71 74 11 80 9 91 -30z m266 20 c44 -21 44 -49 0 -45 -27 2 -28 1 -10 -9 11
-                    -7 21 -13 23 -14 1 -1 0 -9 -4 -18 -4 -12 -11 -14 -30 -7 -13 5 -24 6 -24 1 0
-                    -5 9 -11 20 -14 22 -6 24 -14 11 -35 -7 -11 -16 -10 -50 8 -23 11 -41 24 -39
-                    28 2 4 14 33 27 65 14 31 28 57 33 57 4 0 23 -8 43 -17z m-408 -68 c12 -22 23
-                    -42 23 -45 0 -10 -63 -40 -85 -40 -28 0 -43 34 -25 55 8 9 8 15 2 15 -24 0
-                    -20 30 6 45 39 21 53 15 79 -30z m509 -33 c17 -16 20 -17 30 -4 13 17 44 10
-                    44 -10 -1 -7 -23 -37 -50 -67 l-50 -55 -35 34 c-42 41 -43 55 -8 92 31 33 43
-                    34 69 10z m-626 -37 c32 -33 33 -36 17 -52 -16 -16 -18 -15 -45 10 -37 36 -51
-                    22 -15 -15 24 -25 25 -30 13 -43 -13 -12 -22 -8 -67 36 -57 54 -59 59 -41 77
-                    9 9 16 8 28 -3 15 -14 19 -13 35 5 25 28 36 25 75 -15z m396 -22 c95 -31 170
-                    -99 216 -193 18 -37 22 -63 23 -150 0 -91 -3 -111 -23 -152 -38 -76 -96 -134
-                    -170 -170 -61 -30 -74 -33 -162 -33 -85 0 -101 3 -153 29 -151 76 -237 259
-                    -194 411 8 28 16 57 18 65 9 32 100 133 146 161 80 49 207 63 299 32z m329
-                    -50 c4 -12 0 -22 -10 -28 -38 -23 -50 -34 -43 -40 3 -4 20 1 37 10 33 17 51
-                    13 51 -10 0 -12 -88 -71 -94 -63 -16 22 -46 78 -46 87 0 12 68 59 86 60 7 1
-                    15 -7 19 -16z m-886 -2 c10 -7 11 -13 1 -31 -11 -20 -10 -25 6 -37 26 -19 45
-                    -16 51 7 6 24 36 23 41 -1 4 -23 -36 -69 -61 -69 -12 0 -37 9 -54 20 -36 21
-                    -42 49 -21 95 12 27 16 29 37 16z m156 -610 c-3 -7 4 -20 15 -28 11 -8 20 -20
-                    20 -28 0 -8 6 -12 14 -9 8 3 24 1 35 -5 16 -9 22 -8 29 4 12 23 44 8 37 -16
-                    -4 -13 -1 -19 8 -19 30 0 39 -26 26 -69 -7 -23 -13 -41 -15 -41 -24 0 -34 16
-                    -28 46 8 42 -3 44 -18 3 -7 -20 -16 -29 -27 -26 -17 3 -17 5 -6 48 8 31 -21
-                    50 -32 22 -4 -9 -1 -19 5 -21 15 -5 16 -32 1 -32 -26 0 -49 22 -49 48 -1 23
-                    -2 25 -11 10 -9 -17 -12 -17 -39 -3 -36 18 -40 55 -10 85 31 31 2 36 -30 5
-                    -28 -27 -50 -27 -50 0 0 8 13 24 30 36 20 16 27 26 20 34 -6 7 -5 16 2 23 9 9
-                    20 5 45 -20 19 -19 31 -38 28 -47z m681 37 l45 -43 -31 -33 c-16 -18 -34 -31
-                    -39 -28 -5 3 -8 -2 -7 -12 1 -12 -8 -18 -26 -20 -16 -2 -25 -8 -22 -15 2 -7
-                    -12 -21 -32 -32 -40 -21 -38 -22 -75 49 -17 31 -18 40 -7 47 20 13 22 12 42
-                    -26 21 -39 24 -40 49 -21 16 13 16 15 -8 30 -33 22 -31 61 2 61 28 0 56 35 41
-                    52 -11 13 -3 33 13 33 6 0 30 -19 55 -42z m-372 -134 c26 -10 19 -34 -10 -34
-                    -22 0 -25 -4 -22 -27 4 -35 30 -37 38 -3 12 50 85 65 97 21 3 -14 13 -19 31
-                    -18 18 1 27 -4 30 -16 4 -21 -27 -35 -38 -17 -6 9 -13 7 -29 -9 -23 -23 -51
-                    -27 -69 -9 -9 9 -12 9 -12 0 0 -7 -15 -12 -40 -12 -29 0 -42 5 -50 19 -32 60
-                    16 127 74 105z"/>
-                    <path d="M700 1105 c0 -14 4 -25 9 -25 12 0 23 29 15 41 -10 18 -24 9 -24 -16z"/>
-                    <path d="M688 1043 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z"/>
-                    <path d="M943 995 c-3 -9 -3 -19 1 -22 7 -7 36 16 36 28 0 15 -30 10 -37 -6z"/>
-                    <path d="M533 952 c-28 -10 -67 -31 -87 -45 -36 -28 -92 -95 -85 -101 8 -6
-                    590 -78 595 -73 10 10 -39 98 -77 137 -87 89 -230 123 -346 82z"/>
-                    <path d="M320 704 c-30 -146 47 -297 189 -366 69 -35 195 -33 273 4 113 53
-                    179 151 186 278 l3 75 -161 -161 -161 -162 -30 44 c-16 24 -33 44 -37 44 -4 0
-                    -31 -14 -61 -30 -62 -34 -71 -30 -71 36 0 23 -3 75 -6 117 -6 71 -9 78 -51
-                    126 -25 28 -48 51 -53 51 -5 0 -14 -25 -20 -56z"/>
-                    <path d="M1000 316 c0 -9 7 -16 16 -16 9 0 14 5 12 12 -6 18 -28 21 -28 4z"/>
-                    <path d="M960 282 c0 -12 19 -26 26 -19 2 2 -2 10 -11 17 -9 8 -15 8 -15 2z"/>
-                    <path d="M714 169 c-3 -6 -1 -16 5 -22 8 -8 11 -5 11 11 0 24 -5 28 -16 11z"/>
-                    </g>
-                    </svg>
-                    <!-- <svg viewBox="0 0 100 100" width="18" height="18"
-                        class="logo-full">
-                        <defs>
-                            <linearGradient id="a" x1="82.85" y1="30.41" x2="51.26" y2="105.9"
-                                gradientTransform="matrix(1, 0, 0, -1, -22.41, 110.97)" gradientUnits="userSpaceOnUse">
-                                <stop offset="0" stop-color="#6c56cc"></stop>
-                                <stop offset="1" stop-color="#9785e5"></stop>
-                            </linearGradient>
-                        </defs>
-                        <polygon points="62.61,0 30.91,17.52 18,45.45 37.57,90.47 65.35,100 70.44,89.8 81,26.39 62.61,0"
-                            fill="#34208c"></polygon>
-                        <polygon points="81,26.39 61.44,14.41 34.43,35.7 65.35,100 70.44,89.8 81,26.39" fill="url(#a)">
-                        </polygon>
-                        <polygon points="81,26.39 81,26.39 62.61,0 61.44,14.41 81,26.39" fill="#af9ff4"></polygon>
-                        <polygon points="61.44,14.41 62.61,0 30.91,17.52 34.43,35.7 61.44,14.41" fill="#4a37a0">
-                        </polygon>
-                        <polygon points="34.43,35.7 37.57,90.47 65.35,100 34.43,35.7" fill="#4a37a0"></polygon>
-                    </svg> -->
-                    <svg viewBox="0 0 100 100" width="18" height="18" fill="none" stroke="currentColor"
-                        stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="logo-wireframe">
-                        <path
-                            d="M 30.91 17.52 L 34.43 35.7 M 61.44 14.41 L 62.61 0 M 34.43 35.7 L 37.57 90.47 M 81 26.39 L 61.44 14.41 L 34.43 35.7 L 65.35 100 M 62.61 0 L 30.91 17.52 L 18 45.45 L 37.57 90.47 L 65.35 100 L 70.44 89.8 L 81 26.39 L 62.61 0 Z">
-                        </path>
-                    </svg></div>
+                </div>
             </div>
         </div>
     </div>
@@ -168,7 +83,6 @@ if (!isset($_SESSION['user_id']) ||
 
                     <a href="."><img src="logo.svg" height="25" class="logo" alt="ChangEdu Logo"></a>
                     <div class="sidebar-toggle-button mod-left sidebar" aria-label="" aria-label-position="right">
-
 
                         <div class="clickable-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -194,48 +108,6 @@ if (!isset($_SESSION['user_id']) ||
                                 <path d="M12 12v3"></path>
                             </svg></div>
                     </div>
-                    <!-- 随机打开一片note，不需要 -->
-                    <!-- <div class="side-dock-actions">
-                        <div class="clickable-icon side-dock-ribbon-action" aria-label="Open random note"
-                            data-tooltip-position="right" data-tooltip-delay="300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="svg-icon dice">
-                                <path
-                                    d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" />
-                                <path
-                                    d="M17 16C17 16.5523 16.5523 17 16 17C15.4477 17 15 16.5523 15 16C15 15.4477 15.4477 15 16 15C16.5523 15 17 15.4477 17 16Z" />
-                                <path
-                                    d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" />
-                                <path
-                                    d="M9 8C9 8.55228 8.55228 9 8 9C7.44772 9 7 8.55228 7 8C7 7.44772 7.44772 7 8 7C8.55228 7 9 7.44772 9 8Z" />
-                            </svg>
-                        </div>
-                    </div> -->
-                    <!-- 设置皮肤和交互的，不需要 -->
-                    <!-- <div class="side-dock-settings">
-                        <div class="clickable-icon side-dock-ribbon-action" aria-label="Help"
-                            aria-label-position="right"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="svg-icon help">
-                                <path
-                                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z">
-                                </path>
-                                <path
-                                    d="M9.09009 9.00003C9.32519 8.33169 9.78924 7.76813 10.4 7.40916C11.0108 7.05019 12.079 6.94542 12.7773 7.06519C13.9093 7.25935 14.9767 8.25497 14.9748 9.49073C14.9748 11.9908 12 11.2974 12 14">
-                                </path>
-                                <path d="M12 17H12.01"></path>
-                            </svg></div>
-                        <div class="clickable-icon side-dock-ribbon-action" aria-label="Settings"
-                            aria-label-position="right"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-settings">
-                                <path
-                                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
-                                </path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg></div>
-                    </div> -->
                 </div>
                 <div class="workspace-split mod-horizontal mod-left-split" style="width: 450px;">
                     <hr class="workspace-leaf-resize-handle left-dock">
@@ -311,33 +183,6 @@ if (!isset($_SESSION['user_id']) ||
                             <div class="workspace-leaf">
                                 <hr class="workspace-leaf-resize-handle">
                                 <div class="workspace-leaf-content" data-type="file-explorer">
-                                    <?php echo $customSection; ?>
-                                    <!-- custom page sidebar -->
-                                    <!-- <h3 class="sm-site-title"> Perlite</h3> -->
-                                    <!-- <div class="sm-site-title">&nbsp;</div>
-                                    <div class="custom-page">
-
-                                    
-                                    
-                                    <img class="custom-page-logo" src="logo1.jpg" alt="Custom Logo">
-                                    <div> &nbsp;</div>
-                                    <div class="sm-site-desc"><i>IT-Security Notes and Writeups</i></div>
-
-                                    <div><ul class="social-media-list">
-                                        <li><a href="https://github.com/secure-77"><img class="social-logo" src="github-color.svg" alt="Custom Logo"></a></li>
-                                        <li><a href="https://twitter.com/secure_sec77"><img class="social-logo" src="x-color.svg" alt="Custom Logo"></a></li>
-                                        <li><a href="https://secure77.de"><img class="social-logo" src="fontawesome-color.svg" alt="Custom Logo"></a></li>
-                                    </ul> -->
-
-                                    <!-- <div><ul class="social-media-list">
-                                        <li><img class="social-logo" src="github-color.svg" alt="Custom Logo"> &nbsp;<a href="https://github.com/secure-77">Secure-77</a></li>
-                                        <li><img class="social-logo" src="x-color.svg" alt="Custom Logo"> &nbsp;<a href="https://github.com/secure-77">Twitter (X)</a></li>
-                                        <li><img class="social-logo" src="fontawesome-color.svg" alt="Custom Logo"> &nbsp;<a href="https://github.com/secure-77">secure77.de</a></li>
-                                    </ul>
- 
-                                    </div>
-                                    </div> -->
-
                                     <!-- nav sidebar-left -->
                                     <div class="nav-header">
                                         <div class="nav-buttons-container">
@@ -448,22 +293,13 @@ if (!isset($_SESSION['user_id']) ||
                                                     <line x1="6" y1="6" x2="18" y2="18"></line>
                                                 </svg></div>
                                         </div>
-
                                         <div class="view-header-title-container mod-at-start">
                                             <div class="view-header-title-parent"></div>
                                             <div class="view-header-title" tabindex="-1"></div>
                                         </div>
 
                                         <div class="view-actions">
-                                            <!-- <a class="clickable-icon view-action" aria-label="Click to edit"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="svg-icon lucide-edit-3">
-                                                    <path d="M12 20h9"></path>
-                                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z">
-                                                    </path>
-                                                </svg></a> -->
+
                                             <a class="clickable-icon view-action" aria-label="Copy URL">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -496,148 +332,6 @@ if (!isset($_SESSION['user_id']) ||
                                     </div>
                                     <div class="view-content"
                                         style="padding: 0px; overflow: hidden; position: relative;">
-                                        <div id="graph_content" style="display: none">
-                                            <div id="graph_all"></div>
-                                            <div id="loading-text" class="markdown-preview-view">0%</div>
-                                            <div class="graph-controls is-close">
-                                                <div class="clickable-icon graph-controls-button mod-close"
-                                                    aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg"
-                                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" class="svg-icon lucide-x">
-                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                    </svg></div>
-                                                <div class="clickable-icon graph-controls-button mod-open"
-                                                    aria-label="Open graph settings"><svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="svg-icon lucide-settings">
-                                                        <path
-                                                            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
-                                                        </path>
-                                                        <circle cx="12" cy="12" r="3"></circle>
-                                                    </svg></div>
-                                                <div class="clickable-icon graph-controls-button mod-reset"
-                                                    aria-label="Restore default settings"><svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="svg-icon lucide-rotate-ccw">
-                                                        <path d="M3 2v6h6"></path>
-                                                        <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
-                                                    </svg></div>
-                                                <div class="tree-item graph-control-section mod-filter">
-                                                    <div class="tree-item-self">
-                                                        <div class="tree-item-inner">
-                                                            <header class="graph-control-section-header">Options
-                                                            </header>
-                                                        </div>
-                                                    </div>
-                                                    <div class="tree-item-children">
-
-                                                        <div class="setting-item mod-toggle">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name"
-                                                                    aria-label="Show files that are not linked to any other file">
-                                                                    Orphans</div>
-                                                                <div class="setting-item-description"></div>
-                                                            </div>
-                                                            <div class="setting-item-control">
-                                                                <div
-                                                                    class="checkbox-container mod-small graphNoLinkOption is-enabled">
-                                                                    <input type="checkbox" tabindex="0">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="setting-item mod-toggle">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name"
-                                                                    aria-label="Show files that are not linked to any other file">
-                                                                    Auto-Reload</div>
-                                                                <div class="setting-item-description"></div>
-                                                            </div>
-                                                            <div class="setting-item-control">
-                                                                <div
-                                                                    class="checkbox-container mod-small graphAutoReloadOption is-enabled">
-                                                                    <input type="checkbox" tabindex="0">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="setting-item">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name">Style</div>
-                                                            </div>
-                                                            <div class="setting-item-control">
-                                                                <select id="graphStyleDropdown" class="dropdown">
-                                                                    <option value="dynamic">Dynamic (Default)</option>
-                                                                    <option value="continuous">Continuous</option>
-                                                                    <option value="discrete">Discrete</option>
-                                                                    <option value="diagonalCross">DiagonalCross</option>
-                                                                    <option value="straightCross">StraightCross</option>
-                                                                    <option value="horizontal">Horizontal</option>
-                                                                    <option value="vertical">Vertical</option>
-                                                                    <option value="curvedCW">CurvedCW</option>
-                                                                    <option value="curvedCCW">CurvedCCW</option>
-                                                                    <option value="cubicBezier">CubicBezier</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tree-item graph-control-section mod-display">
-                                                    <div class="tree-item-self">
-                                                        <div class="tree-item-inner">
-                                                            <header class="graph-control-section-header">Display
-                                                            </header>
-                                                        </div>
-                                                    </div>
-                                                    <div class="tree-item-children">
-                                                        <div class="setting-item mod-slider">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name">Node size</div>
-                                                                <div class="setting-item-description"></div>
-                                                            </div>
-                                                            <div class="setting-item-control"><input
-                                                                    class="slider nodeSize" type="range" min="5"
-                                                                    max="40" step="2"></div>
-
-                                                        </div>
-                                                        <div class="setting-item mod-slider">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name">Link thickness</div>
-                                                                <div class="setting-item-description"></div>
-
-                                                            </div>
-                                                            <div class="setting-item-control"><input
-                                                                    class="slider linkThickness" type="range" min="0.1"
-                                                                    max="5" step="any"></div>
-
-                                                        </div>
-                                                        <div class="setting-item mod-slider">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name">Link distance</div>
-                                                                <div class="setting-item-description"></div>
-                                                            </div>
-                                                            <div class="setting-item-control"><input
-                                                                    class="slider linkDistance" type="range" min="30"
-                                                                    max="1000" step="10"></div>
-
-                                                        </div>
-
-                                                        <div class="setting-item">
-                                                            <div class="setting-item-info">
-                                                                <div class="setting-item-name"></div>
-                                                                <div class="setting-item-description"></div>
-                                                            </div>
-                                                            <div class="setting-item-control"><button id="graphReload"
-                                                                    class="mod-cta">Reload</button></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="markdown-reading-view" style="width: 100%; height: 100%; ">
                                             <div class="markdown-preview-view markdown-rendered node-insert-event allow-fold-headings show-indentation-guide allow-fold-lists"
                                                 style="tab-size: 4;">
@@ -817,11 +511,7 @@ if (!isset($_SESSION['user_id']) ||
                                                 <div id="toc"></div>
 
                                             </div>
-                                            <div id=localGraph>
-                                            <h3>Graph</h3>
 
-                                            <div id="mynetwork"></div>
-                                            </div>
                                             <div class="tree-item-self" aria-label-position="left"><span
                                                     class="tree-item-icon collapse-icon"><svg
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -856,20 +546,7 @@ if (!isset($_SESSION['user_id']) ||
             </div>
         </div>
     </div>
-    <!-- Graph settings -->
-    <div style="display: none">
-        <div>
-            <?php echo $jsonGraphData; ?>
-        </div>
-        <p class="graph-view color-line"></p>
-        <p class="graph-view color-fill"></p>
-        <p class="graph-view color-text"></p>
-        <p class="graph-view color-fill-highlight"></p>
-        <p class="graph-view color-fill-focused"></p>
-        <p class="graph-view color-line-hightlight"></p>
-        <p class="vault"><?php echo $vaultName ?></p>
-        <p class="perliteTitle"><?php echo $title ?></p>
-    </div>
+
     <!-- tool tip -->
     <div class="tooltip" style="top: 83.9531px; left: 1032.51px; width: 180.984px; height: 25px; display: none">
         <div class="tooltip-arrow" style="left: initial; right: 43px;"></div>
@@ -884,144 +561,7 @@ if (!isset($_SESSION['user_id']) ||
             <div class="aboutContent modal-content"></div>
         </div>
     </div>
-    <!-- perlite settings -->
-    <div id="settings" class="modal-container mod-dim" style="display: none">
-        <div class="modal-bg" style="opacity: 0.85;"></div>
-        <div id="settings" class="modal mod-settings">
-            <div class="modal-close-button"></div>
-            <div class="modal-title">Perlite Settings</div>
-            <div class="setting-item-description">Some settings need a page reload to take affect!</div>
-            <div class="modal-content vertical-tabs-container">
-                <div class="vertical-tab-content-container">
-                    <div class="vertical-tab-content">
-                        <div class="setting-item">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Theme</div>
-                                <div class="setting-item-description">Select installed theme</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <select id="themeDropdown" class="dropdown">
-                                    <option value="">Default</option>
-                                </select><button id="resetTheme" class="mod-cta">Reset</button>
-                            </div>
 
-                        </div>
-
-                        <div class="setting-item mod-toggle">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Dark mode</div>
-                                <div class="setting-item-description">Choose Perlite's default color scheme.</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="checkbox-container is-enabled darkModeOption"><input type="checkbox"
-                                        tabindex="0"></div>
-                            </div>
-                        </div>
-
-                        <div class="setting-item setting-item-heading">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Sizes</div>
-                                <div class="setting-item-description"></div>
-                            </div>
-                            <div class="setting-item-control"></div>
-                        </div>
-                        <div class="setting-item">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Font size</div>
-                                <div class="setting-item-description">Font size in pixels that affects reading
-                                    view.</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="clickable-icon setting-editor-extra-setting-button"
-                                    aria-label="Restore text settings">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="svg-icon lucide-rotate-ccw">
-                                        <path d="M3 2v6h6"></path>
-                                        <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
-                                    </svg>
-                                </div><input class="slider font-size" type="range" min="10" max="30" step="1">
-                            </div>
-                        </div>
-                        <div class="setting-item">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Panel sizes</div>
-                                <div class="setting-item-description">Reset the panel sizes</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="clickable-icon setting-editor-extra-setting-button"
-                                    aria-label="Restore panel settings">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="svg-icon lucide-rotate-ccw">
-                                        <path d="M3 2v6h6"></path>
-                                        <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setting-item setting-item-heading">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Mobile</div>
-                                <div class="setting-item-description"></div>
-                            </div>
-                            <div class="setting-item-control"></div>
-                        </div>
-
-                        <div class="setting-item mod-toggle">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Pop Up</div>
-                                <div class="setting-item-description">Open a popup by clicking on an internal link</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="checkbox-container popUpSetting"><input type="checkbox" tabindex="0"></div>
-                            </div>
-                        </div>
-
-                        <div class="setting-item setting-item-heading">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Advanced</div>
-                                <div class="setting-item-description"></div>
-                            </div>
-                            <div class="setting-item-control"></div>
-                        </div>
-                        <div class="setting-item mod-toggle">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Disable Pop Hovers</div>
-                                <div class="setting-item-description">Disable popups by hover</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="checkbox-container disablePopUp"><input type="checkbox" tabindex="0"></div>
-                            </div>
-                        </div>
-                        <div class="setting-item mod-toggle">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Show inline title</div>
-                                <div class="setting-item-description">Displays the filename as an title inline with the
-                                    file contents.</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="checkbox-container is-enabled inlineTitleOption"><input type="checkbox"
-                                        tabindex="0"></div>
-                            </div>
-                        </div>
-                        <div class="setting-item mod-toggle">
-                            <div class="setting-item-info">
-                                <div class="setting-item-name">Collapse Metadata</div>
-                                <div class="setting-item-description">Collapse the Front Matter Metadata contents by
-                                    default.</div>
-                            </div>
-                            <div class="setting-item-control">
-                                <div class="checkbox-container metadataOption"><input type="checkbox" tabindex="0">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Pop Hover -->
     <div class="popover hover-popover" style="display: none">
         <div class="markdown-embed is-loaded">

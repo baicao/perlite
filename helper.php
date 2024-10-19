@@ -23,7 +23,8 @@ $rootDir = empty(getenv('NOTES_PATH')) ? 'ChangEduHome' : getenv('NOTES_PATH');
 $vaultName = $rootDir;
 
 // hide folders
-$hideFolders = getenv('HIDE_FOLDERS');
+// $hideFolders = getenv('HIDE_FOLDERS');
+$hideFolders = "Markscheme,Pastpapers,Attachments,Box,Dataview(不发布),Dataiew(不发布),Questions";
 
 // use absolut paths instead of relative paths
 // $relPathes = empty(getenv('ABSOLUTE_PATHS')) ? false : filter_var(getenv('ABSOLUTE_PATHS'), FILTER_VALIDATE_BOOLEAN);
@@ -50,7 +51,7 @@ $allowedFileLinkTypes = empty(getenv('ALLOWED_FILE_LINK_TYPES')) ? ['pdf', 'mp4'
 $disablePopHovers = empty(getenv('DISABLE_POP_HOVER')) ? "false" : getenv('DISABLE_POP_HOVER');
 
 // show TOC
-$showTOC = empty(getenv('SHOW_TOC')) ? "true" : getenv('SHOW_TOC');
+$showTOC = empty(getenv('SHOW_TOC')) ? "false" : getenv('SHOW_TOC');
 
 // show local Graph
 $showLocalGraph = empty(getenv('SHOW_LOCAL_GRAPH')) ? "true" : getenv('SHOW_TOC');
@@ -138,13 +139,12 @@ function menu($dir, $folder = '')
 
 	// sort array
 	usort($files, "cmp");
-
 	// iterate the folders 
 	foreach ($files as $file) {
 		if (is_dir($file)) {
-
+			
 			if (isValidFolder($file)) {
-
+				
 				// split Folder Infos
 				$folder = getFolderInfos($file)[0];
 				$folderClean = getFolderInfos($file)[1];
@@ -152,7 +152,6 @@ function menu($dir, $folder = '')
 				$folderId = str_replace(' ', '_', $folderClean);
 				$folderId = preg_replace('/[^A-Za-z\-]/', '_', $folderId);
 				$folderId = '_' . $folderId;
-
 
 				$html .= '
 				<div class="tree-item nav-folder is-collapsed">
@@ -166,6 +165,7 @@ function menu($dir, $folder = '')
 						<div style="width: 591px; height: 0.1px; margin-bottom: 0px;"></div>';
 				$html .= menu($file, $folder . '/');
 				$html .= '</div></div>';
+				
 			}
 		}
 	}
@@ -553,7 +553,6 @@ function loadSettings($rootDir)
 
 	// get themes
 	$themes = "";
-	$folders = glob($rootDir . '/.obsidian/themes/*');
 	$appearanceFile = $rootDir . '/.obsidian/appearance.json';
 	$defaultTheme = "";
 
@@ -562,7 +561,6 @@ function loadSettings($rootDir)
 		if ($jsonData) {
 			$json_obj = json_decode($jsonData, true);
 			if ($json_obj) {
-
 				// if theme is set, set it as default
 				if (array_key_exists('cssTheme', $json_obj)) {
 					$defaultTheme = $json_obj["cssTheme"];
@@ -570,25 +568,6 @@ function loadSettings($rootDir)
 			}
 		}
 	}
-
-	// iterate the folders 
-	foreach ($folders as $folder) {
-		if (is_dir($folder)) {
-
-			$folderName = getFolderInfos($folder)[2];
-			$folderClean = str_replace(' ', '_', $folderName);
-			$themePath = $rootDir . '/.obsidian/themes/' . $folderName . '/theme.css';
-
-			if ($defaultTheme === $folderName) {
-
-				$themes .= '<link data-themename="' . $folderName . '" class="theme" id="' . $folderClean . '" href="' . $themePath . '" type="text/css" rel="stylesheet">';
-			} else {
-
-				$themes .= '<link data-themename="' . $folderName . '" class="theme" id="' . $folderClean . '" href="' . $themePath . '" type="text/css" rel="stylesheet" disabled="disabled">';
-			}
-		}
-	}
-
 
 	// Meta Tags
 	$defaultSettings =

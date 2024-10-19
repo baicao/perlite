@@ -12,31 +12,25 @@
 // define home file
 var homeFile = "README";
 if ($('#index').data('option')) {
-
   homeFile = $('#index').data('option');
 }
 
 // disable pophovers
 if ($('#disablePopHovers').data('option') == true && localStorage.getItem("disablePopUp") === null) {
-
   $('#disablePopUp').addClass('is-enabled')
   localStorage.setItem('disablePopUp', 'true');
-
 }
 
 // show toc
 if ($('#showTOC').data('option') == false || localStorage.getItem("showTOC") === false) {
-
   localStorage.setItem("showTOC", "false")
   $('#outline').css('display', 'none')
 }
 
-if ($('#showLocalGraph').data('option') == false || localStorage.getItem("showLocalGraph") === false) {
-
-  localStorage.setItem("showLocalGraph", "false")
-  $('#localGraph').css('display', 'none')
-}
-
+// if ($('#showLocalGraph').data('option') == false || localStorage.getItem("showLocalGraph") === false) {
+//   localStorage.setItem("showLocalGraph", "false")
+//   $('#localGraph').css('display', 'none')
+// }
 
 
 /**
@@ -57,7 +51,6 @@ function scrollToAnchor(aid) {
  * @param {String} anchor
  */
 function getContent(str, home = false, popHover = false, anchor = "") {
-
   // reset content if request is empty
   if (str.length == 0) {
     document.getElementById("mdContent").innerHTML = "";
@@ -70,11 +63,8 @@ function getContent(str, home = false, popHover = false, anchor = "") {
         return
       }
       requestPath = "content.php?home";
-
     }
-
     mdContent = $("#mdContent")[0]
-
 
     $.ajax({
       url: requestPath, success: function (result) {
@@ -83,7 +73,6 @@ function getContent(str, home = false, popHover = false, anchor = "") {
           return;
         }
         if (popHover == false) {
-
           // set content
           $("#mdContent").html(result);
 
@@ -106,12 +95,7 @@ function getContent(str, home = false, popHover = false, anchor = "") {
             $("div.view-header-title-parent").text(parentTitle);
             $("div.view-header-title").text(title);
             $(".inline-title").text(title);
-
-            $("title").text(title + ' - ' + $("p.vault").text() + ' - ' + $("p.perliteTitle").text());
-
-            // set edit button url
-            $('.clickable-icon.view-action[aria-label="Click to edit"]')
-              .attr("href", "obsidian://open?vault=" + encodeURIComponent($("p.vault").text()) + "&file=" + encodeURIComponent(title))
+            $("title").text(title);
           }
 
           // Outlines
@@ -168,19 +152,16 @@ function getContent(str, home = false, popHover = false, anchor = "") {
 
 
           // trigger graph render on side bar
-          renderGraph(false, str);
-
+          // renderGraph(false, str);
           //resize graph on windows rezise
-          $(window).resize(function () {
-            renderGraph(false, str, false);
-          });
-
+          // $(window).resize(function () {
+          //   renderGraph(false, str, false);
+          // });
 
           // update the url
           if (home == false) {
             window.history.pushState({}, "", location.protocol + '//' + location.host + location.pathname + "?link=" + str + anchor);
           }
-
 
           // on Tag click -> start search
           $('.tag').click(function (e) {
@@ -315,7 +296,6 @@ function getContent(str, home = false, popHover = false, anchor = "") {
 
           }
 
-
           //check setting if metadata is collapsed or not
           if ($('.metadataOption').hasClass('is-enabled')) {
             $('.metadata-properties-heading').trigger('click')
@@ -407,16 +387,12 @@ function getContent(str, home = false, popHover = false, anchor = "") {
               var textonly = '[[' + linkElement.innerHTML + ']]';
               linkElement.replaceWith(textonly)
             }
-
           }
-
         }
-
         //render mermaid
         mermaid.init(undefined, document.querySelectorAll(".language-mermaid"));
 
         //scroll to anchor
-
         if (anchor != "") {
           scrollToAnchor(anchor.substring(1));
         }
@@ -426,298 +402,7 @@ function getContent(str, home = false, popHover = false, anchor = "") {
     });
   }
 };
-
-/**
- * vis js stuff
- * @param {Boolean} modal
- * @param {String} path
- * @param {Boolean} filter_emptyNodes
- */
-function renderGraph(modal, path = "", filter_emptyNodes = false) {
-
-  // no graph found exit
-  if ($("#allGraphNodes").length == 0 || $("#allGraphNodes").text == '[]') {
-    console.log("Graph: no data found")
-    return;
-  }
-
-
-  var visNodes = document.getElementById('allGraphNodes').textContent;
-  var visEdges = document.getElementById('allGraphEdges').textContent;
-
-  var jsonNodes = JSON.parse(visNodes);
-  var jsonEdges = JSON.parse(visEdges);
-
-  var currId = 0;
-  path = decodeURIComponent(path);
-  if (path == 'home') {
-    path = '/' + homeFile;
-  }
-
-
-  // reset backlings count
-
-  $('#backlinksCount').text(0);
-
-  // get current node
-  for (const x in jsonNodes) {
-    if (path == ('/' + (jsonNodes[x]['title']).replace('&amp;', '&'))) {
-      currId = jsonNodes[x]['id'];
-      break;
-    }
-    else if (modal == false) {
-      currId = -1;
-    }
-  }
-
-  // cancel graph display if no node was found
-  if (currId == -1) {
-    return;
-  }
-
-  // Graph Defaults
-
-  nodeSize = parseInt($('.slider.nodeSize').val())
-  varLinkDistance = parseInt($('.slider.linkDistance').val())
-  varLinkThickness = parseFloat($('.slider.linkThickness').val())
-  varGraphStyle = $('#graphStyleDropdown').val()
-
-
-  var options = {
-    interaction: {
-      hover: true,
-    },
-    layout: {
-      improvedLayout: true,
-      clusterThreshold: 10000,
-    },
-    physics: {
-      solver: 'forceAtlas2Based',
-      solver: 'barnesHut',
-      enabled: true,
-      stabilization: {
-        enabled: true,
-        iterations: 1000,
-        updateInterval: 10,
-        onlyDynamicEdges: false,
-        fit: true
-      }
-    },
-    // configure: {
-    //   enabled: true,
-    //   filter: 'nodes,edges',
-    //   container: container,
-    //   showButton: true
-    // } ,
-    edges: {
-      length: varLinkDistance,
-      width: varLinkThickness,
-      color: getComputedStyle(document.querySelector('.graph-view.color-line')).color,
-      smooth: {
-        type: varGraphStyle,
-        enabled: true,
-      }
-    },
-
-    nodes: {
-      shape: 'dot',
-      size: nodeSize,
-      font: {
-        size: 16,
-        color: getComputedStyle(document.querySelector('.graph-view.color-text')).color,
-      },
-      borderWidth: 1,
-      color: {
-        background: getComputedStyle(document.querySelector('.graph-view.color-fill')).color,
-        border: getComputedStyle(document.querySelector('.graph-view.color-fill')).color,
-        highlight: {
-          border: getComputedStyle(document.querySelector('.graph-view.color-fill')).color,
-          background: getComputedStyle(document.querySelector('.graph-view.color-fill')).color,
-        },
-        hover: {
-          border: getComputedStyle(document.querySelector('.graph-view.color-fill')).color,
-          background: getComputedStyle(document.querySelector('.graph-view.color-fill-highlight')).color,
-        },
-      },
-    }
-  };
-
-  var network;
-
-  // show the whole graph
-  if (modal) {
-
-    var container_modal = document.getElementById('graph_all');
-
-    var nodes = new vis.DataSet(jsonNodes);
-    var edges = new vis.DataSet(jsonEdges);
-
-    edgeView = edges;
-    nodeView = nodes;
-
-    if (filter_emptyNodes) {
-      nodeView = new vis.DataView(nodes, {
-        filter: function (node) {
-          connEdges = edgeView.get({
-            filter: function (edge) {
-              if (node.id == currId) {
-                return true;
-              }
-              return (
-                (edge.to == node.id) || (edge.from == node.id));
-            }
-          });
-          return connEdges.length > 0;
-        }
-      });
-
-    }
-
-    // provide the data in the vis format
-    var data = {
-      nodes: nodeView,
-      edges: edgeView
-    };
-
-    network = new vis.Network(container_modal, data, options);
-
-    // show loading status
-    document.getElementById("loading-text").innerText = "loading graph: 0%";
-    document.getElementById("loading-text").style.display = "unset";
-
-    network.on("stabilizationProgress", function (params) {
-      var widthFactor = params.iterations / params.total;
-      document.getElementById("loading-text").innerText = "loading graph: " + Math.round(widthFactor * 100) + "%";
-    });
-
-    network.once("stabilizationIterationsDone", function () {
-      document.getElementById("loading-text").innerText = "loading graph: 100%";
-      // really clean the dom element
-      setTimeout(function () {
-        document.getElementById("loading-text").style.display = "none";
-      }, 500);
-    });
-
-
-
-
-    //network.selectNodes([currId]);
-    var node = network.body.nodes[currId];
-    node.setOptions({
-      font: {
-        size: 20
-      },
-      color: {
-        background: getComputedStyle(document.querySelector('.graph-view.color-fill-focused')).color,
-      },
-    });
-
-
-
-    // local Graph
-  } else {
-
-    var myNodes = [];
-    var myEdges = [];
-
-    options['edges']['length'] = 250;
-
-    // add current node
-    for (const x in jsonNodes) {
-      jsonNodes[x]['label'] = (jsonNodes[x]['label']).replace('&amp;', '&')
-      jsonNodes[x]['title'] = (jsonNodes[x]['title']).replace('&amp;', '&')
-      if (path == ('/' + jsonNodes[x]['title'])) {
-        myNodes.push(jsonNodes[x])
-        curNode = myNodes[0]
-        curNode.size = '20';
-        curNode.color = {
-          background: getComputedStyle(document.querySelector('.graph-view.color-fill-focused')).color,
-        };
-
-        break;
-      }
-    }
-
-
-    function idExists(id) {
-      return myNodes.some(function (el) {
-        return el.id === id;
-      });
-    }
-
-
-    // search linked nodes
-    for (const y in jsonEdges) {
-      if (currId == jsonEdges[y]['from']) {
-
-        // add "To" node to the nodes
-        for (const x in jsonNodes) {
-          if (jsonEdges[y]['to'] == jsonNodes[x]['id']) {
-            if (!idExists(jsonNodes[x]['id'])) {
-              myNodes.push(jsonNodes[x])
-            }
-            break;
-          }
-        }
-
-        // add the link
-        myEdges.push(jsonEdges[y]);
-
-        // search the backlinks
-      } else if (currId == jsonEdges[y]['to']) {
-
-        // add "From" node to the nodes
-        for (const x in jsonNodes) {
-          if (jsonEdges[y]['from'] == jsonNodes[x]['id']) {
-            if (!idExists(jsonNodes[x]['id'])) {
-              myNodes.push(jsonNodes[x])
-            }
-            break;
-          }
-        }
-
-        // add the backlink
-        myEdges.push(jsonEdges[y]);
-        curr = $('#backlinksCount').text();
-        $('#backlinksCount').text(parseInt(curr) + 1);
-      }
-
-    }
-
-    // build network structure
-
-    var nodes = new vis.DataSet(myNodes);
-    var edges = new vis.DataSet(myEdges);
-
-
-    var data = {
-      nodes: nodes,
-      edges: edges
-    };
-
-    // update linked mentions
-    $("#nodeCount").text(nodes.length - 1);
-
-    var container = document.getElementById('mynetwork');
-    network = new vis.Network(container, data, options);
-
-
-  }
-
-  // jump to file function
-  if (network) {
-
-    network.on("click", function (properties) {
-
-      if (!properties.nodes.length) return;
-      var node = nodes.get(properties.nodes[0]);
-      var glink = '?link=' + encodeURIComponent('/' + node.title);
-      window.open(glink, "_self");
-    });
-  }
-
-};
-
+ 
 /**
  * change mobile settings
  */
