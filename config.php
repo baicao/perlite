@@ -54,7 +54,10 @@ function log_message($message) {
     $unique_id = isset($_SESSION['unique_id']) ? $_SESSION['unique_id'] : 'unknown';
     $current_time = date('Y-m-d H:i:s'); // 获取当前日期和时间
     $log_entry = "[" . $current_time . "] [" . $unique_id . "] " . $message . "\r\n";
-    error_log($log_entry, 3, LOG_FILE);
+    $result = error_log($log_entry, 3, LOG_FILE);
+    if (!$result) {
+        echo "无法写入日志文件，请检查路径和权限。";
+    }
 
     // 将日志写入文件或其他日志存储
     // $result = file_put_contents('login_debug.log', $log_entry . PHP_EOL, FILE_APPEND);
