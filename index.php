@@ -43,10 +43,10 @@ if (!isset($_SESSION['user_id']) ||
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
     <?php echo loadSettings($rootDir); ?>
-    <link rel="stylesheet" href=".styles/app.css" type="text/css">
+    <link rel="stylesheet" href=".styles/app.min.css" type="text/css">
     <link id="highlight-js" rel="stylesheet" href=".styles/atom-one-dark.min.css" type="text/css">
-    <link rel="stylesheet" href=".styles/perlite.css" type="text/css">
-    <link rel="stylesheet" href=".styles/vis-network.min.css" type="text/css">
+    <link rel="stylesheet" href=".styles/perlite.min.css" type="text/css">
+    <!-- <link rel="stylesheet" href=".styles/vis-network.min.css" type="text/css"> -->
     <link rel="stylesheet" href=".styles/katex.min.css" type="text/css">
    
     <script src=".js/jquery.min.js"></script>
@@ -606,7 +606,7 @@ if (!isset($_SESSION['user_id']) ||
 
 
     </div>
-    <script src=".js/perlite.js"></script>
+    <script src=".js/perlite.min.js"></script>
 </body>
 
 </html>
