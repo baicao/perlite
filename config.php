@@ -50,7 +50,7 @@ function get_client_ip() {
     if($private_ip == "127.0.0.1"){
         $public_ip = "127.0.0.1";
     }else{
-        $public_ip = "www.changedu.com";
+        $public_ip = "www.changedu.com.cn";
     }
 
     return [$private_ip, $public_ip];
