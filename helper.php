@@ -24,7 +24,7 @@ $vaultName = $rootDir;
 
 // hide folders
 // $hideFolders = getenv('HIDE_FOLDERS');
-$hideFolders = "Markscheme,Pastpapers,Attachments,Box,Dataview(不发布),Dataiew(不发布),Questions";
+$hideFolders = "Markscheme,Pastpapers,Attachments,Box,Dataview(不发布),Questions";
 
 // use absolut paths instead of relative paths
 // $relPathes = empty(getenv('ABSOLUTE_PATHS')) ? false : filter_var(getenv('ABSOLUTE_PATHS'), FILTER_VALIDATE_BOOLEAN);
