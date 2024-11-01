@@ -4,15 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $servername = "localhost";
-$username = "root";
-$password = "Wxy2024qwe";
 
-// 连接到应用数据库
-$app_dbname = "changedu";
-$app_conn = new mysqli($servername, $username, $password, $app_dbname);
-if ($app_conn->connect_error) {
-    die("Connection to app database failed: " . $app_conn->connect_error);
-}
+
 
 
 $ip_list = get_client_ip();
@@ -20,8 +13,18 @@ $private_ip = $ip_list[0];
 $public_ip = $ip_list[1];
 if($private_ip == "127.0.0.1"){
     define('LOG_FILE', "login_debug.log"); 
+    $username = "root";
+    $password = "Wxy2024qwe";
 }else{
-    define('LOG_FILE', "/home/lighthouse/test/perlite/login_debug.log"); 
+    define('LOG_FILE', "/www/wwwroot/perlite/logs/login_debug.log"); 
+    $username = "changedu";
+    $password = "fkKen4zaZf7EsCPa";
+}
+// 连接到应用数据库
+$app_dbname = "changedu";
+$app_conn = new mysqli($servername, $username, $password, $app_dbname);
+if ($app_conn->connect_error) {
+    die("Connection to app database failed: " . $app_conn->connect_error);
 }
 define('SITE_URL', 'https://'.$public_ip.'/');
 define('SITE_TITLE', 'Chang Edu'); // 替换为您的实际域名
@@ -48,9 +51,9 @@ function get_client_ip() {
         $private_ip = $_SERVER['REMOTE_ADDR'];
     }
     if($private_ip == "127.0.0.1"){
-        $public_ip = "127.0.0.1";
+        $public_ip = "localhost:8080";
     }else{
-        $public_ip = "www.changedu.com.cn";
+        $public_ip = "changedu.com.cn";
     }
 
     return [$private_ip, $public_ip];
