@@ -10,6 +10,7 @@ $countdown = 0;
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+$email = isset($_GET['email']) ? $_GET['email'] : '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 验证 CSRF 令牌
@@ -23,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['verify'])) {
             // 验证码验证逻辑
             $input_code = $_POST['verification_code'];
+            log_message("Login with $email $input_code");
             $stmt = $app_conn->prepare("SELECT * FROM users WHERE email = ? AND verification_code = ?");
             $stmt->bind_param("ss", $email, $input_code);
             $stmt->execute();
@@ -91,12 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>验证邮箱</title>
     <link rel="stylesheet" href=".styles/login.css">
-    <style>
-        .center-message {
-            text-align: center;
-            margin: 20px 0;
-        }
-    </style>
     <script>
         function startCountdown(duration) {
             var button = document.getElementById('sendCodeBtn');
@@ -130,8 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST" class="verify-form" id="sendCodeForm" onsubmit="disableButton()">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
             <div>
-                <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="邮箱地址" required>
-                <button type="submit" id="sendCodeBtn" class="login-button" <?php echo $countdown > 0 ? 'disabled' : ''; ?>>
+                <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="邮箱地址" disabled required>
+                <button type="submit" id="sendCodeBtn" <?php echo $countdown > 0 ? 'disabled' : ''; ?>>
                     <?php echo $countdown > 0 ? "重新发送 ({$countdown})" : '发送验证码'; ?>
                 </button>
             </div>
@@ -142,9 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div>
                 <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
                 <input type="text" name="verification_code" placeholder="请输入6位验证码" required>
-                <button type="submit" name="verify" class="login-button">验证</button>
+                <button type="submit" name="verify" >验证 Verify</button>
             </div>
         </form>
+
+        <!-- 跳过按钮 -->
+        <div class="center-message">
+            <button onclick="window.location.href='<?php echo SITE_URL; ?>'" >跳过 Skip</button>
+        </div>
     </div>
 
     <?php if ($countdown > 0): ?>

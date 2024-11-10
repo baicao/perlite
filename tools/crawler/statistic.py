@@ -36,7 +36,8 @@ def count_pdf_pages(directory):
     return df
 
 # 使用示例
-directory = "/Users/xiangyuwang/Downloads/英國語文"  # 替换为你的目录路径
+directory = "/Users/xiangyuwang/Desktop/打印/英國語文"  # 替换为你的目录路径
+directory = "/Users/xiangyuwang/Desktop/英國語文"
 df = count_pdf_pages(directory)
 print(df)
 
