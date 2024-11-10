@@ -121,3 +121,16 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2024-10-23 20:39:23
+
+
+-- SQL to create verification_codes table with default create_time --
+CREATE TABLE verification_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    phone_number VARCHAR(20),
+    code VARCHAR(6),
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expiry INT
+);
+ALTER TABLE users ADD phone_number VARCHAR(20);
+ALTER TABLE users ADD country_code VARCHAR(20);
+ALTER TABLE users ADD COLUMN is_phone_verified TINYINT(1) DEFAULT 0;
