@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ .'/config.php';
-require_once __DIR__ .'/email_helper.php';
+require_once __DIR__ .'/handlers/email_helper.php';
 
 $message = '';
 
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $reset_link = SITE_URL . "reset_password.php?token=" . $reset_token;
             $to = $email;
             $subject = "密码重置请求";
-            $email_message = "<p>请点击以下链接重置您的密码：</p><p><a href=\"$reset_link\">重置密码</a></p>";
-            
+            $email_message = "<h2>请点击以下链接重置您的密码：</h2><p><a href=\"$reset_link\">重置密码</a></p>";
+            log_message("Reset Password Link: $reset_link");
             if (send_email($to, $subject, $email_message, true)) {
                 $message = "重置密码链接已发送到您的邮箱。请通过邮箱中的链接重置密码。";
                 // 添加 JavaScript 自动跳转
@@ -68,16 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 </head>
 <body>
-    <form method="POST" onsubmit="disableButton()">
-        <h2>忘记密码 Forgot Password</h2>
-        <?php if ($message): ?>
-            <p class="message <?php echo strpos($message, '已发送') !== false ? 'success' : 'error'; ?>"><?php echo htmlspecialchars($message); ?></p>
-        <?php endif; ?>
-        <input type="email" name="email" placeholder="邮箱 Email" required>
-        <button type="submit" id="resetPasswordBtn">重置密码 Reset Password</button>
-        <div class="additional-links">
-            <a href="login.php" class="link-button">返回登录 Back to Login</a>
-        </div>
-    </form>
+    <div class="login-container">
+        <form method="POST" onsubmit="disableButton()">
+            <h2>忘记密码 Forgot Password</h2>
+            <?php if ($message): ?>
+                <p class="message <?php echo strpos($message, '已发送') !== false ? 'success' : 'error'; ?>"><?php echo htmlspecialchars($message); ?></p>
+            <?php endif; ?>
+            <input type="email" name="email" placeholder="邮箱 Email" required>
+            <button type="submit" id="resetPasswordBtn">重置密码 Reset Password</button>
+            <div class="additional-links">
+                <a href="login.php" class="link-button">返回登录 Back to Login</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

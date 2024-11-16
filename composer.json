@@ -28,8 +28,13 @@
     },
     
     "require": {
+        "php": ">=5.6",
+        "tencentcloud/common": "*",
+        "tencentcloud/sms" : "*",
         "erusev/parsedown": "^1.7.4",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "tencentcloud/tencentcloud-sdk-php": "^3.0",
+        "monolog/monolog": "^2.0"
     }
 
 }

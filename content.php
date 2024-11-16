@@ -10,49 +10,41 @@ use Perlite\PerliteParsedown;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/helper.php';
 require_once __DIR__ . '/permissions.php';
-include('helper.php');
-
-
-if (!isset($_SESSION['user_id'])) {
-	echo 'Login in first';
-	exit;
-}
 
 // check get params
 if (isset($_GET['mdfile'])) {
 	$requestFile = $_GET['mdfile'];
-	if (is_string($requestFile)) {
-		if (!empty($requestFile)) {
-			if(!hasPageAccess($_SESSION['user_id'], $requestFile, $app_conn)){
-				$requestFile = "/Tools/Payment Notice";
-			}
-			log_message("Request file: " . $requestFile);
+	log_message("Request file: " . $requestFile);
+	if (is_string($requestFile) && !empty($requestFile)) {
+		if(free_pages($requestFile)){
 			parseContent($requestFile);
+		}else{
+			if (!isset($_SESSION['user_id'])) {
+				echo "login first";
+			}else{
+				if(!hasPageAccess($_SESSION['user_id'], $requestFile, $app_conn)){
+					$requestFile = "/Tools/Payment Notice";
+				}
+				parseContent($requestFile);
+			}
 		}
 	}
+}else{
+	parseContent('/' . $index);
 }
 
 
-// search request
-if (isset($_GET['search'])) {
-
-	$searchString = $_GET['search'];
-	if (is_string($searchString)) {
-		if (!empty($searchString)) {
-			echo doSearch($rootDir, $searchString);
-		}
-	}
-}
-
-
-// parse content for home site
-if (isset($_GET['home'])) {
-
-	if (is_string($_GET['home'])) {
-		parseContent('/' . $index);
-	}
-}
+// // search request
+// if (isset($_GET['search'])) {
+// 	$searchString = $_GET['search'];
+// 	if (is_string($searchString)) {
+// 		if (!empty($searchString)) {
+// 			echo doSearch($rootDir, $searchString);
+// 		}
+// 	}
+// }
 
 
 // parse the md to html

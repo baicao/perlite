@@ -152,21 +152,21 @@ $schools = [
             }
 
             if (!emailPattern.test(email)) {
-                errorMessageElement.textContent = "请输入有效的邮箱地址。Please enter a valid email address.";
+                errorMessageElement.textContent = "请输入有效的邮箱地址";
                 return false;
             }
 
             if (password.length < 6) {
-                errorMessageElement.textContent = "密码至少需要6位。Password must be at least 6 characters long.";
+                errorMessageElement.textContent = "密码至少需要6位";
                 return false;
             }
 
             if (!datePattern.test(dob)) {
-                errorMessageElement.textContent = "请输入有效的日期格式 (YYYY-MM-DD)。Please enter a valid date format (YYYY-MM-DD).";
+                errorMessageElement.textContent = "请输入有效的日期格式 (YYYY-MM-DD)";
                 return false;
             }
 
-            if (!confirm("您输入的手机号是 " + phone + "，请确认是否正确？该手机号可能会用于登录接受验证码。")) {
+            if (!confirm("您输入的手机号是 " + phone + "，请确认是否正确？该手机号可能会用于登录接受验证码")) {
                 return false;
             }
 
@@ -188,9 +188,9 @@ $schools = [
             
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
             
-            <input type="text" id="username" name="username" placeholder="用户名 Username" required>
+            <input type="text" id="username" name="username" placeholder="用户名" required>
             
-            <input type="email" id="email" name="email" placeholder="邮箱 Email" required>
+            <input type="email" id="email" name="email" placeholder="邮箱" required>
             
             <div class="country-code">
                 <select id="country_code" name="country_code">
@@ -198,19 +198,19 @@ $schools = [
                     <option value="+852">香港 +852</option>
                     <!-- 可以添加其他国家的区号 -->
                 </select>
-                <input type="text" id="phone" name="phone" placeholder="手机号码 Phone Number" required>
+                <input type="text" id="phone" name="phone" placeholder="手机号码" required>
             </div>
             
-            <input type="password" id="password" name="password" placeholder="密码 Password" required>
+            <input type="password" id="password" name="password" placeholder="密码" required>
             
             <select id="gender" name="gender" required>
-                <option value="male">男 Male</option>
-                <option value="female">女 Female</option>
-                <option value="other">其他 Other</option>
+                <option value="male">男</option>
+                <option value="female">女</option>
+                <option value="other">其他</option>
             </select>
             
             <select id="grade" name="grade" onchange="toggleInput(this, 'other_grade_input')" required>
-                <option value="">选择年级 Select Grade</option>
+                <option value="">选择年级</option>
                 <optgroup label="DSE">
                     <option value="dse_s1">中一</option>
                     <option value="dse_s2">中二</option>
@@ -235,32 +235,32 @@ $schools = [
                 </optgroup>
                 <option value="other">其他 Other</option>
             </select>
-            <input type="text" id="other_grade_input" name="other_grade" placeholder="其他年级 Other Grade" style="display:none;">
+            <input type="text" id="other_grade_input" name="other_grade" placeholder="其他年级" style="display:none;">
             
-            <input type="text" id="dob" name="dob" class="dob-input" placeholder="出生年月日 Date of Birth:" required>
+            <input type="text" id="dob" name="dob" class="dob-input" placeholder="出生年月日" required>
             
             <select id="country" name="country" onchange="toggleInput(this, 'other_country_input')" required>
-                <option value="">选择国家 Select Country</option>
-                <option value="china">中国 China</option>
-                <option value="usa">美国 USA</option>
-                <option value="uk">英国 UK</option>
-                <option value="canada">加拿大 Canada</option>
-                <option value="australia">澳大利亚 Australia</option>
-                <option value="other">其他 Other</option>
+                <option value="">选择国家</option>
+                <option value="china">中国</option>
+                <option value="usa">美国</option>
+                <option value="uk">英国</option>
+                <option value="canada">加拿大</option>
+                <option value="australia">澳大利亚</option>
+                <option value="other">其他</option>
             </select>
-            <input type="text" id="other_country_input" name="other_country" placeholder="其他国家 Other Country" style="display:none;">
+            <input type="text" id="other_country_input" name="other_country" placeholder="其他国家" style="display:none;">
             
             <select id="city" name="city" onchange="toggleInput(this, 'other_city_input')" required>
-                <option value="">选择城市 Select City</option>
-                <option value="beijing">北京 Beijing</option>
-                <option value="shanghai">上海 Shanghai</option>
-                <option value="shenzhen">深圳 Shenzhen</option>
-                <option value="new_york">纽约 New York</option>
-                <option value="london">伦敦 London</option>
-                <option value="sydney">悉尼 Sydney</option>
-                <option value="other">其他 Other</option>
+                <option value="">选择城市</option>
+                <option value="beijing">北京</option>
+                <option value="shanghai">上海</option>
+                <option value="shenzhen">深圳</option>
+                <option value="new_york">纽约</option>
+                <option value="london">伦敦</option>
+                <option value="sydney">悉尼</option>
+                <option value="other">其他</option>
             </select>
-            <input type="text" id="other_city_input" name="other_city" placeholder="其他城市 Other City" style="display:none;">
+            <input type="text" id="other_city_input" name="other_city" placeholder="其他城市" style="display:none;">
             
             <select id="school" name="school" onchange="toggleInput(this, 'other_school_input')" required>
                 <?php
@@ -277,8 +277,8 @@ $schools = [
                 }
                 ?>
             </select>
-            <input type="text" id="other_school_input" name="other_school" placeholder="其他学校 Other School" style="display:none;">
-            <button type="submit">注册 Register</button>
+            <input type="text" id="other_school_input" name="other_school" placeholder="其他学校" style="display:none;">
+            <button type="submit">注册</button>
         </form>
     </div>
     <script>

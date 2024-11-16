@@ -1,5 +1,28 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/helper.php';
+
+// 免费网站内容
+function free_pages($mdfile){
+    $white_patterns = getWhitePageList();
+    $black_patterns = getBlackPageList();
+    foreach ($black_patterns as $pattern) {
+        if (preg_match($pattern, $mdfile)) {
+            $matched = false;
+            return $matched;
+        }
+    }
+    // 检查 $mdfile 是否匹配任意一个模式
+    $matched = false;
+    foreach ($white_patterns as $pattern) {
+        if (preg_match($pattern, $mdfile)) {
+            $matched = true;
+            break;
+        }
+    }
+    return $matched;
+}
+
 
 // 检查用户是否有访问页面的权限
 function hasPageAccess($userId, $pageName, $app_conn) {

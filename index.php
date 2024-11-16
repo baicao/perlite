@@ -8,24 +8,25 @@
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/helper.php';
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/helper.php';
 require_once __DIR__ . '/permissions.php';
 
 $title = $siteTitle;
 $menu = menu($rootDir);
 
 
-if (!isset($_SESSION['user_id']) || 
-!isset($_SESSION['last_activity']) ||
- (time() - $_SESSION['last_activity'] > $_SESSION['expire_time'])) {
-    session_unset();
-    session_destroy();
-    header("Location: login.php");
-    exit();
+$gender = $_SESSION['gender'] ?? null; // 获取用户信息
+$logoSrc = 'images/logo.svg'; // 默认 logo
+if ($gender) {
+    if ($gender === 'male') {
+        $logoSrc = 'images/boy.png'; // 男性 logo
+    } elseif ($gender === 'female') {
+        $logoSrc = 'images/girl.png'; // 女性 logo
+    }elseif ($gender === 'female') {
+        $logoSrc = 'images/others.png'; // 女性 logo
+    }
 }
-
-
 ?>
 
 <!-- 
@@ -81,7 +82,7 @@ if (!isset($_SESSION['user_id']) ||
             <div class="workspace is-left-sidedock-open">
                 <div class="workspace-ribbon side-dock-ribbon mod-left">
 
-                    <a href="."><img src="logo.svg" height="25" class="logo" alt="ChangEdu Logo"></a>
+                    <a href="user_profile.php" class="logo-link"><img src="<?php echo $logoSrc; ?>" height="25" class="logo" alt="User Logo"></a>
                     <div class="sidebar-toggle-button mod-left sidebar" aria-label="" aria-label-position="right">
 
                         <div class="clickable-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -140,7 +141,7 @@ if (!isset($_SESSION['user_id']) ||
                                             </svg></div>
                                     </div>
                                 </div>
-                                <div class="workspace-tab-header" draggable="true" aria-label="Search"
+                                <!-- <div class="workspace-tab-header" draggable="true" aria-label="Search"
                                     aria-label-delay="50" data-type="search">
                                     <div class="workspace-tab-header-inner">
                                         <div class="workspace-tab-header-inner-icon"><svg
@@ -162,7 +163,7 @@ if (!isset($_SESSION['user_id']) ||
                                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                                             </svg></div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="workspace-tab-header-new-tab"><span class="clickable-icon"
                                     aria-label="New tab"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -606,7 +607,7 @@ if (!isset($_SESSION['user_id']) ||
 
 
     </div>
-    <script src=".js/perlite.min.js"></script>
+    <script src=".js/perlite.js"></script>
 </body>
 
 </html>
