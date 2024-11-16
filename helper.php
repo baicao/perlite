@@ -48,7 +48,9 @@ $lineBreaks = empty(getenv('LINE_BREAKS')) ? true : filter_var(getenv('LINE_BREA
 $allowedFileLinkTypes = empty(getenv('ALLOWED_FILE_LINK_TYPES')) ? ['pdf', 'mp4'] : explode(",", getenv('ALLOWED_FILE_LINK_TYPES'));
 
 // disable PopHovers
-$disablePopHovers = empty(getenv('DISABLE_POP_HOVER')) ? "false" : getenv('DISABLE_POP_HOVER');
+// $disablePopHovers = empty(getenv('DISABLE_POP_HOVER')) ? "true" : getenv('DISABLE_POP_HOVER');
+$disablePopHovers = true;
+
 
 // show TOC
 $showTOC = empty(getenv('SHOW_TOC')) ? "false" : getenv('SHOW_TOC');
@@ -64,6 +66,45 @@ $font_size = empty(getenv('FONT_SIZE')) ? "16" : getenv('FONT_SIZE');
 
 // Set safe mode from environment variable
 $htmlSafeMode = empty(getenv('HTML_SAFE_MODE')) ? false : filter_var(getenv('HTML_SAFE_MODE'), FILTER_VALIDATE_BOOLEAN);
+
+// 白名单页面
+function getWhitePageList(){
+	$white_list = array(
+		"/Chang Edu Home",
+		"*Index",
+		"*/Notebook/*",	
+		"*/Box/*",	
+	);
+    // 将白名单模式转换为正则表达式
+    $patterns = array_map(function($pattern) {
+        // 转义正则表达式中的特殊字符
+        $pattern = preg_quote($pattern, '/');
+        // 将通配符 '*' 替换为正则表达式 '.*'
+        $pattern = str_replace('\*', '.*', $pattern);
+        // 添加起始和结束标记
+        return '/^' . $pattern . '$/';
+    }, $white_list);
+
+	return $patterns;
+}
+
+// 黑名单页面
+function getBlackPageList(){
+	$black_list = array(
+		"/DSE/Notebook/*",
+	);
+	// 将白名单模式转换为正则表达式
+	$patterns = array_map(function($pattern) {
+		// 转义正则表达式中的特殊字符
+		$pattern = preg_quote($pattern, '/');
+		// 将通配符 '*' 替换为正则表达式 '.*'
+		$pattern = str_replace('\*', '.*', $pattern);
+		// 添加起始和结束标记
+		return '/^' . $pattern . '$/';
+	}, $black_list);
+	return $patterns;
+}
+
 
 // Custom Site Section
 
@@ -549,7 +590,6 @@ function loadSettings($rootDir)
 	global $siteDescription;
 	global $siteName;
 	global $siteTwitter;
-
 
 	// get themes
 	$themes = "";

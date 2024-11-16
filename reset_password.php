@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['token'])) {
     $result = $stmt->get_result();
     
     if ($result->num_rows != 1) {
-        $error_message = "验证码无效或过期<br>Invalid or expired reset token";
+        $error_message = "验证码无效或过期";
     }
     $stmt->close();
 } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['token'])) {
             $stmt->execute();
             
             if ($stmt->affected_rows > 0) {
-                $success_message = "密码已成功重置, 请使用新密码登录<br>Password reset successfully, login with your new password.";
+                $success_message = "密码已成功重置, 请使用新密码登录";
                 // 添加 JavaScript 自动跳转
                 echo "<script>
                     setTimeout(function() {
@@ -48,11 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['token'])) {
                     }, 3000); // 3秒后跳转
                 </script>";
             } else {
-                $error_message = "密码重置失败，请重试<br>Password reset failed, try again.";
+                $error_message = "密码重置失败，请重试";
             }
             $stmt->close();
         } else {
-            $error_message = "两次输入的密码不匹配请重试<br>Passwords do not match, try again.";
+            $error_message = "两次输入的密码不匹配请重试";
         }
     }
 }
@@ -64,26 +64,28 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['token'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=".styles/login.css">
-    <title>重置密码 Reset Password - Perlite</title>
+    <title>重置密码</title>
 </head>
 <body>
-    <form method="POST">
-        <h2>重置密码 Reset Password</h2>
-        <?php if ($error_message): ?>
-            <p class="message error"><?php echo $error_message; ?></p>
-        <?php endif; ?>
-        <?php if ($success_message): ?>
-            <p class="message success"><?php echo $success_message; ?></p>
-        <?php else: ?>
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token'] ?? ''); ?>">
-            <input type="password" name="new_password" placeholder="新密码 New Password" required>
-            <input type="password" name="confirm_password" placeholder="确认新密码 Confirm New Password" required>
-            <button type="submit">重置密码 Reset Password</button>
-        <?php endif; ?>
-        <div class="additional-links">
-            <a href="login.php" class="link-button">返回登录 Back to Login</a>
-        </div>
-    </form>
+    <div class="login-container">
+        <form method="POST">
+            <h2>重置密码</h2>
+            <?php if ($error_message): ?>
+                <p class="message error"><?php echo $error_message; ?></p>
+            <?php endif; ?>
+            <?php if ($success_message): ?>
+                <p class="message success"><?php echo $success_message; ?></p>
+            <?php else: ?>
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token'] ?? ''); ?>">
+                <input type="password" name="new_password" placeholder="新密码" required>
+                <input type="password" name="confirm_password" placeholder="确认新密码" required>
+                <button type="submit">重置密码</button>
+            <?php endif; ?>
+            <div class="additional-links">
+                <a href="login.php" class="link-button">返回登录</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

@@ -27,11 +27,6 @@ if ($('#showTOC').data('option') == false || localStorage.getItem("showTOC") ===
   $('#outline').css('display', 'none')
 }
 
-// if ($('#showLocalGraph').data('option') == false || localStorage.getItem("showLocalGraph") === false) {
-//   localStorage.setItem("showLocalGraph", "false")
-//   $('#localGraph').css('display', 'none')
-// }
-
 
 /**
  * scroll to anchor
@@ -68,7 +63,9 @@ function getContent(str, home = false, popHover = false, anchor = "") {
 
     $.ajax({
       url: requestPath, success: function (result) {
-        if (result == "Login in first") {
+        console.log("result:"+result)
+        if (result == "login first") {
+          
           window.location.href = 'login.php';
           return;
         }

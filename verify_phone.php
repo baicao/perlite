@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         log_message("CSRF token mismatch.");
     } else {
         if (isset($_POST['phone_number']) && isset($_POST['verification_code'])) {
-            $phone_number = htmlspecialchars($_POST['phone_number']);
-            $input_code = $_POST['verification_code'];
+            $phone_number = htmlspecialchars(trim($_POST['phone_number']));
+            $input_code = htmlspecialchars(trim($_POST['verification_code']));
             log_message("Attempting to verify phone number: $phone_number with code: $input_code");
 
-            $stmt = $app_conn->prepare("SELECT * FROM verification_codes WHERE phone_number = ? AND code = ? AND create_time > (NOW() - INTERVAL 1 MINUTE) ORDER BY create_time DESC LIMIT 1");
+            $stmt = $app_conn->prepare("SELECT * FROM verification_codes WHERE phone_number = ? AND code = ? AND create_time > (NOW() - INTERVAL 3 MINUTE) ORDER BY create_time DESC LIMIT 1");
             $stmt->bind_param("ss", $phone_number, $input_code);
             $stmt->execute();
             $result = $stmt->get_result();

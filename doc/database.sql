@@ -126,10 +126,10 @@ UNLOCK TABLES;
 -- SQL to create verification_codes table with default create_time --
 CREATE TABLE verification_codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    phone_number VARCHAR(20),
-    code VARCHAR(6),
+    phone_number VARCHAR(20) not null,
+    code VARCHAR(6) not null,
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    expiry INT
+    expiry DATETIME not null
 );
 ALTER TABLE users ADD phone_number VARCHAR(20);
 ALTER TABLE users ADD country_code VARCHAR(20);

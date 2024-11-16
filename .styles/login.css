@@ -21,6 +21,17 @@ button {
     box-sizing: border-box;
 }
 
+/* 适用于所有具有 readonly 属性的输入框 */
+input[readonly] {
+    background-color: #f0f0f0; /* 背景颜色 */
+    color: #666; /* 字体颜色 */
+    border: 1px solid #ccc; /* 边框样式 */
+    cursor: not-allowed; /* 鼠标样式 */
+    padding: 10px; /* 内边距 */
+    border-radius: 4px; /* 边框圆角 */
+    width: 100%; /* 宽度 */
+}
+
 button {
     background-color: #8a5cf5;
     color: white;

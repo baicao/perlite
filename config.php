@@ -1,20 +1,24 @@
 <?php
+require_once __DIR__ . '/vendor/autoload.php';
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$servername = "localhost";
 
+
+$servername = "localhost";
 $ip_list = get_client_ip();
 $private_ip = $ip_list[0];
 $public_ip = $ip_list[1];
 if($private_ip == "127.0.0.1"){
-    define('LOG_FILE', "login_debug.log"); 
     $username = "root";
     $password = "Wxy2024qwe";
     define('SITE_URL', 'http://'.$public_ip.'/');
 }else{
-    define('LOG_FILE', "/www/wwwroot/perlite/logs/login_debug.log"); 
     $username = "changedu";
     $password = "fkKen4zaZf7EsCPa";
     define('SITE_URL', 'https://'.$public_ip.'/');
@@ -25,6 +29,22 @@ $app_conn = new mysqli($servername, $username, $password, $app_dbname);
 if ($app_conn->connect_error) {
     die("Connection to app database failed: " . $app_conn->connect_error);
 }
+
+// 生成 sessionid
+if (empty($_SESSION['unique_id'])) {
+    // 生成 sessionID
+    $sessionId = generateSessionId();
+    $_SESSION['unique_id'] = $sessionId;
+    // 获取或创建 device ID
+    $deviceId = getOrCreateDeviceId();
+    // 获取用户设备信息
+    $deviceInfo = getUserDevice();
+    log_message("Device id is $deviceId, Device info is ".json_encode($deviceInfo));
+}
+
+
+
+
 define('SITE_TITLE', 'Chang Edu'); // 替换为您的实际域名
 
 // 邮件设置
@@ -58,18 +78,58 @@ function get_client_ip() {
 }
 
 function log_message($message) {
-    $unique_id = isset($_SESSION['unique_id']) ? $_SESSION['unique_id'] : 'unknown';
-    $current_time = date('Y-m-d H:i:s'); // 获取当前日期和时间
-    $log_entry = "[" . $current_time . "] [" . $unique_id . "] " . $message . "\r\n";
-    $result = error_log($log_entry, 3, LOG_FILE);
-    if (!$result) {
-        echo "无法写入日志文件，请检查路径和权限。";
+    static $log = null;
+    if ($log === null) {
+        $log = new Logger('main');
+        $logDir = __DIR__ . '/logs';
+        if (!file_exists($logDir)) {
+            mkdir($logDir, 0777, true);
+        }
+        $logFile = $logDir . '/login_debug_' . date('Y-m-d') . '.log';
+        $stream = new StreamHandler($logFile, Logger::DEBUG);
+        $formatter = new LineFormatter(null, null, false, true);
+        $stream->setFormatter($formatter);
+        $log->pushHandler($stream);
     }
-
-    // 将日志写入文件或其他日志存储
-    // $result = file_put_contents('login_debug.log', $log_entry . PHP_EOL, FILE_APPEND);
-    // if ($result === false) {
-    //     error_log("Failed to write to log file", 0);
-    // }
+    $unique_id = isset($_SESSION['unique_id']) ? $_SESSION['unique_id'] : 'unknown';
+    $log_entry = "[" . $unique_id . "] " . $message;
+    $log->info($log_entry);
 }
+
+// 获取用户当前的设备信息和生成 sessionID 的脚本
+function getUserDevice() {
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+    
+    $deviceType = 'Unknown';
+    if (preg_match('/mobile|android|iphone|ipad|ipod/i', $userAgent)) {
+        $deviceType = 'Mobile';
+    } elseif (preg_match('/macintosh|windows|linux/i', $userAgent)) {
+        $deviceType = 'Desktop';
+    }
+    
+    return [
+        'userAgent' => $userAgent,
+        'deviceType' => $deviceType
+    ];
+}
+
+function generateSessionId() {
+    return bin2hex(random_bytes(16));
+}
+
+function getOrCreateDeviceId() {
+    // 检查是否已经存在 device_id 的 cookie
+    if (isset($_COOKIE['device_id'])) {
+        return $_COOKIE['device_id'];
+    }
+    
+    // 如果不存在，则生成一个新的 device_id
+    $deviceId = bin2hex(random_bytes(16));
+    // 设置 cookie，有效期为 1 年
+    setcookie('device_id', $deviceId, time() + (365 * 24 * 60 * 60), "/");
+    
+    return $deviceId;
+}
+
+
 ?>
