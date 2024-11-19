@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8'); // 设置内容类型为 JSON 和 UTF-8
 require_once dirname(__DIR__) .'/config.php';
+require_once dirname(__DIR__) . '/models/UserModel.php';
 
 function decryptData($encryptedData) {
     // 私钥路径（请确保这个文件是安全的，且对外部不可访问）
@@ -15,6 +16,7 @@ function decryptData($encryptedData) {
         return "";
     }
 }
+
 
 // 错误代码说明
 // -1: 邮箱未验证
@@ -34,27 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $account = htmlspecialchars(trim($_POST['account']));
             $password = $_POST['password'];
             $decryptedPassword = decryptData($password);
-            $stmt = $app_conn->prepare("SELECT id, password, gender, email, phone_number, is_verified, is_phone_verified, subscription_expiry FROM users WHERE email = ?");
-            $stmt->bind_param("s", $account);
-            $stmt->execute();
-            $stmt->store_result();
-            $stmt->bind_result($id, $hashed_password, $gender, $email, $phone_number, $is_verified, $is_phone_verified, $subscription_expiry);
-            if ($stmt->fetch()) {
+
+            $userModel = new UserModel($app_conn);
+            $user = $userModel->getUserByPhoneOrEmail(null, null,$account, null);
+            if($user["rs"] == 1){
+                $hashed_password = $user["data"]["password"];
                 if (password_verify($decryptedPassword, $hashed_password)) {
                     log_message("[$requestId] Password verified successfully for account: $account");
                     // Email login
+                    $is_verified = $user["data"]["is_verified"];
                     if ($is_verified) {
                         session_regenerate_id(true); // 重新生成会话 ID
-                        $_SESSION['user_id'] = $id;
-                        $_SESSION['gender'] = $gender;
-                        $_SESSION['user_email'] = $account;
-                        $_SESSION['phone_number'] = $phone_number;
-                        $_SESSION['is_verified'] = $is_verified;
-                        $_SESSION['is_phone_verified'] = $is_phone_verified;
-                        $_SESSION['subscription_expiry'] = $subscription_expiry;
+                        $_SESSION['user'] = $user["data"];
                         $_SESSION['last_activity'] = time(); // 设置最后活动时间
                         $_SESSION['expire_time'] = 7 * 24 * 60 * 60; // 设置超时时间为7天
-                        log_message("[$requestId] Login successful for user ID: $id");
+                        log_message("[$requestId] Login successful for user ID: ".$user["data"]["id"]);
                         $response['rs'] = 1;
                         $response['message'] = "success";
                         $response['url'] = SITE_URL; 
@@ -72,62 +68,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $response['error_code'] = -2;
                     $response['message'] = "Password not right";
                 }
-            } else {
+            }else if($user["rs"] == -1){
                 log_message("[$requestId] No user found for email: $email");
                 $response['rs'] = 0;
                 $response['error_code'] = -3;
                 $response['message'] = "Invalid email";
+            }else{
+                log_message("[$requestId] Mysql error: $user->error");
+                $response['rs'] = 0;
+                $response['error_code'] = -6;
+                $response['message'] = "Mysql error";
             }
+
         } elseif (isset($_POST['country_code']) && isset($_POST['phone_number']) && isset($_POST['verification_code'])) {
             // Phone number verification login
             $phone_number = htmlspecialchars(trim($_POST['phone_number']));
             $country_code = htmlspecialchars(trim($_POST['country_code']));
             $verification_code = htmlspecialchars(trim($_POST['verification_code']));
-            log_message("[$requestId] Verify phone and code : $country_code $phone_number $verification_code");
-            $send_phone = $country_code.$phone_number;
-            // Check if phone number exists in the database and verification code matches
-            $stmt = $app_conn->prepare("SELECT * FROM verification_codes WHERE phone_number = ? AND code = ? AND create_time > (NOW() - INTERVAL 3 MINUTE)");
-            $stmt->bind_param("si", $send_phone, $verification_code);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                // 验证码验证成功，查询用户数据
-                $stmt->close();
-                log_message("[$requestId] Verify phone and code success");
-                $stmt = $app_conn->prepare("SELECT id, gender, email, subscription_expiry FROM users WHERE phone_number = ?");
-                $stmt->bind_param("s", $phone_number);
+            $userModel = new UserModel($app_conn);
+            $user = $userModel->getUserByPhoneOrEmail($country_code, $phone_number, null, null);
+            if($user["rs"] == 1){
+                log_message("[$requestId phone exist : $country_code $phone_number");
+                $send_phone = $country_code.$phone_number;
+                // Check if phone number exists in the database and verification code matches
+                $stmt = $app_conn->prepare("SELECT * FROM verification_codes WHERE phone_number = ? AND code = ? AND expiry > NOW()");
+                $stmt->bind_param("si", $send_phone, $verification_code);
                 $stmt->execute();
-                $stmt->bind_result($id, $gender, $email, $subscription_expiry);
-                if ($stmt->fetch()) {
-                    log_message("[$requestId] Login successful for user ID: $id");
-                    // Login successful
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    // 验证码验证成功，查询用户数据
+                    $stmt->close();
+                    log_message("[$requestId] Verify phone and code success");
                     session_regenerate_id(true); // 重新生成会话 ID
-                    $_SESSION['user_id'] = $id;
-                    $_SESSION['gender'] = $gender;
-                    $_SESSION['user_email'] = $account;
-                    $_SESSION['phone_number'] = $phone_number;
-                    $_SESSION['is_verified'] = $is_verified;
-                    $_SESSION['is_phone_verified'] = $is_phone_verified;
-                    $_SESSION['subscription_expiry'] = $subscription_expiry;
+                    $_SESSION['user'] = $user["data"];
                     $_SESSION['last_activity'] = time(); // 设置最后活动时间
                     $_SESSION['expire_time'] = 7 * 24 * 60 * 60; // 设置超时时间为7天
-
+                    log_message("[$requestId] Login successful for user ID: ".$user["data"]["id"]);
                     $response['rs'] = 1;
                     $response['message'] = "success";
                     $response['url'] = SITE_URL; 
                 } else {
-                    log_message("[$requestId] User data not found for phone number: $phone_number");
+                    log_message("[$requestId] Invalid verification code or code expired: $phone_number");
                     $response['rs'] = 0;
-                    $response['error_code'] = -4;
-                    $response['message'] = "Invalid phone";
-                    
+                    $response['error_code'] = -5;
+                    $response['message'] = "Invalid verification code or code expired";
                 }
-            } else {
-                log_message("[$requestId] Invalid verification code or code expired: $phone_number");
-                $response['rs'] = 0;
-                $response['error_code'] = -5;
-                $response['message'] = "Invalid verification code or code expired";
                 
+            }else if($user["rs"] == -1){
+                log_message("[$requestId] User data not found for phone number: $phone_number, $country_code");
+                $response['rs'] = 0;
+                $response['error_code'] = -4;
+                $response['message'] = "Invalid phone";
+            }else{
+                log_message("[$requestId] Mysql error: ".$user["error"]);
+                $response['rs'] = 0;
+                $response['error_code'] = -6;
+                $response['message'] = "Mysql error";
             }
         }
     }

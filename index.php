@@ -16,14 +16,13 @@ $title = $siteTitle;
 $menu = menu($rootDir);
 
 
-$gender = $_SESSION['gender'] ?? null; // 获取用户信息
 $logoSrc = 'images/logo.svg'; // 默认 logo
-if ($gender) {
-    if ($gender === 'male') {
+if (isset($_SESSION['user'])) {
+    if ($_SESSION['user']["gender"] === 'male') {
         $logoSrc = 'images/boy.png'; // 男性 logo
-    } elseif ($gender === 'female') {
+    } elseif ($_SESSION['user']["gender"] === 'female') {
         $logoSrc = 'images/girl.png'; // 女性 logo
-    }elseif ($gender === 'female') {
+    }elseif ($_SESSION['user']["gender"] === 'female') {
         $logoSrc = 'images/others.png'; // 女性 logo
     }
 }
@@ -57,7 +56,45 @@ if ($gender) {
     <!-- <script src=".js/vis-network.min.js"></script> -->
     <!-- <script src=".js/mermaid.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11.2.1/dist/mermaid.min.js"></script>
-
+    <style>
+        .logo-link {
+            position: relative;
+        }
+        .logo-link:hover .user-dropdown {
+            display: block;
+        }
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 30px;
+            left: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 150px;
+            z-index: 1000;
+        }
+        .user-dropdown a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .user-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+        .user-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #ddd transparent;
+        }
+    </style>
 
 </head>
 
@@ -81,8 +118,15 @@ if ($gender) {
         <div class="horizontal-main-container">
             <div class="workspace is-left-sidedock-open">
                 <div class="workspace-ribbon side-dock-ribbon mod-left">
+                    <a href="user_profile.php" class="logo-link">
+                    <img src="<?php echo $logoSrc; ?>" height="25" class="logo" alt="User Logo">
+                        <div class="user-dropdown">
+                            <a href="user_profile.php">账号信息</a>
+                            <a href="logout.php">登出</a>
+                        </div>
+                    </img>
+                    </a>
 
-                    <a href="user_profile.php" class="logo-link"><img src="<?php echo $logoSrc; ?>" height="25" class="logo" alt="User Logo"></a>
                     <div class="sidebar-toggle-button mod-left sidebar" aria-label="" aria-label-position="right">
 
                         <div class="clickable-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -557,8 +601,8 @@ if ($gender) {
         <div class="modal-bg" style="opacity: 0.85;"></div>
         <div class="modal">
             <div class="modal-close-button"></div>
-            <div class="modal-title"> <a href="."><img src="logo.svg" height="35" alt="Perlite Logo"
-                        style="padding-top: 10px"></a> Perlite</div>
+            <div class="modal-title"> <a href="."><img src="./images/logo.svg" height="35" alt="Changedu Logo"
+                        style="padding-top: 10px"></a> Changedu</div>
             <div class="aboutContent modal-content"></div>
         </div>
     </div>
@@ -608,6 +652,32 @@ if ($gender) {
 
     </div>
     <script src=".js/perlite.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoLink = document.querySelector('.logo-link');
+            const userDropdown = document.querySelector('.user-dropdown');
+            let dropdownTimer;
+
+            logoLink.addEventListener('mouseenter', function() {
+                clearTimeout(dropdownTimer);
+                userDropdown.style.display = 'block';
+            });
+
+            logoLink.addEventListener('mouseleave', function() {
+                dropdownTimer = setTimeout(function() {
+                    userDropdown.style.display = 'none';
+                }, 200);
+            });
+            userDropdown.addEventListener('mouseenter', function() {
+                clearTimeout(dropdownTimer);
+                userDropdown.style.display = 'block';
+            });
+            userDropdown.addEventListener('mouseleave', function() {
+                userDropdown.style.display = 'none';
+                clearTimeout(dropdownTimer);
+            });
+        });
+    </script>
 </body>
 
 </html>

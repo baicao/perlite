@@ -21,10 +21,10 @@ if (isset($_GET['mdfile'])) {
 		if(free_pages($requestFile)){
 			parseContent($requestFile);
 		}else{
-			if (!isset($_SESSION['user_id'])) {
+			if (!isset($_SESSION['user'])) {
 				echo "login first";
 			}else{
-				if(!hasPageAccess($_SESSION['user_id'], $requestFile, $app_conn)){
+				if(!hasPageAccess($_SESSION['user'], $requestFile, $app_conn)){
 					$requestFile = "/Tools/Payment Notice";
 				}
 				parseContent($requestFile);

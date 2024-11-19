@@ -16,13 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $message = "无效的请求。请重试。";
         log_message("CSRF token mismatch.");
     } else {
-        if (isset($_POST['phone_number']) && isset($_POST['verification_code'])) {
+        if (isset($_POST['phone_number']) && isset($_POST['country_code']) && isset($_POST['verification_code'])) {
             $phone_number = htmlspecialchars(trim($_POST['phone_number']));
             $input_code = htmlspecialchars(trim($_POST['verification_code']));
-            log_message("Attempting to verify phone number: $phone_number with code: $input_code");
-
+            $country_code = htmlspecialchars(trim($_POST['country_code']));
+            log_message("Attempting to verify phone number: $country_code$phone_number with code: $input_code");
+            $send_phone = $country_code.$phone_number;
             $stmt = $app_conn->prepare("SELECT * FROM verification_codes WHERE phone_number = ? AND code = ? AND create_time > (NOW() - INTERVAL 3 MINUTE) ORDER BY create_time DESC LIMIT 1");
-            $stmt->bind_param("ss", $phone_number, $input_code);
+            $stmt->bind_param("ss", $send_phone, $input_code);
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -30,17 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $user = $result->fetch_assoc();
                 log_message("Verification code matched for phone number: $phone_number");
 
-                $stmt = $app_conn->prepare("UPDATE users SET is_phone_verified = 1 WHERE phone_number = ?");
-                $stmt->bind_param("s", $phone_number);
+                $stmt = $app_conn->prepare("UPDATE users SET is_phone_verified = 1 WHERE phone_number = ? AND country_code= ?");
+                $stmt->bind_param("s", $phone_number, $country_code);
                 $stmt->execute();
                 
                 // 更新会话以反映用户的验证状态和其他信息
-                $_SESSION['is_phone_verified'] = true;
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_phone'] = $phone_number;
-                $_SESSION['last_activity'] = time(); // 设置最后活动时间
-                $_SESSION['expire_time'] = 7 * 24 * 60 * 60; // 设置超时时间为7天
-                
+                $_SESSION['user']['is_phone_verified'] = 0;                
                 log_message("Phone verification successful for user ID: " . $user['id']);
                 // 立即跳转到主页
                 header("Location: " . SITE_URL);
@@ -90,10 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-container">
         <h2>验证手机号码</h2>
-        <?php if ($message): ?>
-            <p class="message center-message"><?php echo htmlspecialchars($message); ?></p>
-        <?php endif; ?>
-        
+        <p class="message center-message">
+        <?php 
+        if ($message){echo htmlspecialchars($message);}
+        ?>
+        </p>
         <form method="POST" class="verify-form" id="verifyCodeForm">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
             <div class="country-code">
@@ -117,15 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script>
         function sendVerificationCode() {
             const phoneNumber = document.querySelector("input[name='phone_number']").value;
+            const country_code = document.querySelector("select[name='country_code']").value;
             let errorMessageElement = document.querySelector("#verifyCodeForm .message.error");
-            
-            // 如果 .message.error 元素不存在，则创建它
-            if (!errorMessageElement) {
-                errorMessageElement = document.createElement('p');
-                errorMessageElement.className = 'message error';
-                const form = document.getElementById('verifyCodeForm');
-                form.insertBefore(errorMessageElement, form.firstChild);
-            }
             
             if (!phoneNumber) {
                 errorMessageElement.textContent = "请输入手机号";
@@ -148,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ phone_number: phoneNumber })
+                body: JSON.stringify({ phone_number: phoneNumber, country_code: country_code })
             })
             .then(response => response.json())
             .then(data => {

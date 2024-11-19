@@ -44,21 +44,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmt = $app_conn->prepare("UPDATE users SET is_verified = 1, verification_code = '' WHERE email = ?");
                     $stmt->bind_param("s", $email);
                     $stmt->execute();
+
+                    $userModel = new UserModel($app_conn);
+                    $user = $userModel->getUserByPhoneOrEmail(null, null,$email, null);
+                    if($user["rs"] == 1){
+                        session_regenerate_id(true); // 重新生成会话 ID
+                        $_SESSION['user'] = $user["data"];
+                        $_SESSION['last_activity'] = time(); // 设置最后活动时间
+                        $_SESSION['expire_time'] = 7 * 24 * 60 * 60; // 设置超时时间为7天
+                        header("Location: " . SITE_URL);
+                        exit();
+                    }else{
+                        header("Location: " . ERROR_PAGE);
+                        exit();
+                    }
                     
-                    // 更新会话以反映用户的验证状态和其他信息
-                    session_regenerate_id(true); // 重新生成会话 ID
-                    $_SESSION['user_id'] = $id;
-                    $_SESSION['user_email'] = $account;
-                    $_SESSION['phone_number'] = $phone_number;
-                    $_SESSION['is_verified'] = $is_verified;
-                    $_SESSION['is_phone_verified'] = $is_phone_verified;
-                    $_SESSION['subscription_expiry'] = $subscription_expiry;
-                    $_SESSION['last_activity'] = time(); // 设置最后活动时间
-                    $_SESSION['expire_time'] = 7 * 24 * 60 * 60; // 设置超时时间为7天
-                    
-                    // 立即跳转到主页
-                    header("Location: " . SITE_URL);
-                    exit();
                 } else {
                     $message = "验证码无效。请重试。";
                 }

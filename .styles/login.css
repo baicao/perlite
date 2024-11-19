@@ -94,6 +94,17 @@ h2 {
     }
 }
 
+.profile-container{
+    min-width: 320px;
+    max-width: 1200px;
+    width: 80%;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
 
 .login-container {
     max-width: 400px;
@@ -102,6 +113,11 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 10px;
     background-color: #ffffff;
+}
+.error-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
 }
 
 /* tab样式 */

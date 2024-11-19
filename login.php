@@ -1,11 +1,15 @@
 <?php
-require_once __DIR__ .'/config.php';
+require_once __DIR__ . '/config.php';
+require_once 'models/UserModel.php';
 
 $error_message = '';
 // 生成 CSRF 令牌
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
+// 创建 UserModel 实例并传递数据库连接
+$userModel = new UserModel($app_conn);
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -114,7 +118,7 @@ if (empty($_SESSION['csrf_token'])) {
                     success: function(response) {
                         if (response.rs == 1) {
                             // 登录成功后的处理
-                            $('.message.error').html('<p style="color: green;">' + response.message + '</p>');
+                            $('.message.error').html('<p style="color: green;">登录成功，正在跳转</p>');
                             window.location.replace(response.url);
                         } else if (response.rs == 0) {
                             let error_message = "";
@@ -178,7 +182,7 @@ if (empty($_SESSION['csrf_token'])) {
                     success: function(response) {
                         if (response.rs == 1) {
                             // 登录成功后的处理
-                            $('.message.error').html('<p style="color: green;">' + response.message + '</p>');
+                            $('.message.error').html('<p style="color: green;">登录成功，正在跳转</p>');
                             window.location.replace(response.url);
                         } else if (response.rs == 0) {
                             let error_message = "";
@@ -274,7 +278,7 @@ if (empty($_SESSION['csrf_token'])) {
         function startCountdown() {
             const sendCodeBtn = document.getElementById('send-code-btn');
             sendCodeBtn.disabled = true;
-            let countdown = 60;
+            let countdown = 180;
 
             const timer = setInterval(() => {
                 countdown--;
