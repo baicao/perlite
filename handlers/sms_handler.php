@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ){
                     log_message("Verification code: $country_code $phone_number $verification_code");
                     // 存储验证码到数据库
                     $send_phone = $country_code.$phone_number;
-                    $stmt = $app_conn->prepare("INSERT INTO verification_codes (phone_number, code, create_time, expiry) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 3 MINUTE)");
+                    $stmt = $app_conn->prepare("INSERT INTO verification_codes (phone_number, code, create_time, expiry) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 3 MINUTE))");
                     $stmt->bind_param("si", $send_phone, $verification_code);
                     if ($stmt->execute()) {
                         // 发送验证码
@@ -218,6 +218,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ){
             $response["error_code"] = -1;
         }
     }catch(Exception $e) {
+        log_message("Exception occurred: " . $e->getMessage());
+        print_r($e); // 打印异常信息
         $response["rs"] = 0;
         $response["message"] = '未知错误，请微信联系ByteSwan';
         $response["error_code"] = -6;

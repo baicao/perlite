@@ -60,57 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-
 $schools = [
     'Shenzhen College of International Education' => '深圳国际交流学院',
     'Shenzhen Hong Kong Pui Kiu Xinyi' => '深圳培侨信义',
     'Guangzhou Minxin School' => '广州南沙民心',
-    'Affiliated School of JNU' => [
-        'Guangzhou Affiliated School of JNU' => '广州暨大港澳子弟学校',
-        'Dongguan Affiliated School of JNU' => '东莞暨大港澳子弟学校',
-        'Foshan Affiliated School of JNU' => '佛山暨大港澳子弟学校'
-    ],
-    'HKTA Tang Hin Memorial Secondary School' => '香港道教聯合會鄧顯紀念中學',
-    'TWGHs Kap Yan Directors\' College' => '東華三院甲寅年總理中學',
-    'Elegantia College' => '風采中學',
-    'SKH Chan Young Secondary School' => '聖公會陳融中學',
-    'Tin Ka Ping Secondary School' => '田家炳中學',
-    'TWGHs Li Ka Shing College' => '東華三院李嘉誠中學',
-    'Fanling Rhenish Church Secondary School' => '粉嶺禮賢會中學',
-    'Fung Kai Liu Man Shek Tong Secondary School' => '鳳溪廖萬石堂中學',
-    'Po Leung Kuk Ma Kam Ming College' => '保良局馬錦明中學',
-    'Christian Alliance S W Chan Memorial College' => '宣道會陳朱素華紀念中學',
-    'Queen\'s College' => '皇仁书院',
-    'Diocesan Boys\' School' => '拔萃男书院',
-    'St\. Paul\'s Co-educational College' => '圣保罗男女中学',
-    'Heep Yunn School' => '协恩中学',
-    'La Salle College' => '喇沙书院',
-    'BASIS International School' => [
-        'BASIS International School Shenzhen (Shekou Campus)' => '深圳贝赛思国际学校（蛇口校区）',
-        'BASIS Bilingual School Shenzhen (Futian Campus)' => '深圳贝赛思外国语学校（福田校区）',
-        'BASIS International School Huizhou' => '惠州小径湾贝赛思国际学校',
-        'BASIS International School Guangzhou' => '广州贝赛思国际学校',
-        'BASIS Bilingual School Shenzhen (Guangming Campus)' => '深圳贝赛思外国语学校（光明校区）',
-        'BASIS Kindergarten Nanshan' => '南山贝赛思幼儿园'
-    ],
-    'Harrow International School' => [
-        'Beijing Campus' => '北京校区',
-        'Shanghai Campus' => '上海校区',
-        'Shenzhen Campus' => '深圳校区'
-    ],
-    'Wellington College' => [
-        'Shanghai Campus' => '上海校区',
-        'Tianjin Campus' => '天津校区'
-    ],
-    'Dulwich College' => [
-        'Beijing Campus' => '北京校区',
-        'Shanghai Campus' => '上海校区',
-        'Suzhou Campus' => '苏州校区'
-    ],
-    'Yew Chung International School' => '耀中国际学校',
-    'Concordia International School' => '协和国际学校',
-    'Other' => '其他'
-];
+]
+
 ?>
 
 <!DOCTYPE html>
@@ -120,8 +75,8 @@ $schools = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=".styles/login.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-i18n/1.12.1/jquery-ui-i18n.min.js"></script>
     <title>注册 Register</title>
     <script>
@@ -264,15 +219,15 @@ $schools = [
             
             <select id="school" name="school" onchange="toggleInput(this, 'other_school_input')" required>
                 <?php
-                foreach ($schools as $group_label => $options) {
-                    if (is_array($options)) {
+                foreach ($options["schools"] as $group_label => $option) {
+                    if (is_array($option)) {
                         echo "<optgroup label=\"$group_label\">";
-                        foreach ($options as $value => $label) {
+                        foreach ($option as $value => $label) {
                             echo "<option value=\"" . strtolower(str_replace(' ', '_', $value)) . "\">$label $value</option>";
                         }
                         echo "</optgroup>";
                     } else {
-                        echo "<option value=\"" . strtolower(str_replace(' ', '_', $group_label)) . "\">$options $group_label</option>";
+                        echo "<option value=\"" . strtolower(str_replace(' ', '_', $group_label)) . "\">$option $group_label</option>";
                     }
                 }
                 ?>
