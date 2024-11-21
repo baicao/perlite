@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ){
                     $stmt->execute();
                     $stmt->store_result();
                     if ($stmt->num_rows === 0) {
-                        $response["rs"] = 1;
+                        $response["rs"] = 0;
                         $response["message"] = '手机号不存在';
                         $response["error_code"] = -3;
                         echo json_encode($response, JSON_UNESCAPED_UNICODE);
