@@ -204,3 +204,17 @@ h2 {
     text-align: center;
     margin: 20px 0;
 }
+/* 在 .styles/login.css 中添加以下样式 */
+.message.error {
+    color: red; /* 设置文本颜色为红色 */
+    text-align: center; /* 文本居中 */
+    margin: 10px 0; /* 添加上下间距 */
+    font-weight: bold; /* 加粗文本 */
+}
+/* 在 .styles/login.css 中添加以下样式 */
+.message.success {
+    color: green; /* 设置文本颜色为红色 */
+    text-align: center; /* 文本居中 */
+    margin: 10px 0; /* 添加上下间距 */
+    font-weight: bold; /* 加粗文本 */
+}

@@ -110,6 +110,7 @@ $userModel = new UserModel($app_conn);
                     verification_code: verification_code,
                     phone_number: phone_number
                 };
+                
                 $.ajax({
                     type: 'POST',
                     url: '/handlers/login_handler.php', // 指定处理表单的 PHP 文件
@@ -263,6 +264,7 @@ $userModel = new UserModel($app_conn);
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 if (data.rs == 1) {
                     $('.message.error').html('<p style="color: green;">验证码已发送至'+phoneNumber+'</p>');
                     startCountdown();
