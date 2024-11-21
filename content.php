@@ -24,7 +24,7 @@ if (isset($_GET['mdfile'])) {
 			if (!isset($_SESSION['user'])) {
 				echo "login first";
 			}else{
-				if(!hasPageAccess($_SESSION['user'], $requestFile, $app_conn)){
+				if(!hasPageAccess($_SESSION['user']["id"], $requestFile, $app_conn)){
 					$requestFile = "/Tools/Payment Notice";
 				}
 				parseContent($requestFile);

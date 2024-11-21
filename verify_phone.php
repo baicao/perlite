@@ -69,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($result->num_rows > 0) {
                 // 验证成功，更新用户状态
-                $stmt = $app_conn->prepare("UPDATE users SET is_phone_verified = 1 WHERE phone_number = ? AND country_code = ?");
-                $stmt->bind_param("ss", $user['phone_number'], $user['country_code']);
+                $stmt = $app_conn->prepare("UPDATE users SET is_phone_verified = 1, phone_number=?, country_code=? WHERE id = ?");
+                $stmt->bind_param("ssi", $user['phone_number'], $user['country_code'], $user["id"]);
                 $stmt->execute();
 
                 // 更新会话以反映用户的验证状态
