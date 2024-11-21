@@ -84,4 +84,22 @@ class UserModel {
         }
     }
 
+    public function updatePhoneVerificationStatus($user_id) {
+        $sql = "UPDATE users SET is_phone_verified = 1 WHERE id = ?";
+        
+        try {
+            $stmt = $this->app_conn->prepare($sql);
+            if ($stmt === false) {
+                return ['rs' => -3, 'message' => '数据库准备语句失败', "error" => $this->app_conn->error];
+            }
+
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            return ['rs' => 1, 'message' => '手机号验证状态更新成功'];
+        } catch (Exception $e) {
+            return ['rs' => -2, 'message' => '数据库更新失败', "error" => $e->getMessage()];
+        }
+    }
+
 } 

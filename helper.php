@@ -49,11 +49,11 @@ $allowedFileLinkTypes = empty(getenv('ALLOWED_FILE_LINK_TYPES')) ? ['pdf', 'mp4'
 
 // disable PopHovers
 // $disablePopHovers = empty(getenv('DISABLE_POP_HOVER')) ? "true" : getenv('DISABLE_POP_HOVER');
-$disablePopHovers = true;
-
+$disablePopHovers = "false";
 
 // show TOC
-$showTOC = empty(getenv('SHOW_TOC')) ? "false" : getenv('SHOW_TOC');
+// $showTOC = empty(getenv('SHOW_TOC')) ? "false" : getenv('SHOW_TOC');
+$showTOC = "true";
 
 // show local Graph
 $showLocalGraph = empty(getenv('SHOW_LOCAL_GRAPH')) ? "true" : getenv('SHOW_TOC');

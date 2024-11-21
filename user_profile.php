@@ -18,7 +18,7 @@ if($user["rs"] == 1){
     header("Location: login.php"); // 如果用户未登录，重定向到登录页面
     exit();
 }
-
+$error_message = "";
 
 // 处理表单提交以更新用户信息
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -59,15 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $update_stmt->bind_param("si", $hashed_password, $user['id']);
                 $update_stmt->execute();
                 $update_stmt->close();
-
+                $error_message = '<p style="color: green;">密码更新成功</p>';
                 // 密码修改成功后，重定向到用户资料页面
-                header("Location: user_profile.php?password_changed=1"); // 刷新页面以显示更新后的信息
+                header("Location: user_profile.php"); // 刷新页面以显示更新后的信息
                 exit();
             } else {
-                echo "新密码和确认密码不匹配。";
+                $error_message = '<p style="color: red;">新密码和确认密码不匹配。</p>';
             }
         } else {
-            echo "旧密码不正确。";
+            $error_message = '<p style="color: red;">旧密码不正确。</p>';
         }
     }
 }
@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>用户个人信息</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href=".styles/login.css" type="text/css"> <!-- 引入 login.css -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <script>
     function toggleInput(selectElement, inputId) {
@@ -112,8 +113,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         window.location.href = '/verify.php';
     }
     function verifyPhone() {
-        // 跳转到邮箱验证页面的逻辑
-        window.location.href = '/verify_phone.php';
+        var inputElement = document.getElementById('phone-input');
+        var countryCodeElement = document.getElementById('country_code');
+        
+        var phoneNumber = inputElement ? inputElement.value : '';
+        var countryCode = countryCodeElement ? countryCodeElement.value : '';
+
+        // 跳转到手机验证页面，传递手机号和区号
+        window.location.href = '/verify_phone.php?phone_number=' + encodeURIComponent(phoneNumber) + '&country_code=' + encodeURIComponent(countryCode);
     }
 </script>
 <style>
@@ -252,25 +259,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- 联系方式显示 -->
         <div id="contact-info" class="tab-content">
-            <div class="info-item">
-                <label>手机号码:</label>
-                <span><?php echo htmlspecialchars($user['phone_number']); ?></span>
-                <?php if (!$user['is_phone_verified']): ?>
-                    <button onclick="verifyPhone()" style="margin-left: 10px; padding: 5px 10px;">去验证</button>
-                <?php endif; ?>
+            <div class="info-item" style="display: flex; justify-content: space-between;">
+                <label style="flex: 1;">手机号码:</label>
+                <div style="flex: 2; display: flex;">
+                    <?php if (empty($user['phone_number'])): ?>
+                        <select id="country_code" name="country_code" style="margin-right: 10px;">
+                            <option value="+86">中国 +86</option>
+                            <!-- 可以添加其他国家的区号 -->
+                        </select>
+                        <input type="text" id="phone-input" name="phone_number" placeholder="请输入手机号" required />
+                    <?php else: ?>
+                        <span><?php echo htmlspecialchars($user['country_code']); ?></span>
+                        <span><?php echo htmlspecialchars($user['phone_number']); ?></span>
+                    <?php endif; ?>
+                </div>
+                <div style="flex: 1;">
+                    <?php if (empty($user['phone_number'])): ?>
+                        <button onclick="verifyPhone()" style="padding: 5px 10px;">去验证</button>
+                    <?php else: ?>
+                        <?php if (!$user['is_phone_verified']): ?>
+                            <button onclick="verifyPhone('<?php echo htmlspecialchars($user['phone_number']); ?>', '<?php echo htmlspecialchars($user['country_code']); ?>')" style="padding: 5px 10px;">去验证</button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
-            <div class="info-item">
-                <label>邮箱地址:</label>
-                <span><?php echo htmlspecialchars($user['email']); ?></span>
-                <?php if (!$user['is_verified']): ?>
-                    <button onclick="verifyEmail()" style="margin-left: 10px; padding: 5px 10px;">去验证</button>
-                <?php endif; ?>
+            <div class="info-item" style="display: flex; justify-content: space-between;">
+                <label style="flex: 1;">邮箱地址:</label>
+                <div style="flex: 2;">
+                    <span><?php echo htmlspecialchars($user['email']); ?></span>
+                </div>
+                <div style="flex: 1;">
+                    <?php if (!$user['is_verified']): ?>
+                        <button onclick="verifyEmail()" style="padding: 5px 10px;">去验证</button>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
 
         <!-- 密码修改表单 -->
         <div id="password-change" class="tab-content">
             <form method="POST" action="user_profile.php" id="password-change-form">
+                <p class="message error"><?php if ($error_message) {echo $error_message;} ?></p>
                 <input type="password" name="old_password" placeholder="旧密码" required />
                 <input type="password" name="new_password" placeholder="新密码" required />
                 <input type="password" name="confirm_new_password" placeholder="确认新密码" required />

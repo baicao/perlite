@@ -63,7 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['token'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href=".styles/login.css">
+    <link rel="stylesheet" href=".styles/login.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>重置密码</title>
 </head>
 <body>

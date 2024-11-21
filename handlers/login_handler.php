@@ -63,13 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $response['url'] = "verify.php?email=" . urlencode($account); 
                     }
                 } else {
-                    log_message("[$requestId] Password verification failed for email: $email");
+                    log_message("[$requestId] Password verification failed for email: $account");
                     $response['rs'] = 0;
                     $response['error_code'] = -2;
                     $response['message'] = "Password not right";
                 }
             }else if($user["rs"] == -1){
-                log_message("[$requestId] No user found for email: $email");
+                log_message("[$requestId] No user found for email: $account");
                 $response['rs'] = 0;
                 $response['error_code'] = -3;
                 $response['message'] = "Invalid email";
@@ -96,14 +96,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
-                    // 验证码验证成功，查询用户数据
+
+                    // 检查手机号验证状态
+                    if ($user["data"]['is_phone_verified'] == 0) {
+                        // 更新手机号验证状态，不需要关心是否修改成功
+                        $updateResponse = $userModel->updatePhoneVerificationStatus($user["data"]['id']);
+                        $user["data"]['is_phone_verified'] = 1;
+                    }
+
                     $stmt->close();
                     log_message("[$requestId] Verify phone and code success");
                     session_regenerate_id(true); // 重新生成会话 ID
-                    $_SESSION['user'] = $user["data"];
+                    $_SESSION['user'] = $user["data"]; // 直接使用查询到的用户数据
                     $_SESSION['last_activity'] = time(); // 设置最后活动时间
                     $_SESSION['expire_time'] = 7 * 24 * 60 * 60; // 设置超时时间为7天
-                    log_message("[$requestId] Login successful for user ID: ".$user["data"]["id"]);
+                    log_message("[$requestId] Login successful for user ID: " . $user["data"]['id']);
                     $response['rs'] = 1;
                     $response['message'] = "success";
                     $response['url'] = SITE_URL; 

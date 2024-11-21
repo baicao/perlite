@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email_message = "<h2>请点击以下链接重置您的密码：</h2><p><a href=\"$reset_link\">重置密码</a></p>";
             log_message("Reset Password Link: $reset_link");
             if (send_email($to, $subject, $email_message, true)) {
-                $message = "重置密码链接已发送到您的邮箱。请通过邮箱中的链接重置密码。";
+                $message = "重置密码链接已发送到您的邮箱。请通过邮箱中的链接重置密码";
                 // 添加 JavaScript 自动跳转
                 echo "<script>
                     setTimeout(function() {
@@ -38,15 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }, 3000); // 3秒后跳转
                 </script>";
             } else {
-                $message = "发送邮件时出错，请稍后再试。";
+                $message = "发送邮件时出错，请稍后再试";
             }
         } else {
-            $message = "更新重置令牌时出错，请稍后再试。";
+            $message = "更新重置令牌时出错，请稍后再试";
         }
         
         $update_stmt->close();
     } else {
-        $message = "该邮箱地址不存在。";
+        $message = "该邮箱地址不存在";
     }
     $stmt->close();
 }
@@ -58,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>忘记密码 Forgot Password</title>
-    <link rel="stylesheet" href=".styles/login.css">
+    <link rel="stylesheet" href=".styles/login.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
         function disableButton() {
             var button = document.getElementById('resetPasswordBtn');
