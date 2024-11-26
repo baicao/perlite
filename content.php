@@ -296,9 +296,15 @@ function getContent($requestFile)
 	$path = substr($requestFile, 0, $n);
 	$originalContent = file_get_contents($rootDir . $requestFile . '.md', true);
 
+
+	// 新增匹配 disclaimer
+	$disclaimerPattern = '/\!\[\[(.*?disclaimer.*?)\]\]/';
+	preg_match($disclaimerPattern, $originalContent, $disclaimerMatches);
+
 	// 首先处理 header
 	$headerPattern = '/\!\[\[(.*?header.*?)\]\]/';
 	preg_match($headerPattern, $originalContent, $headerMatches);
+	
 	
 	if (!empty($headerMatches)) {
 		$headerContent = '';
@@ -336,6 +342,44 @@ function getContent($requestFile)
 
 		// 将 header 内容添加到原始内容的开头，并移除原始的 ![[]] 语法
 		$originalContent = $headerContent . "\n\n" . preg_replace($headerPattern, '', $originalContent, 1);
+	}
+
+	if (!empty($disclaimerMatches)) {
+		$disclaimerContent = '';
+		$innerContent = $disclaimerMatches[1];
+		$parts = explode('|', $innerContent);
+		$filePath = $parts[0];
+
+		$filePathParts = explode('#', $filePath);
+		$actualFilePath = $filePathParts[0];
+		$reference = isset($filePathParts[1]) ? $filePathParts[1] : '';
+
+		$disclaimerPath = $rootDir . '/' . trim($actualFilePath, '/') . '.md';
+		
+		if (file_exists($disclaimerPath)) {
+			$disclaimerContent = file_get_contents($disclaimerPath);
+			
+			if ($reference) {
+				$patterns = [
+					'/\^' . preg_quote($reference, '/') . '\s*(.*?)(\n(?=\^)|$)/s',
+					'/\^' . preg_quote($reference, '/') . '(.*?)(\n|$)/s',
+					'/\^' . preg_quote($reference, '/') . '(.+)/'
+				];
+				
+				foreach ($patterns as $pattern) {
+					if (preg_match($pattern, $disclaimerContent, $refMatch)) {
+						$disclaimerContent = trim($refMatch[1]);
+						break;
+					}
+				}
+			}
+			
+			// 移除所有的 ^ 引用标记
+			$disclaimerContent = preg_replace('/\^[a-zA-Z0-9]+\s*/', '', $disclaimerContent);
+		}
+
+		// 将 disclaimer 内容添加到原始内容的开头，并移除原始的 ![[]] 语法
+		$originalContent = $disclaimerContent . "\n\n" . preg_replace($disclaimerPattern, '', $originalContent, 1);
 	}
 
 	// 处理其他的 ![[]] 语法
