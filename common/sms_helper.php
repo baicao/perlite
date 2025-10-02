@@ -114,7 +114,7 @@ function SendSMSVerifyCode($phone, $verify_code, $valid_minute=3, $requestId=nul
             "PhoneNumberSet" => array($phone),
             "SmsSdkAppId" => "1400946659",
             "TemplateId" => "2305812",
-            "SignName" => "畅知享网",
+            "SignName" => "深圳畅知享科技",
             "TemplateParamSet" => array(strval($verify_code), strval($valid_minute))
         );
         $req->fromJsonString(json_encode($params));
