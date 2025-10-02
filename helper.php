@@ -175,6 +175,19 @@ function menu($dir, $folder = '')
 
 	global $avFiles;
 	$html = '';
+	
+	// 添加伪代码编译器链接
+	$html .= '
+	<div class="tree-item nav-file">
+		<div class="nav-file-title" onclick="window.location.href=\'pseudocode.php\';" style="cursor: pointer;">
+			<div class="nav-file-title-content">
+				<i class="fas fa-code" style="margin-right: 8px; color: #007acc;"></i>
+				伪代码编译器
+			</div>
+		</div>
+	</div>
+	';
+	
 	// get all files from current dir
 	$files = glob($dir . '/*');
 

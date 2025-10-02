@@ -13,12 +13,12 @@ $private_ip = $ip_list[0];
 $public_ip = $ip_list[1];
 if($private_ip == "127.0.0.1"){
     $username = "root";
-    $password = "Wxy2024qwe";
+    $password = "Wxy2025qwe";
     define('SITE_URL', 'http://'.$public_ip.'/');
     
 }else{
     $username = "changedu";
-    $password = "fkKen4zaZf7EsCPa";
+    $password = "Wxy2025qwe";
     define('SITE_URL', 'https://'.$public_ip.'/');
 }
 // 连接到应用数据库
