@@ -1,5 +1,6 @@
 .DS_Store
 ChangEduHome/
-doc/密码.md
+doc/
+shell/
 *.log
 ssl
