@@ -1,0 +1,7 @@
+// 简单字符测试
+DECLARE char_value : CHAR
+DECLARE ascii_value : INTEGER
+
+// 测试ASC函数
+ascii_value ← ASC('A')
+OUTPUT "ASCII value: ", ascii_value

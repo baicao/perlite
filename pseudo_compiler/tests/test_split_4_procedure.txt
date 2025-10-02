@@ -1,0 +1,24 @@
+// 测试4: 只测试简单PROCEDURE功能
+
+// 简单的打印过程
+PROCEDURE PrintMessage(msg : STRING)
+    OUTPUT "Message: ", msg
+ENDPROCEDURE
+
+// 简单的交换过程
+PROCEDURE Swap(BYREF a : INTEGER, BYREF b : INTEGER)
+    DECLARE temp : INTEGER
+    temp ← a
+    a ← b
+    b ← temp
+ENDPROCEDURE
+
+// 测试过程调用
+CALL PrintMessage("Hello World")
+
+DECLARE x, y : INTEGER
+x ← 10
+y ← 20
+OUTPUT "Before swap: x=", x, ", y=", y
+CALL Swap(x, y)
+OUTPUT "After swap: x=", x, ", y=", y

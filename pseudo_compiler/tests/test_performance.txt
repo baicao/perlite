@@ -1,0 +1,16 @@
+// 测试性能保护机制
+OUTPUT "=== Performance Protection Test ==="
+
+// 测试大循环（应该被性能保护机制阻止）
+DECLARE i : INTEGER
+DECLARE count : INTEGER
+count <- 0
+
+OUTPUT "Testing large loop (should be stopped by performance protection)..."
+
+FOR i <- 1 TO 200000
+    count <- count + 1
+NEXT i
+
+OUTPUT "Loop completed, count = ", count
+OUTPUT "=== Performance Protection Test Completed ==="

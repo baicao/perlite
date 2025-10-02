@@ -1,0 +1,27 @@
+// 基础功能测试
+OUTPUT "Hello World!"
+
+// 变量测试
+DECLARE x : INTEGER
+x <- 10
+OUTPUT "x = ", x
+
+// 简单计算
+DECLARE sum : INTEGER
+sum <- 5 + 3
+OUTPUT "5 + 3 = ", sum
+
+// 条件语句测试
+IF sum > 5 THEN
+    OUTPUT "Sum is greater than 5"
+ELSE
+    OUTPUT "Sum is not greater than 5"
+ENDIF
+
+// 简单循环测试
+DECLARE i : INTEGER
+FOR i <- 1 TO 3
+    OUTPUT "Loop iteration: ", i
+NEXT i
+
+OUTPUT "Basic test completed!"

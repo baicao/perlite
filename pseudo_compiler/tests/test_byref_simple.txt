@@ -1,0 +1,24 @@
+// 测试BYREF参数传递
+OUTPUT "=== BYREF Parameter Test ==="
+
+// 简单的交换过程
+PROCEDURE Swap(BYREF a : INTEGER, BYREF b : INTEGER)
+    DECLARE temp : INTEGER
+    temp <- a
+    a <- b
+    b <- temp
+ENDPROCEDURE
+
+DECLARE x : INTEGER
+DECLARE y : INTEGER
+
+x <- 10
+y <- 20
+
+OUTPUT "Before swap: x = ", x, ", y = ", y
+
+CALL Swap(x, y)
+
+OUTPUT "After swap: x = ", x, ", y = ", y
+
+OUTPUT "=== BYREF Parameter Test Completed ==="

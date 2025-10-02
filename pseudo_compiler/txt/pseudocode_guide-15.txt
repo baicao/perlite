@@ -1,0 +1,47 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers. Variables, constants and data types
+
+4.2 Using user-defined data types
+
+When a user-defined data type has been defined it can be used in the same way as any other data type in
+declarations.
+
+Variables of a user-defined data type can be assigned to each other. Individual data items are accessed using
+dot notation.
+
+Example - using user-defined data types
+
+This pseudocode uses the user-defined types Student, Season and TInt Pointer defined in the
+previous section.
+
+DECLARE Pupill : Student
+
+DECLARE Pupil2 : Student
+
+DECLARE Form : ARRAY[1:30] OF Student
+DECLARE ThisSeason : Season
+
+DECLARE NextSeason : Season
+
+DECLARE MyPointer : TIntPointer
+
+Pupill.LastName ← "Johnson"
+Pupill.Firstname ← "Leroy"
+Pupill.DateOfBirth ← 02/01/2005
+Pupill.YearGroup ← 6
+Pupill.FormGroup ← 'A!
+
+Pupil2 ← Pupill
+
+FOR Index ← 1 TO 30
+Form[Index].YearGroup ← Form[Index].YearGroup + 1
+NEXT Index
+
+ThisSeason ← Spring
+
+MyPointer « “*ThisSeason
+
+NextSeason ← MyPointer* + 1
+
+// access the value stored at the memory address
+
+Back to contents page www.cambridgeinternational.org/alevel 15

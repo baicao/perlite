@@ -1,0 +1,49 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers. Variables, constants and data types
+
+14
+
+Composite data type
+
+A composite data type is a collection of data that can consist of different data types, grouped under one
+
+identifier. The composite type should be declared as follows:
+
+TYPE ← identifier1>
+DECLARE ← identifier2>
+DECLARE ← identifier3>
+
+ENDTYPE ← data type>
+<data type>
+
+DECLARE
+DECLARE
+DECLARE
+DECLARE
+DECLARE
+ENDTYPE
+
+TYPE Student
+
+LastName :
+
+FirstName :
+DateOfBirth
+YearGroup :
+FormGroup :
+
+Example - declaration of composite type
+
+This user-defined data type holds data about a student.
+
+STRING
+
+STRING
+DATE
+
+INTEGER
+
+CHAR
+
+www.cambridgeinternational.org/alevel
+
+Back to contents page

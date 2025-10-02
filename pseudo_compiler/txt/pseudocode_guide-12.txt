@@ -1,0 +1,28 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers. Variables, constants and data types
+
+12
+
+Arrays can be used in assignment statements (provided they have same size and data type). The following is
+
+therefore allowed:
+
+Example - accessing a complete array
+
+SavedGame ← NoughtsAndCrosses
+
+A statement should not refer to a group of array elements individually. For example, the following
+construction should not be used.
+
+StudentNames [1 TO 30] <« ""
+
+Instead, an appropriate loop structure is used to assign the elements individually. For example:
+
+Example - assigning a group of array elements
+
+FOR Index ← 1 TO 30
+StudentNames [Index] <
+NEXT Index
+
+www.cambridgeinternational.org/alevel
+
+Back to contents page

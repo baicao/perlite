@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pseudocode 编译器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-code"></i> Cambridge 9618 Pseudocode 编译器</h1>
+            <p class="subtitle">基于 Cambridge International AS & A Level Computer Science 9618 标准</p>
+        </header>
+
+        <div class="main-content">
+            <div class="editor-section">
+                <div class="editor-header">
+                    <h2><i class="fas fa-edit"></i> Pseudocode 编辑器</h2>
+                    <div class="editor-controls">
+                        <button id="clearBtn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> 清空 (Ctrl+L)
+                        </button>
+                        <button id="exampleBtn" class="btn btn-info">
+                            <i class="fas fa-lightbulb"></i> 示例
+                        </button>
+                        <button id="compileBtn" class="btn btn-primary">
+                            <i class="fas fa-play"></i> 编译运行 (Ctrl+Enter)
+                        </button>
+                        <label class="auto-compile-label">
+                            <input type="checkbox" id="auto-compile"> 自动编译
+                        </label>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <div class="line-numbers" id="lineNumbers"></div>
+                    <textarea id="pseudocodeEditor" class="editor" placeholder="在此输入您的 Pseudocode...\n\n示例：\nDECLARE x : INTEGER\nDECLARE y : INTEGER\nINPUT \"请输入第一个数字: \", x\nINPUT \"请输入第二个数字: \", y\nOUTPUT \"两数之和为: \", x + y"></textarea>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="console">
+                        <i class="fas fa-terminal"></i> 控制台输出
+                    </button>
+                    <button class="tab-button" data-tab="javascript">
+                        <i class="fab fa-js-square"></i> 生成的 JavaScript
+                    </button>
+                    <button class="tab-button" data-tab="errors">
+                        <i class="fas fa-exclamation-triangle"></i> 错误信息
+                    </button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="console" class="tab-pane active">
+                        <div class="output-header">
+                            <h3>程序输出</h3>
+                            <button id="clearConsole" class="btn btn-small">
+                                <i class="fas fa-broom"></i> 清空
+                            </button>
+                        </div>
+                        <div id="consoleOutput" class="console-output"></div>
+                        <div id="inputSection" class="input-section" style="display: none;">
+                            <input type="text" id="userInput" placeholder="请输入...">
+                            <button id="submitInput" class="btn btn-small btn-primary">提交</button>
+                        </div>
+                    </div>
+
+                    <div id="javascript" class="tab-pane">
+                        <div class="output-header">
+                            <h3>生成的 JavaScript 代码</h3>
+                            <button id="copyJs" class="btn btn-small">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code id="jsOutput" class="language-javascript"></code></pre>
+                    </div>
+
+                    <div id="errors" class="tab-pane">
+                        <div class="output-header">
+                            <h3>语法错误和警告</h3>
+                        </div>
+                        <div id="errorOutput" class="error-output"></div>
+                        <div id="warnings" class="warning-content"></div>
+                        <div id="statistics" class="statistics-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="help-section">
+                <h3><i class="fas fa-question-circle"></i> 语法帮助</h3>
+                <div class="help-content">
+                    <div class="help-item">
+                        <h4>变量声明</h4>
+                        <code>DECLARE name : INTEGER</code>
+                    </div>
+                    <div class="help-item">
+                        <h4>赋值</h4>
+                        <code>name ← 10</code>
+                    </div>
+                    <div class="help-item">
+                        <h4>输入输出</h4>
+                        <code>INPUT "提示", variable<br>OUTPUT "结果", result</code>
+                    </div>
+                    <div class="help-item">
+                        <h4>条件语句</h4>
+                        <code>IF condition THEN<br>&nbsp;&nbsp;&nbsp;statements<br>ENDIF</code>
+                    </div>
+                    <div class="help-item">
+                        <h4>循环</h4>
+                        <code>FOR i ← 1 TO 10<br>&nbsp;&nbsp;&nbsp;statements<br>NEXT i</code>
+                    </div>
+                </div>
+                <button id="showSyntaxGuide" class="btn btn-info btn-full">
+                    <i class="fas fa-book"></i> 完整语法指南
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 语法指南模态框 -->
+    <div id="syntaxModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pseudocode 语法指南</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="syntaxGuideContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Pseudocode 编译器 | 基于 Cambridge 9618 标准 | 
+           <a href="https://github.com" target="_blank">
+               <i class="fab fa-github"></i> GitHub
+           </a>
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="lexer.js"></script>
+    <script src="parser.js"></script>
+    <script src="generator.js"></script>
+    <script src="compiler.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

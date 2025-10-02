@@ -1,0 +1,4 @@
+// 测试字符字面量错误
+DECLARE c : CHAR
+c ← 'A'
+OUTPUT c

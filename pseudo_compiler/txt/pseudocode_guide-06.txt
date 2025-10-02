@@ -1,0 +1,36 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers.
+
+1 Pseudocode in examined components
+
+The following information sets out how pseudocode will appear within the examined components and is
+provided to allow you to give learners familiarity before the exam.
+
+1.1 Font style and size
+
+Pseudocode is presented in a monospaced (fixed-width) font such as Courier New. The size of the font will
+be consistent throughout.
+
+1.2 Indentation
+
+Lines are indented (usually by three spaces) to indicate that they are contained within a statement in a
+previous line. In cases where line numbering is used, this indentation may be omitted. Every effort will be
+made to make sure that code statements are not longer than a line of text unless this is absolutely necessary.
+Where necessary, continuation lines will be aligned to maximise readability.
+
+1.3 Case
+
+Keywords are in upper-case, e.g. IF, REPEAT, PROCEDURE. (Different keywords are explained in later
+sections of this guide.)
+
+Identifiers are in mixed case (sometimes referred to as camelCase or Pascal case) with upper-case letters
+indicating the beginning of new words, for example NumberOfPlayers.
+
+Meta-variables - symbols in the pseudocode that should be substituted by other symbols are enclosed in
+angled brackets ← > (as in Backus-Naur Form). This is also used in this guide.
+
+Example - meta-variables
+
+REPEAT ← statement (s)>
+UNTIL ← condition>
+
+6 www.cambridgeinternational.org/alevel Back to contents page

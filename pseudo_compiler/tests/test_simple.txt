@@ -1,0 +1,11 @@
+OUTPUT "Testing basic functionality"
+
+DECLARE x : INTEGER
+x <- 5
+OUTPUT "x = ", x
+
+IF x > 0 THEN
+    OUTPUT "x is positive"
+ENDIF
+
+OUTPUT "Test completed"

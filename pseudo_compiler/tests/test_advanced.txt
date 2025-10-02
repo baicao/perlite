@@ -1,0 +1,49 @@
+// 测试高级功能
+OUTPUT "=== Advanced Features Test ==="
+
+// RECORD 测试
+TYPE Student
+    DECLARE Name : STRING
+    DECLARE Age : INTEGER
+    DECLARE Grade : REAL
+ENDTYPE
+
+DECLARE student1 : Student
+student1.Name <- "Alice"
+student1.Age <- 18
+student1.Grade <- 85.5
+
+OUTPUT "Student Name: ", student1.Name
+OUTPUT "Student Age: ", student1.Age
+OUTPUT "Student Grade: ", student1.Grade
+
+// ARRAY 测试
+DECLARE numbers : ARRAY[1:5] OF INTEGER
+DECLARE i : INTEGER
+
+FOR i <- 1 TO 5
+    numbers[i] <- i * 2
+NEXT i
+
+OUTPUT "Array contents:"
+FOR i <- 1 TO 5
+    OUTPUT "numbers[", i, "] = ", numbers[i]
+NEXT i
+
+// FUNCTION 测试
+FUNCTION Square(x : INTEGER) RETURNS INTEGER
+    RETURN x * x
+ENDFUNCTION
+
+DECLARE result : INTEGER
+result <- Square(5)
+OUTPUT "Square of 5 = ", result
+
+// PROCEDURE 测试
+PROCEDURE PrintMessage(msg : STRING)
+    OUTPUT "Message: ", msg
+ENDPROCEDURE
+
+CALL PrintMessage("Hello from procedure!")
+
+OUTPUT "=== Advanced Features Test Completed ==="

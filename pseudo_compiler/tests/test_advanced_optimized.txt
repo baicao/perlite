@@ -1,0 +1,204 @@
+// ========== 优化的高级功能测试 ==========
+// 修复了可能导致页面崩溃的性能问题
+
+// ========== RECORD 类型定义 ==========
+TYPE Student = RECORD
+    Name : STRING
+    Age : INTEGER
+    Grade : REAL
+ENDTYPE
+
+// ========== 变量声明 ==========
+DECLARE MyStudent : Student
+DECLARE StudentList : ARRAY[1:5] OF Student
+DECLARE i : INTEGER
+
+// 初始化学生记录
+MyStudent.Name ← "Alice"
+MyStudent.Age ← 18
+MyStudent.Grade ← 95.5
+
+// ========== FUNCTION 定义 ==========
+
+// 计算阶乘的函数（限制输入范围避免溢出）
+FUNCTION Factorial(n : INTEGER) RETURNS INTEGER
+    DECLARE result : INTEGER
+    DECLARE i : INTEGER
+    
+    // 限制输入范围，避免计算过大的数值
+    IF n < 0 OR n > 10 THEN
+        RETURN -1  // 错误值
+    ENDIF
+    
+    IF n = 0 OR n = 1 THEN
+        RETURN 1
+    ENDIF
+    
+    result ← 1
+    FOR i ← 2 TO n
+        result ← result * i
+    NEXT i
+    
+    RETURN result
+ENDFUNCTION
+
+// 计算两点距离的函数
+FUNCTION Distance(x1 : REAL, y1 : REAL, x2 : REAL, y2 : REAL) RETURNS REAL
+    DECLARE dx, dy : REAL
+    dx ← x2 - x1
+    dy ← y2 - y1
+    RETURN SQRT(dx * dx + dy * dy)
+ENDFUNCTION
+
+// 优化的质数检测函数（使用平方根优化）
+FUNCTION IsPrime(num : INTEGER) RETURNS BOOLEAN
+    DECLARE i : INTEGER
+    DECLARE limit : INTEGER
+    
+    // 限制输入范围，避免过大计算
+    IF num > 1000 THEN
+        OUTPUT "Number too large for prime check"
+        RETURN FALSE
+    ENDIF
+    
+    IF num <= 1 THEN
+        RETURN FALSE
+    ENDIF
+    
+    IF num = 2 THEN
+        RETURN TRUE
+    ENDIF
+    
+    IF num MOD 2 = 0 THEN
+        RETURN FALSE
+    ENDIF
+    
+    // 只检查到平方根，大大减少计算量
+    limit ← 31  // 大约是sqrt(1000)
+    FOR i ← 3 TO limit
+        IF i * i > num THEN
+            RETURN TRUE
+        ENDIF
+        IF num MOD i = 0 THEN
+            RETURN FALSE
+        ENDIF
+    NEXT i
+    
+    RETURN TRUE
+ENDFUNCTION
+
+// 查找数组最大值的函数
+FUNCTION FindMax(arr : ARRAY[1:10] OF INTEGER) RETURNS INTEGER
+    DECLARE max, i : INTEGER
+    max ← arr[1]
+    FOR i ← 2 TO 10
+        IF arr[i] > max THEN
+            max ← arr[i]
+        ENDIF
+    NEXT i
+    RETURN max
+ENDFUNCTION
+
+// ========== PROCEDURE 定义 ==========
+
+// 打印学生信息的过程
+PROCEDURE PrintStudent(student : Student)
+    OUTPUT "Student Name: ", student.Name
+    OUTPUT "Student Age: ", student.Age
+    OUTPUT "Student Grade: ", student.Grade
+ENDPROCEDURE
+
+// 交换两个变量的过程（BYREF 参数）
+PROCEDURE Swap(BYREF a : INTEGER, BYREF b : INTEGER)
+    DECLARE temp : INTEGER
+    temp ← a
+    a ← b
+    b ← temp
+ENDPROCEDURE
+
+// 简化的冒泡排序（只排序前5个元素避免过多计算）
+PROCEDURE BubbleSort(BYREF arr : ARRAY[1:10] OF INTEGER)
+    DECLARE i, j, temp : INTEGER
+    FOR i ← 1 TO 5  // 只排序前5个元素
+        FOR j ← 1 TO 5 - i
+            IF arr[j] > arr[j + 1] THEN
+                temp ← arr[j]
+                arr[j] ← arr[j + 1]
+                arr[j + 1] ← temp
+            ENDIF
+        NEXT j
+    NEXT i
+ENDPROCEDURE
+
+// 初始化数组的过程
+PROCEDURE InitializeArray(BYREF arr : ARRAY[1:10] OF INTEGER, value : INTEGER)
+    DECLARE i : INTEGER
+    FOR i ← 1 TO 10
+        arr[i] ← value
+    NEXT i
+ENDPROCEDURE
+
+// 打印数组的过程（只打印前5个元素）
+PROCEDURE PrintArray(arr : ARRAY[1:10] OF INTEGER)
+    DECLARE i : INTEGER
+    OUTPUT "Array contents (first 5): "
+    FOR i ← 1 TO 5
+        OUTPUT arr[i], " "
+    NEXT i
+    OUTPUT ""
+ENDPROCEDURE
+
+// ========== 主程序测试 ==========
+
+// 测试 RECORD 操作
+OUTPUT "=== RECORD Test ==="
+CALL PrintStudent(MyStudent)
+
+// 测试数组中的 RECORD
+StudentList[1] ← MyStudent
+StudentList[1].Name ← "Bob"
+StudentList[1].Age ← 19
+OUTPUT "Student in array:"
+CALL PrintStudent(StudentList[1])
+
+// 测试 FUNCTION 调用（使用安全的小数值）
+OUTPUT "=== FUNCTION Test ==="
+OUTPUT "Factorial of 5: ", Factorial(5)
+OUTPUT "Distance between (0,0) and (3,4): ", Distance(0.0, 0.0, 3.0, 4.0)
+OUTPUT "Is 17 prime? ", IsPrime(17)
+OUTPUT "Is 15 prime? ", IsPrime(15)
+OUTPUT "Is 97 prime? ", IsPrime(97)
+
+// 测试数组和 PROCEDURE
+OUTPUT "=== ARRAY and PROCEDURE Test ==="
+DECLARE TestArray : ARRAY[1:10] OF INTEGER
+
+// 初始化测试数组
+FOR i ← 1 TO 10
+    TestArray[i] ← 11 - i
+NEXT i
+
+OUTPUT "Original array:"
+CALL PrintArray(TestArray)
+
+OUTPUT "Maximum value: ", FindMax(TestArray)
+
+// 排序测试
+CALL BubbleSort(TestArray)
+OUTPUT "Sorted array:"
+CALL PrintArray(TestArray)
+
+// 重新初始化
+CALL InitializeArray(TestArray, 42)
+OUTPUT "Array after initialization with 42:"
+CALL PrintArray(TestArray)
+
+// 测试变量交换
+DECLARE x, y : INTEGER
+x ← 10
+y ← 20
+OUTPUT "Before swap: x=", x, ", y=", y
+CALL Swap(x, y)
+OUTPUT "After swap: x=", x, ", y=", y
+
+OUTPUT "=== All tests completed successfully! ==="

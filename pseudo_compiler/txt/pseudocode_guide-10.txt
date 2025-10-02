@@ -1,0 +1,22 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers. Variables, constants and data types
+
+2.6 Assignments
+
+The assignment operator is ← .
+
+Assignments should be made in the following format:
+
+<identifier> ← <value>
+
+The identifier must refer to a variable (this can be an individual element in a data structure such as an array or
+
+a user defined data type). The value may be any expression that evaluates to a value of the same data type as
+the variable.
+
+Example - assignments
+
+Counter ← 0
+Counter ← Counter + 1
+TotalToPay ← NumberOfHours * HourlyRate
+
+10 www.cambridgeinternational.org/alevel Back to contents page

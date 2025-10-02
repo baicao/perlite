@@ -1,0 +1,18 @@
+// 测试BYREF参数传递
+
+// 交换两个整数的过程
+PROCEDURE Swap(BYREF a : INTEGER, BYREF b : INTEGER)
+    DECLARE temp : INTEGER
+    temp ← a
+    a ← b
+    b ← temp
+ENDPROCEDURE
+
+// 主程序测试
+DECLARE x, y : INTEGER
+x ← 10
+y ← 20
+
+OUTPUT "Before swap: x=", x, ", y=", y
+CALL Swap(x, y)
+OUTPUT "After swap: x=", x, ", y=", y

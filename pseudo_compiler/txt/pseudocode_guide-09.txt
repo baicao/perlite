@@ -1,0 +1,36 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers. Variables, constants and data types
+
+2.4 Variable declarations
+It is good practice to declare variables explicitly in pseudocode.
+Declarations are made as follows:
+
+DECLARE ← identifier> : <data type>
+
+Example - variable declarations
+
+DECLARE Counter : INTEGER
+DECLARE TotalToPay : REAL
+DECLARE GameOver : BOOLEAN
+
+2.5 Constants
+It is good practice to use constants if this makes the pseudocode more readable, as an identifier is more
+meaningful in many cases than a literal. It also makes the pseudocode easier to update if the value of the
+
+constant changes.
+
+Constants are normally declared at the beginning of a piece of pseudocode (unless it is desirable to restrict the
+scope of the constant).
+
+Constants are declared by stating the identifier and the literal value in the following format:
+
+CONSTANT ← identifier> = <value>
+
+Example - constant declarations
+
+CONSTANT HourlyRate = 6.50
+CONSTANT DefaultText = "N/A"
+
+Only literals can be used as the value of a constant. A variable, another constant or an expression must never
+be used.
+
+Back to contents page www.cambridgeinternational.org/alevel 9

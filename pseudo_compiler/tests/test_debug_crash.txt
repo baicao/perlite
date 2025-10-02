@@ -1,0 +1,8 @@
+// 调试崩溃问题的测试代码
+// 请在浏览器中按F12打开开发者工具，查看Console标签页的错误信息
+
+DECLARE x : INTEGER
+x <- 10
+OUTPUT "测试开始"
+OUTPUT x
+OUTPUT "测试结束"

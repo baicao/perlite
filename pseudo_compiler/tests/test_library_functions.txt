@@ -1,0 +1,116 @@
+// ========== 库函数测试 ==========
+// 测试新实现的ASC、CHR、INT、RAND函数
+
+// 声明变量
+DECLARE char_value : CHAR
+DECLARE ascii_value : INTEGER
+DECLARE real_number : REAL
+DECLARE int_result : INTEGER
+DECLARE random_value : REAL
+DECLARE i : INTEGER
+
+// ========== ASC函数测试 ==========
+OUTPUT "=== ASC函数测试 ==="
+
+// 测试字符'A'的ASCII值
+ascii_value ← ASC('A')
+OUTPUT "ASC('A') = ", ascii_value
+
+// 测试字符'B'的ASCII值
+ascii_value ← ASC('B')
+OUTPUT "ASC('B') = ", ascii_value
+
+// 测试字符'a'的ASCII值
+ascii_value ← ASC('a')
+OUTPUT "ASC('a') = ", ascii_value
+
+// 测试数字字符'0'的ASCII值
+ascii_value ← ASC('0')
+OUTPUT "ASC('0') = ", ascii_value
+
+// ========== CHR函数测试 ==========
+OUTPUT "\n=== CHR函数测试 ==="
+
+// 测试ASCII值65对应的字符
+char_value ← CHR(65)
+OUTPUT "CHR(65) = '", char_value, "'"
+
+// 测试ASCII值66对应的字符
+char_value ← CHR(66)
+OUTPUT "CHR(66) = '", char_value, "'"
+
+// 测试ASCII值97对应的字符
+char_value ← CHR(97)
+OUTPUT "CHR(97) = '", char_value, "'"
+
+// 测试ASCII值48对应的字符
+char_value ← CHR(48)
+OUTPUT "CHR(48) = '", char_value, "'"
+
+// ========== INT函数测试 ==========
+OUTPUT "\n=== INT函数测试 ==="
+
+// 测试正数的整数部分
+real_number ← 27.5415
+int_result ← INT(real_number)
+OUTPUT "INT(27.5415) = ", int_result
+
+// 测试负数的整数部分
+real_number ← -15.8
+int_result ← INT(real_number)
+OUTPUT "INT(-15.8) = ", int_result
+
+// 测试小数的整数部分
+real_number ← 3.14159
+int_result ← INT(real_number)
+OUTPUT "INT(3.14159) = ", int_result
+
+// 测试整数
+real_number ← 42.0
+int_result ← INT(real_number)
+OUTPUT "INT(42.0) = ", int_result
+
+// ========== RAND函数测试 ==========
+OUTPUT "\n=== RAND函数测试 ==="
+
+// 生成0到1之间的随机数
+OUTPUT "生成5个0到1之间的随机数："
+FOR i ← 1 TO 5
+    random_value ← RAND(1)
+    OUTPUT "RAND(1) = ", random_value
+NEXT i
+
+// 生成0到10之间的随机数
+OUTPUT "\n生成5个0到10之间的随机数："
+FOR i ← 1 TO 5
+    random_value ← RAND(10)
+    OUTPUT "RAND(10) = ", random_value
+NEXT i
+
+// 生成0到100之间的随机数
+OUTPUT "\n生成3个0到100之间的随机数："
+FOR i ← 1 TO 3
+    random_value ← RAND(100)
+    OUTPUT "RAND(100) = ", random_value
+NEXT i
+
+// ========== 组合使用测试 ==========
+OUTPUT "\n=== 组合使用测试 ==="
+
+// 生成随机ASCII字符
+OUTPUT "生成3个随机大写字母："
+FOR i ← 1 TO 3
+    // 生成65-90之间的随机数（A-Z的ASCII值）
+    ascii_value ← INT(RAND(26)) + 65
+    char_value ← CHR(ascii_value)
+    OUTPUT "随机字母: '", char_value, "' (ASCII: ", ascii_value, ")"
+NEXT i
+
+// 字符和ASCII值的相互转换
+OUTPUT "\n字符和ASCII值相互转换验证："
+char_value ← 'M'
+ascii_value ← ASC(char_value)
+char_value ← CHR(ascii_value)
+OUTPUT "'M' -> ", ascii_value, " -> '", char_value, "'"
+
+OUTPUT "\n=== 库函数测试完成 ==="

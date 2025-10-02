@@ -1,0 +1,19 @@
+7 Iteration (repetition) ..
+
+7.1 Count-controlled (FOR) loops 21
+7.2 Post-condition (REPEAT) loops 21
+7.3 Pre-condition (WHILE) loops 22
+8 Procedures and FUNCtIONS...............cccccccsess esses eteneneeeeeeeeeeceesetnnnnntnbnntinnnnneseeseeeeeceeeeantneniesninieneee 23
+8.1 Defining and calling procedures 23
+8.2 Defining and calling functions 24
+8.3 Passing parameters by value or by reference 25
+
+9 File handling ......
+
+9.1 Handling text files 26
+9.2 Handling random files 27
+10 Object-oriented Programming o.oo... eesessssssseeessesssseecsesssnstessssssnneeseessnneeeeeessseeese 29
+10.1 Methods and Properties 29
+10.2 Constructors and Inheritance 29
+
+Index of symbols and keywords... eeesessssseeesssssseneesesssssessesesssneeeessssneneeecesssnnesessensnees 31

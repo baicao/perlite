@@ -1,0 +1,26 @@
+// 测试3: 只测试简单FUNCTION功能
+
+// 简单的加法函数
+FUNCTION Add(num1 : INTEGER, num2 : INTEGER) RETURNS INTEGER
+    RETURN num1 + num2
+ENDFUNCTION
+
+// 计算平方的函数
+FUNCTION Square(x : REAL) RETURNS REAL
+    RETURN x * x
+ENDFUNCTION
+
+// 检查偶数的函数
+FUNCTION IsEven(num : INTEGER) RETURNS BOOLEAN
+    IF num MOD 2 = 0 THEN
+        RETURN TRUE
+    ELSE
+        RETURN FALSE
+    ENDIF
+ENDFUNCTION
+
+// 测试函数调用
+OUTPUT "Add(5, 3) = ", Add(5, 3)
+OUTPUT "Square(4.0) = ", Square(4.0)
+OUTPUT "IsEven(6) = ", IsEven(6)
+OUTPUT "IsEven(7) = ", IsEven(7)

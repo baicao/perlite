@@ -1,0 +1,51 @@
+// 基本 FUNCTION 测试
+// 测试 Cambridge 9618 Pseudocode FUNCTION 语法
+
+// 简单的加法函数
+FUNCTION Add(a : INTEGER, b : INTEGER) RETURNS INTEGER
+    RETURN a + b
+ENDFUNCTION
+
+// 计算平方的函数
+FUNCTION Square(x : REAL) RETURNS REAL
+    RETURN x * x
+ENDFUNCTION
+
+// 判断是否为偶数的函数
+FUNCTION IsEven(num : INTEGER) RETURNS BOOLEAN
+    IF num MOD 2 = 0 THEN
+        RETURN TRUE
+    ELSE
+        RETURN FALSE
+    ENDIF
+ENDFUNCTION
+
+// 获取字符串长度的函数（模拟）
+FUNCTION GetLength(text : STRING) RETURNS INTEGER
+    DECLARE count : INTEGER
+    count ← 0
+    // 这里只是示例，实际实现会更复杂
+    RETURN count
+ENDFUNCTION
+
+// 主程序测试函数调用
+DECLARE result : INTEGER
+DECLARE area : REAL
+DECLARE check : BOOLEAN
+
+// 测试函数调用
+result ← Add(5, 3)
+OUTPUT "5 + 3 = ", result
+
+area ← Square(4.5)
+OUTPUT "4.5 squared = ", area
+
+check ← IsEven(10)
+OUTPUT "Is 10 even? ", check
+
+check ← IsEven(7)
+OUTPUT "Is 7 even? ", check
+
+// 嵌套函数调用
+result ← Add(Square(3), Add(2, 1))
+OUTPUT "Square(3) + Add(2,1) = ", result

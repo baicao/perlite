@@ -1,0 +1,29 @@
+// ========== 最小化安全测试 ==========
+// 逐步测试各个功能，避免复杂操作
+
+// 基础变量测试
+DECLARE x, y : INTEGER
+x ← 5
+y ← 10
+OUTPUT "Basic variables: x=", x, ", y=", y
+
+// 简单函数测试
+FUNCTION Add(a : INTEGER, b : INTEGER) RETURNS INTEGER
+    RETURN a + b
+ENDFUNCTION
+
+OUTPUT "Function test: 5 + 10 =", Add(5, 10)
+
+// 简单过程测试
+PROCEDURE SimpleSwap(BYREF a : INTEGER, BYREF b : INTEGER)
+    DECLARE temp : INTEGER
+    temp ← a
+    a ← b
+    b ← temp
+ENDPROCEDURE
+
+OUTPUT "Before swap: x=", x, ", y=", y
+CALL SimpleSwap(x, y)
+OUTPUT "After swap: x=", x, ", y=", y
+
+OUTPUT "=== Minimal test completed ==="

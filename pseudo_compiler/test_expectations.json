@@ -1,0 +1,276 @@
+{
+  "test_basic.txt": {
+    "description": "基础功能测试 - 变量、输出、条件、循环",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [
+      "Hello World!",
+      "x = 10",
+      "5 + 3 = 8",
+      "Sum is greater than 5",
+      "Loop iteration: 1",
+      "Loop iteration: 2",
+      "Loop iteration: 3",
+      "Basic test completed!"
+    ],
+    "features": ["OUTPUT", "DECLARE", "assignment", "IF-THEN-ELSE", "FOR-NEXT"]
+  },
+  
+  "test_ultra_simple.txt": {
+    "description": "最简单的测试 - 基础变量和输出",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [
+      "Hello World",
+      "5"
+    ],
+    "features": ["DECLARE", "assignment", "OUTPUT"]
+  },
+  
+  "test_simple.txt": {
+    "description": "简单测试案例",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["basic_syntax"]
+  },
+  
+  "test_minimal_safe.txt": {
+    "description": "最小安全测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["minimal_syntax"]
+  },
+  
+  "test_array_basic.txt": {
+    "description": "基本数组测试 - 一维和二维数组",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [
+      "Numbers[1] = 10",
+      "Numbers[2] = 20", 
+      "Numbers[3] = 30",
+      "Numbers[4] = 40",
+      "Numbers[5] = 50",
+      "Names[0] = Apple",
+      "Names[1] = Banana",
+      "Names[2] = Cherry"
+    ],
+    "features": ["ARRAY", "array_indexing", "FOR_loop", "multi_dimensional_array"]
+  },
+  
+  "test_split_2_array.txt": {
+    "description": "数组分割测试2",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["ARRAY", "complex_operations"]
+  },
+  
+  "test_split_7_complex_array.txt": {
+    "description": "复杂数组测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["ARRAY", "complex_array_operations"]
+  },
+  
+  "test_function_basic.txt": {
+    "description": "基本函数测试 - 函数定义和调用",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["FUNCTION", "RETURNS", "function_call", "parameters"]
+  },
+  
+  "test_split_3_function.txt": {
+    "description": "函数分割测试3",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["FUNCTION", "advanced_functions"]
+  },
+  
+  "test_procedure_basic.txt": {
+    "description": "基本过程测试 - 过程定义和调用",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["PROCEDURE", "procedure_call", "parameters"]
+  },
+  
+  "test_split_4_procedure.txt": {
+    "description": "过程分割测试4",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["PROCEDURE", "advanced_procedures"]
+  },
+  
+  "test_byref.txt": {
+    "description": "引用传递测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["BYREF", "reference_parameters"]
+  },
+  
+  "test_byref_simple.txt": {
+    "description": "简单引用传递测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["BYREF", "simple_reference"]
+  },
+  
+  "test_record_basic.txt": {
+    "description": "基本记录类型测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [
+      "Name: John",
+      "Age: 20"
+    ],
+    "features": ["TYPE", "RECORD", "dot_notation"]
+  },
+  
+  "test_correct_record.txt": {
+    "description": "正确的记录测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["TYPE", "RECORD", "record_operations"]
+  },
+  
+  "test_split_1_record.txt": {
+    "description": "记录分割测试1",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["TYPE", "RECORD", "complex_records"]
+  },
+  
+  "test_for_loop.txt": {
+    "description": "FOR循环测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["FOR", "NEXT", "loop_control"]
+  },
+  
+  "test_advanced.txt": {
+    "description": "高级功能测试 - 记录和数组组合",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [
+      "Student Name: Alice",
+      "Student Age: 18",
+      "Student Grade: 85.5",
+      "Array contents:",
+      "numbers[1] = 2",
+      "numbers[2] = 4",
+      "numbers[3] = 6",
+      "numbers[4] = 8",
+      "numbers[5] = 10"
+    ],
+    "features": ["TYPE", "RECORD", "ARRAY", "FOR_loop", "complex_operations"]
+  },
+  
+  "test_advanced_features.txt": {
+    "description": "高级特性测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["advanced_syntax", "complex_features"]
+  },
+  
+  "test_advanced_optimized.txt": {
+    "description": "优化的高级测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["optimization", "advanced_features"]
+  },
+  
+  "test_library_functions.txt": {
+    "description": "库函数测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["library_functions", "built_in_functions"]
+  },
+  
+  "test_simple_library.txt": {
+    "description": "简单库函数测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["library_functions", "basic_library"]
+  },
+  
+  "test_no_input.txt": {
+    "description": "无INPUT语句的综合测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["comprehensive", "no_input", "multiple_features"]
+  },
+  
+  "test_split_5_recursive.txt": {
+    "description": "递归测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["recursion", "FUNCTION", "recursive_calls"]
+  },
+  
+  "test_split_6_prime.txt": {
+    "description": "质数算法测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["algorithms", "prime_numbers", "mathematical_operations"]
+  },
+  
+  "test_performance.txt": {
+    "description": "性能测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["performance", "optimization"]
+  },
+  
+  "test_optimized.txt": {
+    "description": "优化测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["optimization", "performance"]
+  },
+  
+  "test_char_error.txt": {
+    "description": "字符字面量测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": ["A"],
+    "features": ["CHAR", "character_literals"]
+  },
+  
+  "test_simple_char.txt": {
+    "description": "简单字符测试",
+    "shouldCompile": true,
+    "shouldExecute": true,
+    "expectedOutputs": [],
+    "features": ["CHAR", "character_operations"]
+  },
+  
+  "test_debug_crash.txt": {
+    "description": "调试崩溃测试 - 边界情况",
+    "shouldCompile": false,
+    "shouldExecute": false,
+    "expectedOutputs": [],
+    "expectedError": "compilation_error",
+    "features": ["error_handling", "edge_cases"]
+  }
+}

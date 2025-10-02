@@ -1,0 +1,5 @@
+// 最简单的测试 - 只有基础输出
+DECLARE x : INTEGER
+x <- 5
+OUTPUT "Hello World"
+OUTPUT x

@@ -1,0 +1,67 @@
+// 基本 PROCEDURE 测试
+// 测试 Cambridge 9618 Pseudocode PROCEDURE 语法
+
+// 简单的打印过程
+PROCEDURE PrintMessage(message : STRING)
+    OUTPUT "Message: ", message
+ENDPROCEDURE
+
+// 打印数字的过程
+PROCEDURE PrintNumber(num : INTEGER)
+    OUTPUT "Number: ", num
+ENDPROCEDURE
+
+// 按值传递的过程
+PROCEDURE DoubleValue(value : INTEGER)
+    value ← value * 2
+    OUTPUT "Inside procedure, doubled value: ", value
+ENDPROCEDURE
+
+// 按引用传递的过程
+PROCEDURE DoubleByRef(BYREF value : INTEGER)
+    value ← value * 2
+    OUTPUT "Inside procedure, doubled by reference: ", value
+ENDPROCEDURE
+
+// 多参数过程
+PROCEDURE PrintPersonInfo(name : STRING, age : INTEGER, height : REAL)
+    OUTPUT "Name: ", name
+    OUTPUT "Age: ", age
+    OUTPUT "Height: ", height
+ENDPROCEDURE
+
+// 无参数过程
+PROCEDURE PrintSeparator()
+    OUTPUT "==================="
+ENDPROCEDURE
+
+// 主程序测试过程调用
+DECLARE testNum : INTEGER
+DECLARE refNum : INTEGER
+
+// 测试基本过程调用
+CALL PrintMessage("Hello World")
+CALL PrintNumber(42)
+
+CALL PrintSeparator()
+
+// 测试按值传递
+testNum ← 5
+OUTPUT "Before DoubleValue, testNum = ", testNum
+CALL DoubleValue(testNum)
+OUTPUT "After DoubleValue, testNum = ", testNum
+
+CALL PrintSeparator()
+
+// 测试按引用传递
+refNum ← 5
+OUTPUT "Before DoubleByRef, refNum = ", refNum
+CALL DoubleByRef(refNum)
+OUTPUT "After DoubleByRef, refNum = ", refNum
+
+CALL PrintSeparator()
+
+// 测试多参数过程
+CALL PrintPersonInfo("Alice", 25, 165.5)
+
+CALL PrintSeparator()

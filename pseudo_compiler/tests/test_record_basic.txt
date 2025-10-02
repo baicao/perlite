@@ -1,0 +1,19 @@
+// 基本 RECORD 测试
+// 测试 Cambridge 9618 Pseudocode RECORD 语法
+
+// 定义简单的 RECORD 类型
+TYPE Person
+    DECLARE Name : STRING
+    DECLARE Age : INTEGER
+ENDTYPE
+
+// 声明 RECORD 变量
+DECLARE Student : Person
+
+// 基本赋值操作
+Student.Name ← "John"
+Student.Age ← 20
+
+// 输出测试
+OUTPUT "Name: ", Student.Name
+OUTPUT "Age: ", Student.Age

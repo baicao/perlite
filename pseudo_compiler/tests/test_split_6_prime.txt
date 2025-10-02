@@ -1,0 +1,23 @@
+// 测试6: 测试质数函数（可能的崩溃原因）
+
+// 检查是否为质数的函数
+FUNCTION IsPrime(num : INTEGER) RETURNS BOOLEAN
+    DECLARE i : INTEGER
+    IF num <= 1 THEN
+        RETURN FALSE
+    ENDIF
+    
+    FOR i ← 2 TO num - 1
+        IF num MOD i = 0 THEN
+            RETURN FALSE
+        ENDIF
+    NEXT i
+    
+    RETURN TRUE
+ENDFUNCTION
+
+// 测试小数值的质数检查
+OUTPUT "Is 2 prime? ", IsPrime(2)
+OUTPUT "Is 3 prime? ", IsPrime(3)
+OUTPUT "Is 4 prime? ", IsPrime(4)
+OUTPUT "Is 5 prime? ", IsPrime(5)

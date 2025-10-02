@@ -1,0 +1,28 @@
+// 测试2: 只测试ARRAY功能
+
+DECLARE Numbers : ARRAY[1:5] OF INTEGER
+DECLARE Names : ARRAY[0:4] OF STRING
+DECLARE i : INTEGER
+
+// 一维数组操作
+FOR i ← 1 TO 5
+    Numbers[i] ← i * 2
+NEXT i
+
+// 字符串数组
+Names[0] ← "Apple"
+Names[1] ← "Banana"
+Names[2] ← "Cherry"
+Names[3] ← "Date"
+Names[4] ← "Elderberry"
+
+// 输出数组内容
+OUTPUT "Numbers array:"
+FOR i ← 1 TO 5
+    OUTPUT Numbers[i], " "
+NEXT i
+
+OUTPUT "Names array:"
+FOR i ← 0 TO 4
+    OUTPUT Names[i]
+NEXT i

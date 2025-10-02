@@ -1,0 +1,49 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers.
+
+4 User-defined data types
+
+Syllabus requirements
+
+The Cambridge International AS & A Level syllabus (9618) requires candidates to understand that data
+structures that are not available in a particular programming language need to be constructed from the
+data structures that are built-in within the language. User-defined data types need to be defined. The
+syllabus requires candidates to use and define non-composite data types such as enumerated and pointer
+and composite data types such as record, set, class/object. Abstract Data Types (ADTs) stack, queue,
+linked list, dictionary and binary tree are also defined as composite data types.
+
+4.1 Defining user-defined data types
+
+Non-composite data type: enumerated
+
+Auser-defined non-composite data type with a list of possible values is called an enumerated data type. The
+enumerated type should be declared as follows:
+
+TYPE ← identifier> = (valuel, value2, value3, ...)
+
+Example - declaration of enumerated type
+This enumerated type holds data about seasons of the year.
+
+TYPE Season = (Spring, Summer, Autumn, Winter)
+
+Non-composite data type: pointer
+
+A user-defined non-composite data type referencing a memory location is called a pointer. The pointer should
+be declared as follows:
+
+TYPE ← identifier> = *<data type>
+
+The * shows that the variable is a pointer and the data type indicates the type of the data stored in the
+memory location.
+
+Example - declarations of pointer type
+
+TYPE TIntPointer = “INTEGER
+TYPE TCharPointer = “CHAR
+
+Declaration of a variable of pointer type does not require the * (caret) symbol to be used.
+
+Example - declaration of a pointer variable
+
+DECLARE MyPointer : TIntPointer
+
+Back to contents page www.cambridgeinternational.org/alevel 13

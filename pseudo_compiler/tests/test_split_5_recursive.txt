@@ -1,0 +1,15 @@
+// 测试5: 测试递归函数（可能的崩溃原因）
+
+// 计算阶乘的递归函数
+FUNCTION Factorial(n : INTEGER) RETURNS INTEGER
+    IF n <= 1 THEN
+        RETURN 1
+    ELSE
+        RETURN n * Factorial(n - 1)
+    ENDIF
+ENDFUNCTION
+
+// 测试小数值的阶乘
+OUTPUT "Factorial of 3: ", Factorial(3)
+OUTPUT "Factorial of 4: ", Factorial(4)
+OUTPUT "Factorial of 5: ", Factorial(5)

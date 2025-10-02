@@ -1,0 +1,23 @@
+// 测试1: 只测试RECORD类型定义和基本操作
+
+TYPE Student
+    DECLARE Name : STRING
+    DECLARE Age : INTEGER
+    DECLARE Grade : REAL
+    DECLARE IsActive : BOOLEAN
+ENDTYPE
+
+// 声明RECORD变量
+DECLARE MyStudent : Student
+
+// RECORD赋值测试
+MyStudent.Name ← "Alice"
+MyStudent.Age ← 18
+MyStudent.Grade ← 85.5
+MyStudent.IsActive ← TRUE
+
+// 输出测试
+OUTPUT "Student Name: ", MyStudent.Name
+OUTPUT "Age: ", MyStudent.Age
+OUTPUT "Grade: ", MyStudent.Grade
+OUTPUT "Active: ", MyStudent.IsActive

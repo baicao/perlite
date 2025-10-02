@@ -1,0 +1,37 @@
+Cambridge International AS & A Level Information Technology 9626 Pseudocode Guide for Teachers. Pseudocode in examined components
+
+1.4 Lines and line numbering
+
+Where it is necessary to number the lines of pseudocode so that they can be referred to, line numbers are
+presented to the left of the pseudocode with sufficient space to indicate clearly that they are not part of the
+pseudocode statements.
+
+Line numbers are consecutive, unless numbers are skipped to indicate that part of the code is missing. This will
+also be clearly stated.
+
+Each line representing a statement is numbered. However, when a statement runs over one line of text, the
+continuation lines are not numbered.
+
+1.5 Comments
+
+Comments are preceded by two forward slashes //. The comment continues until the end of the line. For
+multi-line comments, each line is preceded by //.
+
+Normally the comment is on a separate line before, and at the same level of indentation as, the code it refers
+to. Occasionally, however, a short comment that refers to a single line may be at the end of the line to which
+it refers.
+
+Example - comments
+
+// this procedure swaps
+
+// values of X and Y
+
+PROCEDURE SWAP(BYREF X : INTEGER, Y : INTEGER)
+Temp ← X // temporarily store X
+xX ← -Y
+Y ← Temp
+
+ENDPROCEDURE
+
+Back to contents page www.cambridgeinternational.org/alevel 7

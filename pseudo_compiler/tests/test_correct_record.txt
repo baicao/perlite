@@ -1,0 +1,38 @@
+// ========== 使用正确Cambridge 9618 RECORD语法的测试 ==========
+
+// 正确的RECORD类型定义语法
+TYPE Student
+    DECLARE Name : STRING
+    DECLARE Age : INTEGER
+    DECLARE Grade : REAL
+ENDTYPE
+
+// 变量声明
+DECLARE MyStudent : Student
+DECLARE i : INTEGER
+
+// 初始化学生记录
+MyStudent.Name ← "Alice"
+MyStudent.Age ← 18
+MyStudent.Grade ← 95.5
+
+// 简单的函数测试
+FUNCTION Add(a : INTEGER, b : INTEGER) RETURNS INTEGER
+    RETURN a + b
+ENDFUNCTION
+
+// 打印学生信息的过程
+PROCEDURE PrintStudent(student : Student)
+    OUTPUT "Student Name: ", student.Name
+    OUTPUT "Student Age: ", student.Age
+    OUTPUT "Student Grade: ", student.Grade
+ENDPROCEDURE
+
+// 测试 RECORD 操作
+OUTPUT "=== RECORD Test ==="
+CALL PrintStudent(MyStudent)
+
+// 测试简单函数
+OUTPUT "Function test: 5 + 10 =", Add(5, 10)
+
+OUTPUT "=== Test completed ==="

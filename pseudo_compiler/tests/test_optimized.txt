@@ -1,0 +1,108 @@
+// 优化版本的高级特性测试
+
+// ========== RECORD 测试 ==========
+TYPE Student
+    DECLARE Name : STRING
+    DECLARE Age : INTEGER
+    DECLARE Grade : REAL
+    DECLARE IsActive : BOOLEAN
+ENDTYPE
+
+// 声明 RECORD 变量
+DECLARE MyStudent : Student
+
+// RECORD 赋值测试
+MyStudent.Name ← "Alice"
+MyStudent.Age ← 18
+MyStudent.Grade ← 85.5
+MyStudent.IsActive ← TRUE
+
+// ========== ARRAY 测试 ==========
+DECLARE Numbers : ARRAY[1:5] OF INTEGER
+
+// 一维数组操作
+FOR i ← 1 TO 5
+    Numbers[i] ← i * 2
+NEXT i
+
+// ========== 优化的FUNCTION 测试 ==========
+
+// 优化的质数检查函数（只检查到平方根）
+FUNCTION IsPrimeOptimized(num : INTEGER) RETURNS BOOLEAN
+    DECLARE i, limit : INTEGER
+    IF num <= 1 THEN
+        RETURN FALSE
+    ENDIF
+    IF num <= 3 THEN
+        RETURN TRUE
+    ENDIF
+    IF num MOD 2 = 0 THEN
+        RETURN FALSE
+    ENDIF
+    
+    limit ← 10  // 限制检查范围，避免大数值计算
+    FOR i ← 3 TO limit
+        IF num MOD i = 0 THEN
+            RETURN FALSE
+        ENDIF
+    NEXT i
+    
+    RETURN TRUE
+ENDFUNCTION
+
+// 计算阶乘的函数（限制输入范围）
+FUNCTION SafeFactorial(n : INTEGER) RETURNS INTEGER
+    IF n <= 1 THEN
+        RETURN 1
+    ENDIF
+    IF n > 10 THEN  // 限制最大值，避免栈溢出
+        RETURN -1   // 返回错误值
+    ENDIF
+    RETURN n * SafeFactorial(n - 1)
+ENDFUNCTION
+
+// ========== PROCEDURE 测试 ==========
+
+// 打印学生信息的过程
+PROCEDURE PrintStudent(student : Student)
+    OUTPUT "Student Name: ", student.Name
+    OUTPUT "Age: ", student.Age
+    OUTPUT "Grade: ", student.Grade
+    OUTPUT "Active: ", student.IsActive
+ENDPROCEDURE
+
+// 交换两个整数的过程（按引用传递）
+PROCEDURE Swap(BYREF a : INTEGER, BYREF b : INTEGER)
+    DECLARE temp : INTEGER
+    temp ← a
+    a ← b
+    b ← temp
+ENDPROCEDURE
+
+// ========== 主程序测试 ==========
+
+// 测试 RECORD 操作
+OUTPUT "=== RECORD Test ==="
+CALL PrintStudent(MyStudent)
+
+// 测试优化的 FUNCTION 调用
+OUTPUT "=== Optimized FUNCTION Test ==="
+OUTPUT "Safe Factorial of 5: ", SafeFactorial(5)
+OUTPUT "Safe Factorial of 15: ", SafeFactorial(15)  // 应该返回-1
+OUTPUT "Is 7 prime (optimized)? ", IsPrimeOptimized(7)
+OUTPUT "Is 9 prime (optimized)? ", IsPrimeOptimized(9)
+
+// 测试数组输出
+OUTPUT "=== ARRAY Test ==="
+OUTPUT "Numbers array:"
+FOR i ← 1 TO 5
+    OUTPUT "Numbers[", i, "] = ", Numbers[i]
+NEXT i
+
+// 测试变量交换
+DECLARE x, y : INTEGER
+x ← 10
+y ← 20
+OUTPUT "Before swap: x=", x, ", y=", y
+CALL Swap(x, y)
+OUTPUT "After swap: x=", x, ", y=", y

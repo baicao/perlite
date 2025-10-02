@@ -1,0 +1,19 @@
+// 简单库函数测试
+DECLARE result : INTEGER
+DECLARE char_result : CHAR
+
+// 测试ASC函数
+result ← ASC('A')
+OUTPUT "ASC('A') = ", result
+
+// 测试CHR函数
+char_result ← CHR(65)
+OUTPUT "CHR(65) = '", char_result, "'"
+
+// 测试INT函数
+result ← INT(3.14)
+OUTPUT "INT(3.14) = ", result
+
+// 测试RAND函数
+result ← RAND(10)
+OUTPUT "RAND(10) = ", result
