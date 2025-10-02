@@ -1,41 +1,47 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-// 不加载需要数据库连接的配置文件
-// require_once 'config.php';
-require_once 'helper.php';
-// require_once 'permissions.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/helper.php';
+require_once __DIR__ . '/permissions.php';
 
-// 简化的配置，只设置必要的变量
-$vaultName = "Changedu";
-$mdDir = __DIR__ . "/content"; // 假设内容目录
-
-// 生成导航菜单（如果目录存在）
-$menu = '';
-if (is_dir($mdDir)) {
-    $menu = menu($mdDir);
+// 检查用户是否已登录
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit();
 }
 
-// 模拟用户信息
-$user = null;
-$gender = 'male';
-$logoFile = 'logo.svg';
+$title = $siteTitle . " - 伪代码编译器";
+$menu = menu($rootDir);
+
+// 用户头像逻辑
+$logoSrc = 'images/logo.svg'; // 默认 logo
+if (isset($_SESSION['user'])) {
+    if ($_SESSION['user']["gender"] === 'male') {
+        $logoSrc = 'images/boy.png'; // 男性 logo
+    } elseif ($_SESSION['user']["gender"] === 'female') {
+        $logoSrc = 'images/girl.png'; // 女性 logo
+    } else {
+        $logoSrc = 'images/others.png'; // 其他 logo
+    }
+}
 ?>
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
+
+<?php echo loadSettings($rootDir); ?>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>伪代码编译器 - <?php echo $vaultName ?></title>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title><?php echo $title ?></title>
     
     <!-- 主网站样式 -->
     <link rel="stylesheet" href=".styles/app.min.css" type="text/css">
-    <link rel="stylesheet" href=".styles/atom-one-dark.min.css" type="text/css">
+    <link id="highlight-js" rel="stylesheet" href=".styles/atom-one-dark.min.css" type="text/css">
     <link rel="stylesheet" href=".styles/perlite.min.css" type="text/css">
     <link rel="stylesheet" href=".styles/katex.min.css" type="text/css">
-    
-    <!-- 伪代码编译器样式 -->
-    <link rel="stylesheet" href="pseudo_compiler/prism.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- 主网站脚本 -->
     <script src=".js/jquery.min.js"></script>
@@ -100,11 +106,65 @@ $logoFile = 'logo.svg';
             overflow: hidden;
         }
     </style>
+
 </head>
-<body class="theme-dark">
+
+<body
+    class="theme-light mod-windows is-frameless is-hidden-frameless obsidian-app show-inline-title show-view-header is-maximized"
+    style="--zoom-factor:1; --font-text-size: <?php echo $font_size; ?>px;">
+    <title>
+        <?php echo $title ?>
+    </title>
+
+    <div class="titlebar">
+        <div class="titlebar-inner">
+            <div class="titlebar-button-container mod-left">
+                <div class="titlebar-button mod-logo">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <div class="horizontal-main-container">
-            <div class="workspace">
+            <div class="workspace is-left-sidedock-open">
+                <div class="workspace-ribbon side-dock-ribbon mod-left">
+                    <a href="user_profile.php" class="logo-link">
+                    <img src="<?php echo $logoSrc; ?>" height="25" class="logo" alt="User Logo">
+                        <div class="user-dropdown">
+                            <a href="user_profile.php">账号信息</a>
+                            <a href="logout.php">登出</a>
+                        </div>
+                    </img>
+                    </a>
+
+                    <div class="sidebar-toggle-button mod-left sidebar" aria-label="" aria-label-position="right">
+
+                        <div class="clickable-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="svg-icon sidebar-left">
+                                <path
+                                    d="M21 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V5C23 3.89543 22.1046 3 21 3Z">
+                                </path>
+                                <path d="M10 4V20"></path>
+                                <path d="M4 7H7"></path>
+                                <path d="M4 10H7"></path>
+                                <path d="M4 13H7"></path>
+                            </svg></div>
+                    </div>
+                    <div class="side-dock-actions">
+                        <div class="clickable-icon side-dock-ribbon-action" aria-label="Open graph view"
+                            aria-label-position="right"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-git-fork">
+                                <circle cx="12" cy="18" r="3"></circle>
+                                <circle cx="6" cy="6" r="3"></circle>
+                                <circle cx="18" cy="6" r="3"></circle>
+                                <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"></path>
+                                <path d="M12 12v3"></path>
+                            </svg></div>
+                    </div>
+                </div>
                 <div class="workspace-split mod-horizontal mod-left-split">
                     <div class="workspace-tabs mod-top">
                         <div class="workspace-tab-header-container">
