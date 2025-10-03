@@ -376,8 +376,10 @@ class PseudocodeLexer {
 }
 
 // 兼容浏览器和Node.js环境
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = PseudocodeLexer;
-} else {
+// ES6 导出
+export default PseudocodeLexer;
+
+// 兼容浏览器环境
+if (typeof window !== 'undefined') {
     window.PseudocodeLexer = PseudocodeLexer;
 }

@@ -13,7 +13,7 @@ require_once __DIR__ . '/helper.php';
 require_once __DIR__ . '/permissions.php';
 
 $title = $siteTitle;
-$menu = menu($rootDir);
+$menu = menu($rootDir, '', true);
 
 
 $logoSrc = 'images/logo.svg'; // 默认 logo

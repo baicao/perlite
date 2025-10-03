@@ -71,14 +71,14 @@ $userModel = new UserModel($app_conn);
             
             // 公钥（从服务器获取公钥，可以通过 API 或直接嵌入到页面中）
             var publicKey = `-----BEGIN PUBLIC KEY-----
-                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz3/Ua47MBHrzSJ8Yc/5X
-                HN+eTKZSooABvA7ADK0xhpOMg21SauCFQUT5KAYCt1+SMHyOmVzMjnDnWfmkskZl
-                lKH0757khuUMxZTex8zEJAMRJPB2a/WPah9VezYckzds7dAN7bMPbUyoWoPWQcmY
-                Aq3gXhSgHsxFQ8o4FjUNujWNL2qysIyZFUKPTs87JxdXXiVBB74nhWyvkWVDvhbM
-                T5ln6WoMcH69Pdtt7yRShcu8p36/ghxatbTgDDm/HXgMRyIB5HWsbfa7+nBD52ml
-                QgNpsIYwGIUraAAhAB7/GU5kMkVZeVAi2W6u4hRx9EWhxVpK3+xQSQxV/2AL3zsm
-                vwIDAQAB
-                -----END PUBLIC KEY-----`;
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqpKKoviVFd5EJCUutCjQ
+ENsOg7j1ovX4MN3WUIo5vmYjqTdxi3xJ1myPrrtQ8ke/L4C8gchLtg73RsWSd6k6
+MzZNZga8I6iWTahgzL9sEkwgOZkY/2Te+aUiFgG2Wn9+FmsP0CTAsw4qdpKy87fn
+mZktrBFfZoF0YTOExKEGPSW8l/Bun56LAueAv0C/yPEhMVgubT2Py0ggNdLKS6Ox
+M2PtmGiVoyoQYwXlLbczJIipafpXrMGIqhdDPM6hftdGu8Pkbp9GUs8zkOm9yDsz
+r5ShKcwhDnXEdVsEmhEeVfX41oiJPywPbCTUlLpeOofcmNF2SAtacN8WAQrFHswR
+0QIDAQAB
+-----END PUBLIC KEY-----`;
 
             // 设置公钥
             encrypt.setPublicKey(publicKey);

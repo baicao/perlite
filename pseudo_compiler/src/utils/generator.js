@@ -761,8 +761,10 @@ class PseudocodeGenerator {
 }
 
 // 兼容浏览器和Node.js环境
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = PseudocodeGenerator;
-} else {
+// ES6 导出
+export default PseudocodeGenerator;
+
+// 兼容浏览器环境
+if (typeof window !== 'undefined') {
     window.PseudocodeGenerator = PseudocodeGenerator;
 }

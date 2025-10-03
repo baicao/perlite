@@ -3,9 +3,9 @@
  * 整合词法分析、语法分析和代码生成
  */
 
-const PseudocodeLexer = require('./lexer.js');
-const PseudocodeParser = require('./parser.js');
-const PseudocodeGenerator = require('./generator.js');
+import PseudocodeLexer from './lexer.js';
+import PseudocodeParser from './parser.js';
+import PseudocodeGenerator from './generator.js';
 
 class PseudocodeCompiler {
     constructor() {
@@ -591,9 +591,11 @@ class SemanticAnalyzer {
 }
 
 // 兼容浏览器和Node.js环境
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { PseudocodeCompiler, SemanticAnalyzer };
-} else {
+// ES6 导出
+export { PseudocodeCompiler, SemanticAnalyzer };
+
+// 兼容浏览器环境
+if (typeof window !== 'undefined') {
     window.PseudocodeCompiler = PseudocodeCompiler;
     window.SemanticAnalyzer = SemanticAnalyzer;
 }

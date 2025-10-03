@@ -170,23 +170,11 @@ function cmp($a, $b)
 	return strnatcasecmp($aTemp, $bTemp);
 }
 
-function menu($dir, $folder = '')
+function menu($dir, $folder = '', $isRoot = false)
 {
 
 	global $avFiles;
 	$html = '';
-	
-	// 添加伪代码编译器链接
-	$html .= '
-	<div class="tree-item nav-file">
-		<div class="nav-file-title" onclick="window.location.href=\'pseudocode.php\';" style="cursor: pointer;">
-			<div class="nav-file-title-content">
-				<i class="fas fa-code" style="margin-right: 8px; color: #007acc;"></i>
-				伪代码编译器
-			</div>
-		</div>
-	</div>
-	';
 	
 	// get all files from current dir
 	$files = glob($dir . '/*');
@@ -217,7 +205,7 @@ function menu($dir, $folder = '')
 					</div>
 					<div class="tree-item-children nav-folder-children collapse" id="' . $folderId . '-collapse" style="">
 						<div style="width: 591px; height: 0.1px; margin-bottom: 0px;"></div>';
-				$html .= menu($file, $folder . '/');
+				$html .= menu($file, $folder . '/', false);
 				$html .= '</div></div>';
 				
 			}
@@ -243,12 +231,26 @@ function menu($dir, $folder = '')
 
 			$html .= '
 			<div class="tree-item nav-file">
-				<div class="nav-file-title perlite-link" onclick=getContent("' . $pathClean . '"); id="' . $pathID . '"">
+				<div class="nav-file-title perlite-link" onclick="getContent(\'' . $pathClean . '\');" id="' . $pathID . '">
 					<div class="nav-file-title-content">' . $mdFile . '</div>
 				</div>
 			</div>
 			';
 		}
+	}
+
+	// 只在根目录调用时添加伪代码编译器链接
+	if ($isRoot) {
+		$html .= '
+		<div class="tree-item nav-file">
+			<div class="nav-file-title" onclick="loadCompilerInIframe();" style="cursor: pointer;">
+				<div class="nav-file-title-content">
+					<i class="fas fa-code" style="margin-right: 8px; color: #007acc;"></i>
+					Pseudocode Compiler
+				</div>
+			</div>
+		</div>
+		';
 	}
 
 	return $html;

@@ -291,7 +291,13 @@ class LLMVLIntegration {
 }
 
 // 导出模块
-module.exports = LLMVLIntegration;
+// ES6 导出
+export default LLMVLIntegration;
+
+// 兼容浏览器环境
+if (typeof window !== 'undefined') {
+    window.LLMVLIntegration = LLMVLIntegration;
+}
 
 // 如果直接运行此脚本，执行示例
 if (require.main === module) {

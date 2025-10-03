@@ -29,6 +29,50 @@ if ($('#showTOC').data('option') == false || localStorage.getItem("showTOC") ===
 
 
 
+// Load compiler in iframe function
+function loadCompilerInIframe() {
+    // Hide the main content
+    $('#mdContent').hide();
+    
+    // Hide static iframe if exists
+    $('#static-compiler-iframe').hide();
+    
+    // Remove existing compiler iframe if any
+    $('#compiler-iframe').remove();
+    
+    // Create and append iframe to the content area
+    const iframe = $('<iframe>', {
+        id: 'compiler-iframe',
+        src: 'http://localhost:3000',
+        style: 'width: 100%; height: 600px; border: none; border-radius: 8px;'
+    });
+    
+    // Append iframe to the mdContent container instead of body
+    $('#mdContent').parent().append(iframe);
+    
+    // Update URL without page reload
+    window.history.pushState({}, '', 'pseudocode.php');
+    
+    // Update active link styling
+    $('.perlite-link').removeClass('is-active');
+    $('[onclick="loadCompilerInIframe();"]').addClass('is-active');
+}
+
+// Function to show main content and hide compiler
+function showMainContent() {
+    $('#compiler-iframe').remove();
+    $('#static-compiler-iframe').show(); // Show static iframe if it exists
+    $('#mdContent').show();
+    
+    // Re-enable navigation links
+    $('.perlite-link').removeClass('is-active');
+    
+    // Update URL to remove pseudocode.php if we're on it
+    if (window.location.pathname.includes('pseudocode.php')) {
+        window.history.pushState({}, '', window.location.protocol + '//' + window.location.host + '/');
+    }
+}
+
 /**
  * scroll to anchor
  * @param {String} aid
@@ -71,6 +115,9 @@ function getContent(str, home = false, popHover = false, anchor = "") {
           return;
         }
         if (popHover == false) {
+          // Show main content and hide compiler iframe if it exists
+          showMainContent();
+          
           // set content
           $("#mdContent").html(result);
 
