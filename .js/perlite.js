@@ -31,8 +31,12 @@ if ($('#showTOC').data('option') == false || localStorage.getItem("showTOC") ===
 
 // Load compiler in iframe function
 function loadCompilerInIframe() {
-    // Hide the main content
-    $('#mdContent').hide();
+    // Hide only the content area, not the entire mod-root
+    $('.view-content').hide();
+    
+    // Hide the right panel and toggle button
+    $('.workspace-split.mod-horizontal.mod-right-split').hide();
+    $('.sidebar-toggle-button.mod-right').hide();
     
     // Hide static iframe if exists
     $('#static-compiler-iframe').hide();
@@ -40,15 +44,15 @@ function loadCompilerInIframe() {
     // Remove existing compiler iframe if any
     $('#compiler-iframe').remove();
     
-    // Create and append iframe to the content area
+    // Create and append iframe to replace content area
     const iframe = $('<iframe>', {
         id: 'compiler-iframe',
         src: 'http://localhost:3000',
-        style: 'width: 100%; height: 600px; border: none; border-radius: 8px;'
+        style: 'width: 100%; height: calc(100vh - 100px); border: none; border-radius: 8px;'
     });
     
-    // Append iframe to the mdContent container instead of body
-    $('#mdContent').parent().append(iframe);
+    // Append iframe to replace the view-content area
+    $('.view-content').parent().append(iframe);
     
     // Update URL without page reload
     window.history.pushState({}, '', 'pseudocode.php');
@@ -62,7 +66,13 @@ function loadCompilerInIframe() {
 function showMainContent() {
     $('#compiler-iframe').remove();
     $('#static-compiler-iframe').show(); // Show static iframe if it exists
-    $('#mdContent').show();
+    
+    // Show the content area
+    $('.view-content').show();
+    
+    // Show the right panel and toggle button
+    $('.workspace-split.mod-horizontal.mod-right-split').show();
+    $('.sidebar-toggle-button.mod-right').show();
     
     // Re-enable navigation links
     $('.perlite-link').removeClass('is-active');
