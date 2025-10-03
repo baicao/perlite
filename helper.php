@@ -228,14 +228,24 @@ function menu($dir, $folder = '', $isRoot = false)
 			$pathID = str_replace(' ', '_', $path);
 			$pathID = preg_replace('/[^A-Za-z0-9\-]/', '_', $path);
 
-
-			$html .= '
-			<div class="tree-item nav-file">
-				<div class="nav-file-title perlite-link" onclick="getContent(\'' . $pathClean . '\');" id="' . $pathID . '">
-					<div class="nav-file-title-content">' . $mdFile . '</div>
+			// Special handling for Chang Edu Home - redirect to index.php
+			if ($mdFile === 'Chang Edu Home') {
+				$html .= '
+				<div class="tree-item nav-file">
+					<div class="nav-file-title perlite-link" onclick="window.location.href=\'index.php\';" id="' . $pathID . '">
+						<div class="nav-file-title-content">' . $mdFile . '</div>
+					</div>
 				</div>
-			</div>
-			';
+				';
+			} else {
+				$html .= '
+				<div class="tree-item nav-file">
+					<div class="nav-file-title perlite-link" onclick="getContent(\'' . $pathClean . '\');" id="' . $pathID . '">
+						<div class="nav-file-title-content">' . $mdFile . '</div>
+					</div>
+				</div>
+				';
+			}
 		}
 	}
 

@@ -426,12 +426,6 @@ OUTPUT "Result is: ", result`);
         </div>
       </div>
 
-      <footer className="footer">
-        <p>
-          &copy; 2025 Pseudocode 编译器 | 基于 Cambridge 9618 标准
-        </p>
-      </footer>
-
       
     </div>
   );

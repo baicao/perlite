@@ -31,35 +31,61 @@ if ($('#showTOC').data('option') == false || localStorage.getItem("showTOC") ===
 
 // Load compiler in iframe function
 function loadCompilerInIframe() {
-    // Hide only the content area, not the entire mod-root
-    $('.view-content').hide();
-    
-    // Hide the right panel and toggle button
-    $('.workspace-split.mod-horizontal.mod-right-split').hide();
-    $('.sidebar-toggle-button.mod-right').hide();
-    
-    // Hide static iframe if exists
-    $('#static-compiler-iframe').hide();
-    
-    // Remove existing compiler iframe if any
-    $('#compiler-iframe').remove();
-    
-    // Create and append iframe to replace content area
-    const iframe = $('<iframe>', {
-        id: 'compiler-iframe',
-        src: 'http://localhost:3000',
-        style: 'width: 100%; height: calc(100vh - 100px); border: none; border-radius: 8px;'
-    });
-    
-    // Append iframe to replace the view-content area
-    $('.view-content').parent().append(iframe);
-    
-    // Update URL without page reload
-    window.history.pushState({}, '', 'pseudocode.php');
-    
-    // Update active link styling
-    $('.perlite-link').removeClass('is-active');
-    $('[onclick="loadCompilerInIframe();"]').addClass('is-active');
+    // Check if we're already on pseudocode.php
+    if (window.location.pathname.includes('pseudocode.php')) {
+        // We're on pseudocode.php, replace view-content with iframe
+        const viewContent = $('.view-content');
+        if (viewContent.length > 0) {
+            // Clear existing content
+            viewContent.empty();
+            
+            // Add a loading message first
+            const loadingDiv = $('<div>', {
+                id: 'iframe-loading',
+                style: 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;',
+                html: '<div>正在加载伪代码编译器...</div><div style="margin-top: 10px; font-size: 12px; color: #666;">如果长时间无法加载，请检查React开发服务器是否运行在端口3000</div>'
+            });
+            
+            // Replace view-content with iframe
+            viewContent.css({
+                'position': 'relative',
+                'height': 'calc(100vh - 200px)',
+                'padding': '0',
+                'overflow': 'hidden'
+            });
+            viewContent.append(loadingDiv);
+            
+            // Wait a moment then create iframe
+            setTimeout(function() {
+                // Create iframe to replace the content
+                const iframe = $('<iframe>', {
+                    id: 'compiler-iframe',
+                    src: 'http://localhost:3000',
+                    style: 'width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;',
+                    frameborder: '0',
+                    allowfullscreen: true
+                });
+                
+                // Add error handling for iframe
+                iframe.on('error', function() {
+                    console.error('Failed to load iframe');
+                    $('#iframe-loading').html('<div style="color: #e74c3c;">无法加载伪代码编译器</div><div style="margin-top: 10px; font-size: 12px; color: #666;">请确保React开发服务器正在运行在端口3000</div>');
+                });
+                
+                // Remove loading message after iframe loads
+                iframe.on('load', function() {
+                    $('#iframe-loading').fadeOut(500, function() {
+                        $(this).remove();
+                    });
+                });
+                
+                viewContent.append(iframe);
+            }, 500);
+        }
+    } else {
+        // We're on index.php or other pages, redirect to pseudocode.php
+        window.location.href = 'pseudocode.php';
+    }
 }
 
 // Function to show main content and hide compiler
@@ -77,10 +103,8 @@ function showMainContent() {
     // Re-enable navigation links
     $('.perlite-link').removeClass('is-active');
     
-    // Update URL to remove pseudocode.php if we're on it
-    if (window.location.pathname.includes('pseudocode.php')) {
-        window.history.pushState({}, '', window.location.protocol + '//' + window.location.host + '/');
-    }
+    // Only update URL when explicitly navigating away from compiler, not on page refresh
+    // Removed automatic URL update to prevent unwanted redirects on page refresh
 }
 
 /**
@@ -157,37 +181,45 @@ function getContent(str, home = false, popHover = false, anchor = "") {
           var toc = "";
           var level = 0;
 
-          document.getElementById("mdContent").innerHTML =
-            document.getElementById("mdContent").innerHTML.replace(
-              /<h([\d])>([^<]+)<\/h([\d])>/gi,
-              function (str, openLevel, titleText, closeLevel) {
+          // Check if mdContent element exists before accessing innerHTML
+          var mdContentElement = document.getElementById("mdContent");
+          if (mdContentElement) {
+            mdContentElement.innerHTML =
+              mdContentElement.innerHTML.replace(
+                /<h([\d])>([^<]+)<\/h([\d])>/gi,
+                function (str, openLevel, titleText, closeLevel) {
 
-                if (openLevel != closeLevel) {
-                  return str;
+                  if (openLevel != closeLevel) {
+                    return str;
+                  }
+                  if (openLevel > level) {
+                    toc += (new Array(openLevel - level + 1)).join('<div class="tree-item tree-item-children">');
+                  } else if (openLevel < level) {
+                    toc += (new Array(level - openLevel + 1)).join("</div>");
+                  }
+
+                  level = parseInt(openLevel);
+
+                  var anchor = titleText.replace(/ /g, "_");
+                  toc += '<div class="tree-item-self is-clickable toc-item"><a href="#' + anchor + '">' + titleText
+                    + '</a></div>';
+
+                  return "<h" + openLevel + "><a name='" + anchor + "' >"
+                    + "" + "</a>" + titleText + "</h" + closeLevel + ">";
+
                 }
-                if (openLevel > level) {
-                  toc += (new Array(openLevel - level + 1)).join('<div class="tree-item tree-item-children">');
-                } else if (openLevel < level) {
-                  toc += (new Array(level - openLevel + 1)).join("</div>");
-                }
-
-                level = parseInt(openLevel);
-
-                var anchor = titleText.replace(/ /g, "_");
-                toc += '<div class="tree-item-self is-clickable toc-item"><a href="#' + anchor + '">' + titleText
-                  + '</a></div>';
-
-                return "<h" + openLevel + "><a name='" + anchor + "' >"
-                  + "" + "</a>" + titleText + "</h" + closeLevel + ">";
-
-              }
-            );
+              );
+          }
 
           if (level) {
             toc += (new Array(level + 1)).join("</div></div>");
           }
 
-          document.getElementById("toc").innerHTML = toc;
+          // Check if toc element exists before setting innerHTML
+          var tocElement = document.getElementById("toc");
+          if (tocElement) {
+            tocElement.innerHTML = toc;
+          }
 
 
           // add Image Click popup
@@ -415,16 +447,18 @@ function getContent(str, home = false, popHover = false, anchor = "") {
         isMobile();
 
         //render LaTeX (Katex)
-        renderMathInElement(mdContent,
-          {
-            delimiters: [
-              { left: "$$", right: "$$", display: true },
-              { left: "\\[", right: "\\]", display: true },
-              { left: "$", right: "$", display: false },
-              { left: "\\(", right: "\\)", display: false }
-            ]
-          }
-        );
+        if (mdContent) {
+          renderMathInElement(mdContent,
+            {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false }
+              ]
+            }
+          );
+        }
 
         // clean internal links in mermaid elements
         var mermaids = document.getElementsByClassName("language-mermaid");
@@ -1504,6 +1538,19 @@ $(document).ready(function () {
 
   // init mermaid
   mermaid.initialize({ startOnLoad: false, 'securityLevel': 'Strict', 'theme': 'dark' });
+
+  // Check if we're on pseudocode.php page and initialize compiler
+  if (window.location.pathname.includes('pseudocode.php')) {
+    // Mark compiler link as active
+    $('[onclick="loadCompilerInIframe();"]').addClass('is-active');
+    
+    // Hide the static iframe and show the React app
+    $('#static-compiler-iframe').hide();
+    
+    // Ensure the React app container is visible
+    $('.pseudocode-container').show();
+    $('#root').show();
+  }
 
 });
 
