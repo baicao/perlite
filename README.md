@@ -128,6 +128,16 @@ npm run build  # 构建生产版本
 - **helper.php**: 导航和文件树生成
 - **content.php**: 内容渲染逻辑
 
+## 更新日志
+
+### v1.1.0 (2024-12-19)
+- **修复**: 优化iframe集成策略，保留导航功能
+  - 修改`loadCompilerInIframe`函数：只替换内容区域而非整个mod-root
+  - 修改`showMainContent`函数：正确恢复内容区域显示
+  - 保留所有导航栏、标题栏和控制按钮功能
+  - 修复iframe高度计算，为导航栏预留空间
+  - 确保侧边栏切换和其他UI功能正常工作
+
 ## 贡献指南
 
 1. Fork 项目
