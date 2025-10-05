@@ -55,7 +55,7 @@
 
 /* 页脚 */
 .footer {
-  background: #ffffff;
+  background: transparent;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 20px;
@@ -92,7 +92,7 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  background: #ffffff;
+  background: transparent;
   color: #374151;
 }
 
@@ -188,7 +188,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   margin: 5% auto;
   padding: 0;
   border-radius: 15px;

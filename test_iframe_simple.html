@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Iframe Test</title>
+</head>
+<body>
+    <h1>Simple Iframe Test</h1>
+    <iframe src="/pseudo_compiler/build/index.html" width="100%" height="600px" style="border: 1px solid #ccc;"></iframe>
+    
+    <script>
+        // Monitor console for errors
+        window.addEventListener('error', function(e) {
+            console.log('Error caught:', e.error);
+        });
+        
+        // Monitor network errors
+        window.addEventListener('unhandledrejection', function(e) {
+            console.log('Unhandled rejection:', e.reason);
+        });
+    </script>
+</body>
+</html>

@@ -255,7 +255,6 @@ function menu($dir, $folder = '', $isRoot = false)
 		<div class="tree-item nav-file">
 			<div class="nav-file-title" onclick="loadCompilerInIframe();" style="cursor: pointer;">
 				<div class="nav-file-title-content">
-					<i class="fas fa-code" style="margin-right: 8px; color: #007acc;"></i>
 					Pseudocode Compiler
 				</div>
 			</div>

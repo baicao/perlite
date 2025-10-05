@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Iframe Test</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        iframe { width: 100%; height: 600px; border: 1px solid #ccc; }
+        .info { margin-bottom: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h3>Direct Iframe Test</h3>
+        <p>Testing iframe loading of the React build directly</p>
+    </div>
+    
+    <iframe 
+        src="/pseudo_compiler/build/index.html" 
+        id="test-iframe"
+        onload="console.log('Iframe loaded successfully')"
+        onerror="console.error('Iframe failed to load')">
+    </iframe>
+    
+    <script>
+        // Listen for messages from iframe
+        window.addEventListener('message', function(event) {
+            console.log('Received message from iframe:', event.data, 'from origin:', event.origin);
+        });
+        
+        // Send test message to iframe after delay
+        setTimeout(function() {
+            const iframe = document.getElementById('test-iframe');
+            try {
+                iframe.contentWindow.postMessage('test-message', '*');
+                console.log('Sent test message to iframe');
+            } catch (e) {
+                console.error('Failed to send message to iframe:', e);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

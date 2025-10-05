@@ -30,6 +30,36 @@ OUTPUT "Result is: ", result`);
   // 组件加载时自动编译默认代码
   useEffect(() => {
     compileCode(true); // silent编译，不显示状态消息
+    
+    // 添加postMessage通信，通知父窗口React应用已准备就绪
+    const notifyParentReady = () => {
+      if (window.parent && window.parent !== window) {
+        try {
+          window.parent.postMessage('react-app-ready', '*');
+          console.log('Sent ready message to parent window');
+        } catch (e) {
+          console.log('Could not send message to parent:', e);
+        }
+      }
+    };
+    
+    // 延迟发送消息，确保组件完全渲染
+    const timer = setTimeout(notifyParentReady, 1000);
+    
+    // 监听来自父窗口的消息
+    const handleMessage = (event) => {
+      if (event.data === 'parent-ready') {
+        console.log('Received parent-ready message');
+        notifyParentReady();
+      }
+    };
+    
+    window.addEventListener('message', handleMessage);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('message', handleMessage);
+    };
   }, []); // 空依赖数组，只在组件挂载时执行一次
 
   // 编译代码

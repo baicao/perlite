@@ -6,9 +6,13 @@ require_once __DIR__ . '/permissions.php';
 
 // 检查用户是否已登录
 if (!isset($_SESSION['user'])) {
+    // 保存当前页面URL，登录后返回
+    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: login.php');
     exit();
 }
+
+$userLoggedIn = true;
 
 $title = $siteTitle . " - 伪代码编译器";
 $menu = menu($rootDir, '', true);
@@ -52,6 +56,48 @@ if (isset($_SESSION['user'])) {
     
     <!-- 伪代码编译器样式 -->
     <link href=".styles/css/main.7de54078.css" rel="stylesheet">
+    
+    <!-- 修复字体样式冲突 -->
+    <style>
+        /* 重置导航栏字体，保持与index.php一致 */
+        .nav-file-title-content {
+            font-family: inherit !important;
+        }
+        .tree-item {
+            font-family: inherit !important;
+        }
+        .workspace-leaf-content {
+            font-family: inherit !important;
+        }
+        
+        /* 修复FontAwesome字体路径 */
+        @font-face {
+            font-family: "Font Awesome 6 Free";
+            font-style: normal;
+            font-weight: 900;
+            font-display: block;
+            src: url(".styles/media/fa-solid-900.2463b90d9a316e4e5294.woff2") format("woff2"),
+                 url(".styles/media/fa-solid-900.2582b0e4bcf85eceead0.ttf") format("truetype");
+        }
+        
+        @font-face {
+            font-family: "Font Awesome 6 Free";
+            font-style: normal;
+            font-weight: 400;
+            font-display: block;
+            src: url(".styles/media/fa-regular-400.89999bdf5d835c012025.woff2") format("woff2"),
+                 url(".styles/media/fa-regular-400.914997e1bdfc990d0897.ttf") format("truetype");
+        }
+        
+        @font-face {
+            font-family: "Font Awesome 6 Brands";
+            font-style: normal;
+            font-weight: 400;
+            font-display: block;
+            src: url(".styles/media/fa-brands-400.c210719e60948b211a12.woff2") format("woff2"),
+                 url(".styles/media/fa-brands-400.1815e00441357e01619e.ttf") format("truetype");
+        }
+    </style>
    
     <script src=".js/jquery.min.js"></script>
     <script src=".js/highlight.min.js"></script>
@@ -110,7 +156,7 @@ if (isset($_SESSION['user'])) {
         /* 伪代码编译器内容区域样式 */
         .pseudocode-content {
             width: 100%;
-            height: calc(100vh - 100px);
+            height: 100vh;
             border: none;
             overflow: hidden;
         }
@@ -290,7 +336,9 @@ if (isset($_SESSION['user'])) {
                                                 <div class="markdown-preview-sizer markdown-preview-section" style="padding-bottom: 200px; min-height: 500px;">
                                                     <div class="markdown-preview-pusher" style="width: 1px; height: 0.1px; margin-bottom: 0px;"></div>
                                                     <div class="inline-title" tabindex="-1" enterkeyhint="done"></div>
-                                                    <div id="mdContent"></div>
+                                                    <div id="mdContent">
+                        <!-- 伪代码编译器将通过iframe加载到这里 -->
+                    </div>
                                                     <div id="toc" style="display: none;"></div>
                                                     <!-- 伪代码编译器将通过JavaScript动态加载到这里 -->
                                                 </div>
@@ -312,10 +360,8 @@ if (isset($_SESSION['user'])) {
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 页面加载完成后立即调用loadCompilerInIframe
-            if (typeof loadCompilerInIframe === 'function') {
-                loadCompilerInIframe();
-            }
+            // 用户已登录，直接加载伪代码编译器到iframe
+            loadCompilerInIframe();
             
             // 用户下拉菜单功能
             const logoLink = document.querySelector('.logo-link');
@@ -376,11 +422,6 @@ if (isset($_SESSION['user'])) {
                     }
                 });
             });
-            
-            // 在pseudocode.php页面加载时自动替换view-content为iframe
-            if (typeof loadCompilerInIframe === 'function') {
-                loadCompilerInIframe();
-            }
         });
     </script>
 </body>

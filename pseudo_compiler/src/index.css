@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #ffffff;
+  background: transparent;
   min-height: 100vh;
   color: #333;
   line-height: 1.6;
@@ -36,7 +36,7 @@ body {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 15px 20px;

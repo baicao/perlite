@@ -2,6 +2,7 @@
   "name": "pseudocode-compiler-react",
   "version": "1.0.0",
   "description": "Cambridge 9618 Pseudocode编译器 - React版本",
+  "homepage": "/pseudo_compiler/build",
   "main": "src/index.js",
   "scripts": {
     "start": "react-scripts start",

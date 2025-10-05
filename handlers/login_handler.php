@@ -53,7 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         log_message("[$requestId] Login successful for user ID: ".$user["data"]["id"]);
                         $response['rs'] = 1;
                         $response['message'] = "success";
-                        $response['url'] = SITE_URL; 
+                        // 检查是否有保存的重定向URL
+                        if (isset($_SESSION['redirect_after_login'])) {
+                            $response['url'] = $_SESSION['redirect_after_login'];
+                            unset($_SESSION['redirect_after_login']); // 清除重定向URL
+                        } else {
+                            $response['url'] = SITE_URL;
+                        } 
                     } else {
                         $_SESSION['user_email'] = $account;
                         log_message("[$requestId] Email not verified for user ID: $id");
@@ -113,7 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     log_message("[$requestId] Login successful for user ID: " . $user["data"]['id']);
                     $response['rs'] = 1;
                     $response['message'] = "success";
-                    $response['url'] = SITE_URL; 
+                    // 检查是否有保存的重定向URL
+                    if (isset($_SESSION['redirect_after_login'])) {
+                        $response['url'] = $_SESSION['redirect_after_login'];
+                        unset($_SESSION['redirect_after_login']); // 清除重定向URL
+                    } else {
+                        $response['url'] = SITE_URL;
+                    } 
                 } else {
                     log_message("[$requestId] Invalid verification code or code expired: $phone_number");
                     $response['rs'] = 0;

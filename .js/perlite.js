@@ -36,55 +36,292 @@ function loadCompilerInIframe() {
         // We're on pseudocode.php, replace view-content with iframe
         const viewContent = $('.view-content');
         if (viewContent.length > 0) {
-            // Clear existing content
-            viewContent.empty();
+            // Check if iframe already exists and is loading/loaded
+            const existingIframe = $('#compiler-iframe');
+            if (existingIframe.length > 0) {
+                console.log('Iframe already exists, not recreating');
+                return; // Don't recreate if iframe already exists
+            }
             
-            // Add a loading message first
-            const loadingDiv = $('<div>', {
-                id: 'iframe-loading',
-                style: 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;',
-                html: '<div>正在加载伪代码编译器...</div><div style="margin-top: 10px; font-size: 12px; color: #666;">如果长时间无法加载，请检查React开发服务器是否运行在端口3000</div>'
+            // Preload critical resources before creating iframe
+            const preloadResources = [
+                '/pseudo_compiler/build/static/js/main.6c06c7b9.js',
+                '/pseudo_compiler/build/static/css/main.55e66a0c.css'
+            ];
+            
+            // Add preload links to head
+            preloadResources.forEach(url => {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.href = url;
+                link.as = url.endsWith('.js') ? 'script' : 'style';
+                document.head.appendChild(link);
             });
+            
+            // Clear existing content only if no iframe exists
+            viewContent.empty();
             
             // Replace view-content with iframe
             viewContent.css({
                 'position': 'relative',
-                'height': 'calc(100vh - 200px)',
+                'height': '100vh',
                 'padding': '0',
                 'overflow': 'hidden'
             });
+            
+            // Add loading indicator first
+            const loadingDiv = $('<div id="iframe-loading" style="color: #666; text-align: center; padding: 50px; font-size: 16px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;"><i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> 正在加载伪代码编译器...<br><div style="margin-top: 10px; font-size: 12px; color: #999;">首次加载可能需要几秒钟</div></div>');
             viewContent.append(loadingDiv);
             
-            // Wait a moment then create iframe
-            setTimeout(function() {
+            // Wait a bit for preloading, then create iframe
+            setTimeout(() => {
                 // Create iframe to replace the content
                 const iframe = $('<iframe>', {
                     id: 'compiler-iframe',
-                    src: 'http://localhost:3000',
-                    style: 'width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;',
+                    src: '/pseudo_compiler/build/index.html',
+                    style: 'width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.3s ease;',
                     frameborder: '0',
-                    allowfullscreen: true
+                    allowfullscreen: true,
+                    sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals',
+                    loading: 'eager'
                 });
+            
+            let loadingComplete = false;
+            let loadStartTime = Date.now();
+            let resourcesLoaded = false;
+            
+            // Send a message to the iframe once it's loaded to establish communication
+            // Use multiple attempts with increasing delays to ensure iframe is ready
+            let messageAttempts1 = 0;
+            const maxAttempts1 = 5;
+            
+            const sendMessageToIframe1 = function() {
+                messageAttempts1++;
+                try {
+                    if (iframe[0] && iframe[0].contentWindow && iframe[0].contentWindow.postMessage) {
+                        iframe[0].contentWindow.postMessage('parent-ready', '*');
+                        console.log('Successfully sent message to iframe on attempt', messageAttempts1);
+                        return;
+                    } else {
+                        throw new Error('contentWindow not ready');
+                    }
+                } catch (e) {
+                    console.log('Could not send message to iframe (attempt ' + messageAttempts1 + '):', e.message);
+                    
+                    // Retry with exponential backoff if we haven't reached max attempts
+                    if (messageAttempts1 < maxAttempts1) {
+                        setTimeout(sendMessageToIframe1, messageAttempts1 * 1000);
+                    }
+                }
+            };
+            
+            // Add error handling and load event for iframe
+            iframe.on('error', function(e) {
+                console.error('Iframe error event:', e);
+                if (!loadingComplete) {
+                    loadingComplete = true;
+                    loadingDiv.html('<div style="color: #e74c3c; text-align: center;">无法加载伪代码编译器<br><div style="margin-top: 10px; font-size: 12px; color: #666;">请刷新页面重试</div></div>');
+                }
+            });
+            
+            // Enhanced load detection with resource checking
+            iframe.on('load', function() {
+                const loadTime = Date.now() - loadStartTime;
+                console.log('Iframe load event fired after', loadTime, 'ms');
                 
-                // Add error handling for iframe
-                iframe.on('error', function() {
-                    console.error('Failed to load iframe');
-                    $('#iframe-loading').html('<div style="color: #e74c3c;">无法加载伪代码编译器</div><div style="margin-top: 10px; font-size: 12px; color: #666;">请确保React开发服务器正在运行在端口3000</div>');
-                });
-                
-                // Remove loading message after iframe loads
-                iframe.on('load', function() {
-                    $('#iframe-loading').fadeOut(500, function() {
+                if (!loadingComplete) {
+                    // Check if resources are actually loaded by examining iframe content
+                    setTimeout(function() {
+                        try {
+                            const iframeDoc = iframe[0].contentDocument || iframe[0].contentWindow.document;
+                            const scripts = iframeDoc.querySelectorAll('script[src]');
+                            const stylesheets = iframeDoc.querySelectorAll('link[rel="stylesheet"]');
+                            
+                            // Check if React app root element exists and has content
+                            const rootElement = iframeDoc.getElementById('root');
+                            const hasReactContent = rootElement && rootElement.children.length > 0;
+                            
+                            console.log('Resource check:', {
+                                scripts: scripts.length,
+                                stylesheets: stylesheets.length,
+                                hasReactContent: hasReactContent
+                            });
+                            
+                            if (hasReactContent || resourcesLoaded) {
+                                // Resources are loaded and React app is rendered
+                                if (!loadingComplete) {
+                                    loadingComplete = true;
+                                    console.log('Resources verified, showing iframe content');
+                                    iframe.css('opacity', '1');
+                                    loadingDiv.fadeOut(300, function() {
+                                        $(this).remove();
+                                    });
+                                }
+                            } else {
+                                // Wait a bit more for React app to render
+                                setTimeout(function() {
+                                    if (!loadingComplete) {
+                                        loadingComplete = true;
+                                        console.log('Showing iframe content after extended wait');
+                                        iframe.css('opacity', '1');
+                                        loadingDiv.fadeOut(300, function() {
+                                            $(this).remove();
+                                        });
+                                    }
+                                }, 1500);
+                            }
+                        } catch (e) {
+                            // Cross-origin or other access issues, proceed with normal loading
+                            console.log('Cannot access iframe content, proceeding with normal loading');
+                            if (!loadingComplete) {
+                                loadingComplete = true;
+                                iframe.css('opacity', '1');
+                                loadingDiv.fadeOut(300, function() {
+                                    $(this).remove();
+                                });
+                            }
+                        }
+                    }, 800); // Reduced initial delay
+                    
+                    // Start message sending attempts after iframe is loaded
+                    setTimeout(sendMessageToIframe1, 500);
+                }
+            });
+            
+            // Enhanced timeout fallback with postMessage monitoring
+            window.addEventListener('message', function(event) {
+                if (event.source === iframe[0].contentWindow && !loadingComplete) {
+                    console.log('Received message from iframe, content is ready');
+                    resourcesLoaded = true;
+                    loadingComplete = true;
+                    iframe.css('opacity', '1');
+                    loadingDiv.fadeOut(300, function() {
                         $(this).remove();
                     });
-                });
-                
-                viewContent.append(iframe);
-            }, 500);
+                }
+            });
+            
+            // Single timeout fallback
+            setTimeout(function() {
+                if (!loadingComplete) {
+                    console.log('First iframe timeout reached, showing iframe anyway');
+                    loadingComplete = true;
+                    iframe.css('opacity', '1');
+                    loadingDiv.html('<div style="color: #27ae60; text-align: center; font-size: 14px;"><i class="fas fa-check-circle" style="margin-right: 8px;"></i>加载完成</div>');
+                    setTimeout(function() {
+                        loadingDiv.fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }, 500);
+                }
+            }, 5000); // Single timeout of 5 seconds
+            
+            viewContent.append(iframe);
+            
+            // Send a message to the iframe once it's loaded to establish communication
+            // Use multiple attempts with increasing delays to ensure iframe is ready
+            let messageAttempts2 = 0;
+            const maxAttempts2 = 5;
+            
+            const sendMessageToIframe2 = function() {
+                messageAttempts2++;
+                try {
+                    if (iframe[0] && iframe[0].contentWindow && iframe[0].contentWindow.postMessage) {
+                        iframe[0].contentWindow.postMessage('parent-ready', '*');
+                        console.log('Successfully sent message to iframe on attempt', messageAttempts2);
+                        return;
+                    } else {
+                        throw new Error('contentWindow not ready');
+                    }
+                } catch (e) {
+                    console.log('Could not send message to iframe (attempt ' + messageAttempts2 + '):', e.message);
+                    
+                    // Retry with exponential backoff if we haven't reached max attempts
+                    if (messageAttempts2 < maxAttempts2) {
+                        setTimeout(sendMessageToIframe2, messageAttempts2 * 1000);
+                    }
+                }
+            };
+            
+            // Message sending will be triggered from iframe load event
+            }, 500); // End of setTimeout for iframe creation
         }
     } else {
-        // We're on index.php or other pages, redirect to pseudocode.php
-        window.location.href = 'pseudocode.php';
+        // We're on index.php or other pages, load compiler directly in current page
+        const mdContent = $('#mdContent');
+        if (mdContent.length > 0) {
+            // Clear existing content
+            mdContent.empty();
+            
+            // Set up container styling
+            mdContent.css({
+                'position': 'relative',
+                'height': '80vh',
+                'padding': '0',
+                'overflow': 'hidden'
+            });
+            
+            // Add loading indicator first
+            const loadingDiv = $('<div id="iframe-loading" style="color: #666; text-align: center; padding: 50px; font-size: 16px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;"><i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> 正在加载伪代码编译器...<br><div style="margin-top: 10px; font-size: 12px; color: #999;">首次加载可能需要几秒钟</div></div>');
+            mdContent.append(loadingDiv);
+            
+            // Create iframe
+            const iframe = $('<iframe>', {
+                id: 'compiler-iframe',
+                src: '/pseudo_compiler/build/index.html',
+                style: 'width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.3s ease;',
+                frameborder: '0',
+                allowfullscreen: true
+            });
+            
+            let loadingComplete = false;
+            
+            // Add load event for iframe
+            iframe.on('load', function() {
+                console.log('Iframe loaded successfully');
+                
+                if (!loadingComplete) {
+                    setTimeout(function() {
+                        if (!loadingComplete) {
+                            loadingComplete = true;
+                            console.log('Showing iframe content');
+                            iframe.css('opacity', '1');
+                            loadingDiv.fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        }
+                    }, 1000); // Reduced from 2000ms to 1000ms
+                    
+                    // Start message sending attempts after iframe is loaded
+                    setTimeout(sendMessageToIframe2, 500);
+                }
+            });
+            
+            // Single timeout fallback for second iframe
+            setTimeout(function() {
+                if (!loadingComplete) {
+                    console.log('Second iframe timeout reached, showing iframe anyway');
+                    loadingComplete = true;
+                    iframe.css('opacity', '1');
+                    loadingDiv.html('<div style="color: #27ae60; text-align: center; font-size: 14px;"><i class="fas fa-check-circle" style="margin-right: 8px;"></i>加载完成</div>');
+                    setTimeout(function() {
+                        loadingDiv.fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }, 500);
+                }
+            }, 5000); // Single timeout of 5 seconds
+            
+            mdContent.append(iframe);
+            
+            // Mark the compiler link as active
+            $('[onclick="loadCompilerInIframe();"]').addClass('is-active');
+            
+            // Update URL without redirect
+            if (history.pushState) {
+                history.pushState(null, null, 'pseudocode.php');
+            }
+        }
     }
 }
 
