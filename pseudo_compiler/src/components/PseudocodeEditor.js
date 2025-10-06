@@ -57,7 +57,7 @@ const PseudocodeEditor = ({
     if (e.ctrlKey || e.metaKey) {
       if (e.key === 'Enter') {
         e.preventDefault();
-        onCompile();
+        onCompileAndRun();
       } else if (e.key === 'l' || e.key === 'L') {
         e.preventDefault();
         onClear();
@@ -420,7 +420,7 @@ OUTPUT "Square root of radius: ", SQR(radius)`
         <div className="editor-controls">
           <button 
             className="control-btn compile-btn"
-            onClick={onCompile}
+            onClick={onCompileAndRun}
             title="Compile and Run (Ctrl+Enter)"
           >
             <i className="fas fa-play"></i> Run

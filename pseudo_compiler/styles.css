@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ffffff;
     min-height: 100vh;
     padding: 20px;
 }
@@ -19,26 +19,34 @@ body {
 }
 
 .header {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
+    background: transparent;
+    padding: 30px 20px;
+    margin-bottom: 30px;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
 }
 
 .header h1 {
-    color: #333;
-    font-size: 2.0em;
-    margin-bottom: 8px;
+    color: #2d3748;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.header h1 i {
+    color: #4299e1;
+    font-size: 2.2rem;
 }
 
 .header .subtitle {
-    color: #666;
-    font-size: 1em;
-    opacity: 0.8;
+    color: #718096;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
 }
 
 .main-content {
@@ -352,6 +360,163 @@ body {
     background: #a8a8a8;
 }
 
+/* 编辑器区域样式 */
+.editor-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* 输出区域样式 */
+.output-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 标签页样式 */
+.tabs {
+    display: flex;
+    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 15px;
+}
+
+.tab-button {
+    padding: 10px 15px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tab-button:hover {
+    color: #333;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.tab-button.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* 标签页内容 */
+.tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-pane {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+}
+
+.tab-pane.active {
+    display: flex;
+}
+
+/* 输出头部 */
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.output-header h3 {
+    color: #333;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+/* 控制台输出 */
+.console-output {
+    background: #1e1e1e;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    min-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+/* 输入区域 */
+.input-section {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.input-section input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* 自动编译标签 */
+.auto-compile-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+.auto-compile-label input[type="checkbox"] {
+    margin: 0;
+}
+
+/* 小按钮样式 */
+.btn-small {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+}
+
+.btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
 /* 动画效果 */
 @keyframes fadeIn {
     from {
@@ -364,7 +529,7 @@ body {
     }
 }
 
-.panel {
+.panel, .editor-section, .output-section {
     animation: fadeIn 0.5s ease-out;
 }
 

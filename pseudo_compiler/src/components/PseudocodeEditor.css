@@ -197,14 +197,6 @@
 
 /* 已移除重复的editor-header定义 */
 
-.editor-header h2 {
-  margin: 0;
-  font-size: 1.2em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .editor-controls {
   display: flex;
   align-items: center;

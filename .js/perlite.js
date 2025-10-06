@@ -46,7 +46,7 @@ function loadCompilerInIframe() {
             // Preload critical resources before creating iframe
             const preloadResources = [
                 '/pseudo_compiler/build/static/js/main.6c06c7b9.js',
-                '/pseudo_compiler/build/static/css/main.55e66a0c.css'
+                '/pseudo_compiler/build/static/css/main.5f8b2b97.css'
             ];
             
             // Add preload links to head
@@ -75,10 +75,16 @@ function loadCompilerInIframe() {
             
             // Wait a bit for preloading, then create iframe
             setTimeout(() => {
+                // Detect environment and choose appropriate iframe source
+                const isDevelopment = window.location.hostname === 'localhost' && window.location.port === '8000';
+                const iframeSrc = isDevelopment && false ? // Set to true to use dev server in development
+                    'http://localhost:3000' : 
+                    '/pseudo_compiler/build/index.html';
+                
                 // Create iframe to replace the content
                 const iframe = $('<iframe>', {
                     id: 'compiler-iframe',
-                    src: '/pseudo_compiler/build/index.html',
+                    src: iframeSrc,
                     style: 'width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.3s ease;',
                     frameborder: '0',
                     allowfullscreen: true,

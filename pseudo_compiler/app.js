@@ -26,6 +26,12 @@ class PseudocodeApp {
         this.outputArea = document.getElementById('jsOutput');
         this.errorArea = document.getElementById('errorOutput');
         
+        // 检查必要的元素是否存在
+        if (!this.editor) {
+            console.warn('pseudocodeEditor 元素未找到，跳过编辑器设置');
+            return;
+        }
+        
         // 设置编辑器默认内容
         this.editor.value = `// 欢迎使用 Cambridge 9618 Pseudocode 编译器
 // 在此输入您的 Pseudocode 代码
@@ -160,29 +166,49 @@ OUTPUT "结果是: ", result`;
     // 设置事件监听器
     setupEventListeners() {
         // 编译运行按钮
-        document.getElementById('compileBtn').addEventListener('click', () => {
-            this.compileAndRun();
-        });
+        const compileBtn = document.getElementById('compileBtn');
+        console.log('设置编译按钮事件监听器，按钮元素:', compileBtn);
+        
+        if (compileBtn) {
+            compileBtn.addEventListener('click', () => {
+                console.log('编译按钮被点击！');
+                this.compileAndRun();
+            });
+        } else {
+            console.error('找不到编译按钮元素！');
+        }
         
         // 清除按钮
-        document.getElementById('clearBtn').addEventListener('click', () => {
-            this.clearEditor();
-        });
+        const clearBtn = document.getElementById('clearBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                this.clearEditor();
+            });
+        }
         
         // 示例按钮
-        document.getElementById('exampleBtn').addEventListener('click', () => {
-            this.showExamples();
-        });
+        const exampleBtn = document.getElementById('exampleBtn');
+        if (exampleBtn) {
+            exampleBtn.addEventListener('click', () => {
+                this.showExamples();
+            });
+        }
         
         // 清空控制台按钮
-        document.getElementById('clearConsole').addEventListener('click', () => {
-            this.clearConsole();
-        });
+        const clearConsoleBtn = document.getElementById('clearConsole');
+        if (clearConsoleBtn) {
+            clearConsoleBtn.addEventListener('click', () => {
+                this.clearConsole();
+            });
+        }
         
         // 复制JS代码按钮
-        document.getElementById('copyJs').addEventListener('click', () => {
-            this.copyJavaScript();
-        });
+        const copyJsBtn = document.getElementById('copyJs');
+        if (copyJsBtn) {
+            copyJsBtn.addEventListener('click', () => {
+                this.copyJavaScript();
+            });
+        }
         
         // Tab切换
         document.querySelectorAll('.tab-button').forEach(button => {
@@ -209,21 +235,32 @@ OUTPUT "结果是: ", result`;
         
         // 实时编译（可选）
         let compileTimeout;
-        this.editor.addEventListener('input', () => {
-            clearTimeout(compileTimeout);
-            compileTimeout = setTimeout(() => {
-                if (document.getElementById('auto-compile').checked) {
-                    this.compileCode(true); // 静默编译
-                }
-            }, 1000);
-        });
+        if (this.editor) {
+            this.editor.addEventListener('input', () => {
+                clearTimeout(compileTimeout);
+                compileTimeout = setTimeout(() => {
+                    const autoCompileCheckbox = document.getElementById('auto-compile');
+                    if (autoCompileCheckbox && autoCompileCheckbox.checked) {
+                        this.compileCode(true); // 静默编译
+                    }
+                }, 1000);
+            });
+        }
     }
 
     // 编译并运行代码
     compileAndRun() {
+        console.log('compileAndRun 方法被调用');
+        this.addToConsole('开始编译...', 'info');
+        
         this.compileCode();
         if (this.lastCompileResult && this.lastCompileResult.success) {
+            console.log('编译成功，开始运行代码');
+            this.addToConsole('编译成功，开始运行...', 'info');
             this.runCode();
+        } else {
+            console.log('编译失败或无编译结果');
+            this.addToConsole('编译失败，请检查代码', 'error');
         }
     }
 
@@ -403,10 +440,10 @@ OUTPUT "结果是: ", result`;
     // 添加内容到控制台
     addToConsole(message, type = 'output') {
         const consoleOutput = document.getElementById('consoleOutput');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `console-${type}`;
-        messageDiv.textContent = message;
-        consoleOutput.appendChild(messageDiv);
+        const messageElement = document.createElement('div');
+        messageElement.className = `console-message console-${type}`;
+        messageElement.textContent = message;
+        consoleOutput.appendChild(messageElement);
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
     
@@ -883,7 +920,21 @@ OUTPUT "半径的平方根: ", SQR(radius)`
 
     // 显示帮助
     showHelp() {
-        alert(`Cambridge 9618 Pseudocode 编译器帮助\n\n快捷键:\n- Ctrl+Enter: 编译并运行\n- Ctrl+L: 清空编辑器\n\n支持的语法:\n- 变量声明: DECLARE name : TYPE\n- 赋值: variable ← value\n- 输入: INPUT prompt, variable\n- 输出: OUTPUT value1, value2\n- 条件: IF...THEN...ELSE...ENDIF\n- 循环: FOR...TO...NEXT, WHILE...ENDWHILE\n- 数组: ARRAY[1:10] OF INTEGER\n- 函数: FUNCTION...RETURNS...ENDFUNCTION`);
+        this.showNotification(`Cambridge 9618 Pseudocode 编译器帮助
+
+快捷键:
+- Ctrl+Enter: 编译并运行
+- Ctrl+L: 清空编辑器
+
+支持的语法:
+- 变量声明: DECLARE name : TYPE
+- 赋值: variable ← value
+- 输入: INPUT prompt, variable
+- 输出: OUTPUT value1, value2
+- 条件: IF...THEN...ELSE...ENDIF
+- 循环: FOR...TO...NEXT, WHILE...ENDWHILE
+- 数组: ARRAY[1:10] OF INTEGER
+- 函数: FUNCTION...RETURNS...ENDFUNCTION`, 'info');
     }
 
     // 显示欢迎消息
@@ -894,7 +945,46 @@ OUTPUT "半径的平方根: ", SQR(radius)`
 
 // 初始化应用程序
 document.addEventListener('DOMContentLoaded', () => {
-    const app = new PseudocodeApp();
+    console.log('DOM内容加载完成，开始初始化应用程序');
+    
+    try {
+        const app = new PseudocodeApp();
+        console.log('PseudocodeApp 实例创建成功:', app);
+        
+        // 将app实例暴露到全局，方便调试
+        window.pseudocodeApp = app;
+        
+    } catch (error) {
+        console.error('初始化应用程序时发生错误:', error);
+        // 使用更友好的错误显示方式
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            max-width: 400px;
+        `;
+        errorDiv.innerHTML = `
+            <strong>应用程序初始化失败</strong><br>
+            ${error.message}
+            <button onclick="this.parentElement.remove()" style="float: right; margin-left: 10px; background: none; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+        `;
+        document.body.appendChild(errorDiv);
+        
+        // 5秒后自动移除错误提示
+        setTimeout(() => {
+            if (errorDiv.parentElement) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
     
     // 设置模态框关闭功能
     document.querySelectorAll('.modal .close').forEach(closeBtn => {
@@ -913,6 +1003,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 全局错误处理
     window.addEventListener('error', (e) => {
         console.error('全局错误:', e.error);
-        app.showError(`发生错误: ${e.error.message}`);
+        if (window.pseudocodeApp) {
+            window.pseudocodeApp.showError(`发生错误: ${e.error.message}`);
+        }
     });
 });
