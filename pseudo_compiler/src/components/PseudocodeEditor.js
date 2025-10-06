@@ -64,6 +64,10 @@ const PseudocodeEditor = ({
       } else if (e.shiftKey && (e.key === 'F' || e.key === 'f')) {
         e.preventDefault();
         formatCode();
+      } else if (e.key === 'a' || e.key === 'A') {
+        // 全选功能 - 让浏览器默认行为处理
+        // 不阻止默认行为，让Ctrl+A/Cmd+A正常工作
+        // 不需要preventDefault()，直接让默认行为执行
       }
     }
     
@@ -385,7 +389,7 @@ OUTPUT "Square root of radius: ", SQR(radius)`
   };
 
   // Load selected example
-  const loadExample = (exampleCode) => {
+  const loadSelectedExample = (exampleCode) => {
     onLoadExample(exampleCode);
     setShowExampleModal(false);
   };
@@ -495,7 +499,7 @@ OUTPUT "Square root of radius: ", SQR(radius)`
                 <div 
                   key={index} 
                   className="example-item"
-                  onClick={() => loadExample(example.code)}
+                  onClick={() => loadSelectedExample(example.code)}
                 >
                   <h4>{example.name}</h4>
                   <pre className="example-preview">{example.code.substring(0, 200)}...</pre>

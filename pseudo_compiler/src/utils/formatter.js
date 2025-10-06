@@ -68,14 +68,16 @@ class PseudocodeFormatter {
       }
 
       // 处理缩进
-      const { newIndentLevel, shouldIndentThisLine } = this.calculateIndent(line, indentLevel);
+      const indentResult = this.calculateIndent(line, indentLevel);
+      const { newIndentLevel, shouldIndentThisLine, customIndentLevel } = indentResult;
       
       // 格式化关键字为大写
       const formattedLine = this.formatKeywords(line);
       
-      // 应用缩进
+      // 应用缩进 - 如果有自定义缩进级别则使用，否则使用当前缩进级别
+      const actualIndentLevel = customIndentLevel !== undefined ? customIndentLevel : indentLevel;
       const indentedLine = shouldIndentThisLine 
-        ? ' '.repeat(Math.max(0, indentLevel * indentSize)) + formattedLine
+        ? ' '.repeat(Math.max(0, actualIndentLevel * indentSize)) + formattedLine
         : formattedLine;
       
       formattedLines.push(indentedLine);
@@ -99,14 +101,39 @@ class PseudocodeFormatter {
     // 处理减少缩进的关键字
     if (this.indentDecreaseKeywords.has(firstWord)) {
       newIndentLevel = Math.max(0, currentIndent - 1);
-      shouldIndentThisLine = true; // 这些关键字本身需要缩进
+      // ENDIF 等结束关键字需要与对应的开始关键字对齐
+      const indentForThisLine = Math.max(0, currentIndent - 1);
+      return { 
+        newIndentLevel: newIndentLevel, 
+        shouldIndentThisLine: true,
+        customIndentLevel: indentForThisLine 
+      };
     }
     // 处理中间关键字（ELSE, ELSEIF, OTHERWISE）
     else if (this.middleKeywords.has(firstWord)) {
-      newIndentLevel = currentIndent; // 保持当前级别
+      // ELSE 和 ELSEIF 需要与 IF 同级，所以减少一级缩进来显示
+      const indentForThisLine = Math.max(0, currentIndent - 1);
       shouldIndentThisLine = true;
-      // ELSEIF 后面还会增加缩进
+      
       if (firstWord === 'ELSEIF') {
+        // ELSEIF 本身与 IF 同级显示，但后续语句需要缩进
+        newIndentLevel = currentIndent; // 保持当前缩进级别给后续语句
+        // 但 ELSEIF 这一行本身要减少缩进显示
+        return { 
+          newIndentLevel: currentIndent, 
+          shouldIndentThisLine: true,
+          customIndentLevel: indentForThisLine 
+        };
+      } else if (firstWord === 'ELSE') {
+        // ELSE 本身与 IF 同级显示，后续语句需要缩进
+        newIndentLevel = currentIndent; // 保持当前缩进级别给后续语句
+        return { 
+          newIndentLevel: currentIndent, 
+          shouldIndentThisLine: true,
+          customIndentLevel: indentForThisLine 
+        };
+      } else {
+        // OTHERWISE
         newIndentLevel = currentIndent;
       }
     }
