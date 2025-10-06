@@ -103,7 +103,7 @@ if (isset($_SESSION['user'])) {
     <script src=".js/highlight.min.js"></script>
     <script src=".js/katex.min.js"></script>
     <script src=".js/auto-render.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.2.1/dist/mermaid.min.js"></script>
+    <script src=".js/mermaid.min.js"></script>
     
     <style>
         .logo-link {
@@ -316,7 +316,8 @@ if (isset($_SESSION['user'])) {
                                             </div>
                                         </div>
                                         <div class="view-header-title-container mod-at-start">
-                                            <div class="view-header-title">Pseudocode Compiler</div>
+                                            <div class="view-header-title-parent"></div>
+                                            <div class="view-header-title" tabindex="-1">Pseudocode Compiler</div>
                                         </div>
                                         <div class="view-actions">
                                             <a class="clickable-icon view-action" aria-label="Copy URL">

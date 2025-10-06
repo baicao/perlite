@@ -218,43 +218,26 @@ function loadCompilerInIframe() {
             
             viewContent.append(iframe);
             
-            // Send a message to the iframe once it's loaded to establish communication
-            // Use multiple attempts with increasing delays to ensure iframe is ready
-            let messageAttempts2 = 0;
-            const maxAttempts2 = 5;
-            
-            const sendMessageToIframe2 = function() {
-                messageAttempts2++;
-                try {
-                    if (iframe[0] && iframe[0].contentWindow && iframe[0].contentWindow.postMessage) {
-                        iframe[0].contentWindow.postMessage('parent-ready', '*');
-                        console.log('Successfully sent message to iframe on attempt', messageAttempts2);
-                        return;
-                    } else {
-                        throw new Error('contentWindow not ready');
-                    }
-                } catch (e) {
-                    console.log('Could not send message to iframe (attempt ' + messageAttempts2 + '):', e.message);
-                    
-                    // Retry with exponential backoff if we haven't reached max attempts
-                    if (messageAttempts2 < maxAttempts2) {
-                        setTimeout(sendMessageToIframe2, messageAttempts2 * 1000);
-                    }
-                }
-            };
-            
             // Message sending will be triggered from iframe load event
             }, 500); // End of setTimeout for iframe creation
         }
     } else {
         // We're on index.php or other pages, load compiler directly in current page
-        const mdContent = $('#mdContent');
-        if (mdContent.length > 0) {
+        // Clear all navigation active states first
+        $('.perlite-link').removeClass('perlite-link-active is-active');
+        $('div.nav-file-title').removeClass('is-active');
+        
+        // Hide right split panel completely
+        $('.workspace-split.mod-right-split').hide();
+        
+        // Use more specific selector to target main content area in mod-root
+        const viewContent = $('.workspace-split.mod-root .view-content');
+        if (viewContent.length > 0) {
             // Clear existing content
-            mdContent.empty();
+            viewContent.empty();
             
             // Set up container styling
-            mdContent.css({
+            viewContent.css({
                 'position': 'relative',
                 'height': '80vh',
                 'padding': '0',
@@ -263,7 +246,7 @@ function loadCompilerInIframe() {
             
             // Add loading indicator first
             const loadingDiv = $('<div id="iframe-loading" style="color: #666; text-align: center; padding: 50px; font-size: 16px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;"><i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> 正在加载伪代码编译器...<br><div style="margin-top: 10px; font-size: 12px; color: #999;">首次加载可能需要几秒钟</div></div>');
-            mdContent.append(loadingDiv);
+            viewContent.append(loadingDiv);
             
             // Create iframe
             const iframe = $('<iframe>', {
@@ -275,6 +258,30 @@ function loadCompilerInIframe() {
             });
             
             let loadingComplete = false;
+            
+            // Define sendMessageToIframe function for this iframe
+            let messageAttempts = 0;
+            const maxAttempts = 5;
+            
+            const sendMessageToIframe = function() {
+                messageAttempts++;
+                try {
+                    if (iframe[0] && iframe[0].contentWindow && iframe[0].contentWindow.postMessage) {
+                        iframe[0].contentWindow.postMessage('parent-ready', '*');
+                        console.log('Successfully sent message to iframe on attempt', messageAttempts);
+                        return;
+                    } else {
+                        throw new Error('contentWindow not ready');
+                    }
+                } catch (e) {
+                    console.log('Could not send message to iframe (attempt ' + messageAttempts + '):', e.message);
+                    
+                    // Retry with exponential backoff if we haven't reached max attempts
+                    if (messageAttempts < maxAttempts) {
+                        setTimeout(sendMessageToIframe, messageAttempts * 1000);
+                    }
+                }
+            };
             
             // Add load event for iframe
             iframe.on('load', function() {
@@ -293,7 +300,7 @@ function loadCompilerInIframe() {
                     }, 1000); // Reduced from 2000ms to 1000ms
                     
                     // Start message sending attempts after iframe is loaded
-                    setTimeout(sendMessageToIframe2, 500);
+                    setTimeout(sendMessageToIframe, 500);
                 }
             });
             
@@ -312,10 +319,19 @@ function loadCompilerInIframe() {
                 }
             }, 5000); // Single timeout of 5 seconds
             
-            mdContent.append(iframe);
+            viewContent.append(iframe);
             
             // Mark the compiler link as active
             $('[onclick="loadCompilerInIframe();"]').addClass('is-active');
+            
+            // Set the view-header-title-parent to "Pseudocode Compiler" only when loading from navigation
+            // Only set title if we're actually loading the compiler (not when navigating to other content)
+            if (!window.location.search.includes('link=')) {
+                $("div.view-header-title-parent").text("");
+                $("div.view-header-title").text("Pseudocode Compiler").attr("tabindex", "-1");
+                $(".inline-title").text("");
+                $("title").text("Pseudocode Compiler");
+            }
             
             // Update URL without redirect
             if (history.pushState) {
@@ -330,6 +346,108 @@ function showMainContent() {
     $('#compiler-iframe').remove();
     $('#static-compiler-iframe').show(); // Show static iframe if it exists
     
+    // Rebuild the proper DOM structure for both main content and right panel
+    const viewContent = $('.workspace-split.mod-horizontal.mod-right-split .view-content');
+    if (viewContent.length > 0) {
+        // Check if the right panel structure was cleared by compiler
+        if (viewContent.find('.nav-header').length === 0 || viewContent.find('.backlink-pane').length === 0) {
+            viewContent.empty();
+            viewContent.css({
+                'padding': '0px',
+                'overflow': 'hidden',
+                'position': 'relative'
+            });
+            
+            // Rebuild the complete right panel structure
+            const rightPanelHTML = `
+                <div class="nav-header">
+                    <div class="view-header-nav-buttons">
+                        <a class="clickable-icon view-action" aria-label="Open localGraph">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-git-fork">
+                                <circle cx="12" cy="18" r="3"></circle>
+                                <circle cx="6" cy="6" r="3"></circle>
+                                <circle cx="18" cy="6" r="3"></circle>
+                                <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"></path>
+                                <path d="M12 12v3"></path>
+                            </svg>
+                        </a>
+                        <a class="clickable-icon view-action" aria-label="Open outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-list">
+                                <line x1="8" y1="6" x2="21" y2="6" />
+                                <line x1="8" y1="12" x2="21" y2="12" />
+                                <line x1="8" y1="18" x2="21" y2="18" />
+                                <line x1="3" y1="6" x2="3.01" y2="6" />
+                                <line x1="3" y1="12" x2="3.01" y2="12" />
+                                <line x1="3" y1="18" x2="3.01" y2="18" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="backlink-pane node-insert-event" style="position: relative;">
+                    <div id="outline" class="outline" style="display: unset">
+                        <div class="sidebar-top">
+                            <h3>Content</h3>
+                        </div>
+                        <div id="toc"></div>
+                    </div>
+                    <div class="tree-item-self" aria-label-position="left">
+                        <span class="tree-item-icon collapse-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle">
+                                <path d="M3 8L12 17L21 8"></path>
+                            </svg>
+                        </span>
+                        <div class="tree-item-inner">Linked mentions</div>
+                        <div class="tree-item-flair-outer">
+                            <span class="tree-item-flair" id="nodeCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            viewContent.html(rightPanelHTML);
+            
+            // Re-bind the outline toggle functionality
+            $('.clickable-icon.view-action[aria-label="Open outline"]').off('click').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if ($('#outline').css('display') == 'inline') {
+                    localStorage.setItem("showTOC", "false")
+                    $('#outline').css('display', 'none')
+                    $(this).removeClass('is-active');
+                } else {
+                    localStorage.setItem("showTOC", "true")
+                    $('#outline').css('display', 'inline')
+                    $(this).addClass('is-active');
+                }
+            });
+        }
+    }
+    
+    // Also rebuild main content area if needed
+    const mainViewContent = $('.workspace-split.mod-vertical.mod-root .view-content');
+    if (mainViewContent.length > 0 && mainViewContent.find('.markdown-reading-view').length === 0) {
+        mainViewContent.empty();
+        mainViewContent.css({
+            'padding': '0px',
+            'overflow': 'hidden',
+            'position': 'relative'
+        });
+        
+        // Rebuild the complete main content DOM structure
+        const markdownReadingView = $(`
+            <div class="markdown-reading-view" style="width: 100%; height: 100%;">
+                <div class="markdown-preview-view markdown-rendered node-insert-event allow-fold-headings show-indentation-guide allow-fold-lists" style="tab-size: 4;">
+                    <div class="markdown-preview-sizer markdown-preview-section" style="padding-bottom: 200px; min-height: 500px;">
+                        <div class="markdown-preview-pusher" style="width: 1px; height: 0.1px; margin-bottom: 0px;"></div>
+                        <div class="inline-title" tabindex="-1" enterkeyhint="done"></div>
+                        <div id="mdContent"></div>
+                    </div>
+                </div>
+            </div>
+        `);
+        mainViewContent.append(markdownReadingView);
+    }
+    
     // Show the content area
     $('.view-content').show();
     
@@ -339,6 +457,9 @@ function showMainContent() {
     
     // Re-enable navigation links
     $('.perlite-link').removeClass('is-active');
+    
+    // Clear any compiler-specific state
+    $('[onclick="loadCompilerInIframe();"]').removeClass('is-active');
     
     // Only update URL when explicitly navigating away from compiler, not on page refresh
     // Removed automatic URL update to prevent unwanted redirects on page refresh
@@ -388,6 +509,24 @@ function getContent(str, home = false, popHover = false, anchor = "") {
         if (popHover == false) {
           // Show main content and hide compiler iframe if it exists
           showMainContent();
+          
+          // Ensure right panel is visible when loading content
+          $('.workspace-split.mod-horizontal.mod-right-split').show();
+          
+          // Force page refresh by updating the URL with the link parameter
+          // But avoid updating URL on pseudocode.php to prevent content overlap
+          if (!window.location.pathname.includes('pseudocode.php')) {
+            const currentUrl = new URL(window.location);
+            const linkParam = encodeURIComponent(str);
+            if (currentUrl.searchParams.get('link') !== linkParam) {
+              currentUrl.searchParams.set('link', linkParam);
+              window.history.pushState({}, '', currentUrl);
+            }
+          }
+          
+          // Clear all navigation active states first
+          $('.perlite-link').removeClass('perlite-link-active is-active');
+          $('[onclick="loadCompilerInIframe();"]').removeClass('is-active');
           
           // set content
           $("#mdContent").html(result);
@@ -484,7 +623,12 @@ function getContent(str, home = false, popHover = false, anchor = "") {
 
           // update the url
           if (home == false) {
-            window.history.pushState({}, "", location.protocol + '//' + location.host + location.pathname + "?link=" + str + anchor);
+            // Ensure we always use index.php for content links, not pseudocode.php
+            let targetPath = location.pathname;
+            if (targetPath.includes('pseudocode.php')) {
+              targetPath = '/index.php';
+            }
+            window.history.pushState({}, "", location.protocol + '//' + location.host + targetPath + "?link=" + str + anchor);
           }
 
           // on Tag click -> start search
@@ -716,7 +860,9 @@ function getContent(str, home = false, popHover = false, anchor = "") {
           }
         }
         //render mermaid
-        mermaid.init(undefined, document.querySelectorAll(".language-mermaid"));
+        if (typeof mermaid !== 'undefined') {
+          mermaid.init(undefined, document.querySelectorAll(".language-mermaid"));
+        }
 
         //scroll to anchor
         if (anchor != "") {
@@ -922,11 +1068,23 @@ function openNavMenu(target, openAll = false) {
 
 
   // set focus to link
-  var searchText = linkname;
+          var searchText = str.replace(/^\//, '').replace(/\.md$/, '');
+          
+          // Find and activate the corresponding navigation link
+          $("div.nav-file-title-content").filter(function () {
+            return $(this).text().trim() === searchText;
+          }).parent().addClass('perlite-link-active is-active');
 
-  $("div").filter(function () {
-    return $(this).text() === searchText;
-  }).parent().addClass('perlite-link-active is-active');
+          // set focus to link
+          var linkname = $("div.mdTitleHide").first().text();
+          if (linkname) {
+            linkname = linkname.substring(1);
+            var searchText = linkname;
+
+            $("div").filter(function () {
+              return $(this).text() === searchText;
+            }).parent().addClass('perlite-link-active is-active');
+          }
 
 };
 
@@ -939,6 +1097,10 @@ function hideTooltip() {
 // on document ready stuff
 $(document).ready(function () {
 
+  // Ensure right panel is visible on page load (unless explicitly hidden)
+  if (!$('.workspace-split.mod-horizontal.mod-right-split').hasClass('is-sidedock-collapse')) {
+    $('.workspace-split.mod-horizontal.mod-right-split').show();
+  }
 
   // load settings from storage
   // ----------------------------------------
@@ -1065,8 +1227,10 @@ $(document).ready(function () {
 
   } else {
 
-    // load index page
-    getContent("home", true);
+    // load index page only if not on pseudocode.php
+    if (!window.location.pathname.includes('pseudocode.php')) {
+      getContent("home", true);
+    }
   }
   // on search submit
   $('*[type="search"]').on('keypress', function (e) {
@@ -1485,7 +1649,7 @@ $(document).ready(function () {
   $('.clickable-icon.side-dock-ribbon-action[aria-label="Open graph view"]').click(function (e) {
     e.preventDefault();
 
-    str = document.getElementsByClassName('perlite-link-active');
+    var str = document.getElementsByClassName('perlite-link-active');
     isMobile();
 
     if (str[0] != undefined) {
@@ -1774,7 +1938,9 @@ $(document).ready(function () {
 
 
   // init mermaid
-  mermaid.initialize({ startOnLoad: false, 'securityLevel': 'Strict', 'theme': 'dark' });
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({ startOnLoad: false, 'securityLevel': 'Strict', 'theme': 'dark' });
+  }
 
   // Check if we're on pseudocode.php page and initialize compiler
   if (window.location.pathname.includes('pseudocode.php')) {

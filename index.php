@@ -54,8 +54,7 @@ if (isset($_SESSION['user'])) {
     <script src=".js/katex.min.js"></script>
     <script src=".js/auto-render.min.js"></script>
     <!-- <script src=".js/vis-network.min.js"></script> -->
-    <!-- <script src=".js/mermaid.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.2.1/dist/mermaid.min.js"></script>
+    <script src=".js/mermaid.min.js"></script>
     <style>
         .logo-link {
             position: relative;
