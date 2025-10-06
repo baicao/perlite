@@ -324,14 +324,11 @@ function loadCompilerInIframe() {
             // Mark the compiler link as active
             $('[onclick="loadCompilerInIframe();"]').addClass('is-active');
             
-            // Set the view-header-title-parent to "Pseudocode Compiler" only when loading from navigation
-            // Only set title if we're actually loading the compiler (not when navigating to other content)
-            if (!window.location.search.includes('link=')) {
-                $("div.view-header-title-parent").text("");
-                $("div.view-header-title").text("Pseudocode Compiler").attr("tabindex", "-1");
-                $(".inline-title").text("");
-                $("title").text("Pseudocode Compiler");
-            }
+            // Always set the title when loading compiler from navigation
+            $("div.view-header-title-parent").text("");
+            $("div.view-header-title").text("Pseudocode Compiler").attr("tabindex", "-1");
+            $(".inline-title").text("");
+            $("title").text("Pseudocode Compiler");
             
             // Update URL without redirect
             if (history.pushState) {
