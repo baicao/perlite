@@ -1,0 +1,454 @@
+/* CodeMirror 编辑器样式 */
+.codemirror-editor {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.codemirror-editor:focus-within {
+  border-color: #007acc;
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+}
+
+/* CodeMirror 基础样式 */
+.CodeMirror {
+  height: auto;
+  min-height: 200px;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent;
+}
+
+.CodeMirror-scroll {
+  min-height: 200px;
+}
+
+.CodeMirror-lines {
+  padding: 8px 0;
+}
+
+.CodeMirror-line {
+  padding: 0 8px;
+}
+
+/* 伪代码语法高亮 - 浅色主题 */
+.cm-s-default .cm-keyword {
+  color: #0066cc;
+  font-weight: bold;
+}
+
+.cm-s-default .cm-string {
+  color: #008000;
+}
+
+.cm-s-default .cm-comment {
+  color: #808080;
+  font-style: italic;
+}
+
+.cm-s-default .cm-number {
+  color: #ff6600;
+}
+
+.cm-s-default .cm-operator {
+  color: #666666;
+  font-weight: bold;
+}
+
+.cm-s-default .cm-def {
+  color: #cc0066;
+  font-weight: bold;
+}
+
+.cm-s-default .cm-variable {
+  color: #333333;
+}
+
+.cm-s-default .cm-punctuation {
+  color: #666666;
+}
+
+/* 伪代码语法高亮 - 深色主题 */
+.cm-s-dark .cm-keyword {
+  color: #569cd6;
+  font-weight: bold;
+}
+
+.cm-s-dark .cm-string {
+  color: #ce9178;
+}
+
+.cm-s-dark .cm-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.cm-s-dark .cm-number {
+  color: #b5cea8;
+}
+
+.cm-s-dark .cm-operator {
+  color: #d4d4d4;
+  font-weight: bold;
+}
+
+.cm-s-dark .cm-def {
+  color: #c586c0;
+  font-weight: bold;
+}
+
+.cm-s-dark .cm-variable {
+  color: #9cdcfe;
+}
+
+.cm-s-dark .cm-punctuation {
+  color: #d4d4d4;
+}
+
+/* 深色主题背景 */
+.cm-s-dark {
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+
+.cm-s-dark .CodeMirror-gutters {
+  background: #252526;
+  border-right: 1px solid #3e3e42;
+}
+
+.cm-s-dark .CodeMirror-linenumber {
+  color: #858585;
+}
+
+.cm-s-dark .CodeMirror-cursor {
+  border-left: 1px solid #d4d4d4;
+}
+
+.cm-s-dark .CodeMirror-selected {
+  background: #264f78;
+}
+
+.cm-s-dark .CodeMirror-focused .CodeMirror-selected {
+  background: #264f78;
+}
+
+.cm-s-dark .CodeMirror-line::selection,
+.cm-s-dark .CodeMirror-line > span::selection,
+.cm-s-dark .CodeMirror-line > span > span::selection {
+  background: #264f78;
+}
+
+/* 专用伪代码主题 - Cambridge */
+.cm-s-cambridge {
+  background: #fafafa;
+  color: #2c3e50;
+}
+
+.cm-s-cambridge .CodeMirror-gutters {
+  background: #f0f0f0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.cm-s-cambridge .CodeMirror-linenumber {
+  color: #7f8c8d;
+}
+
+.cm-s-cambridge .CodeMirror-cursor {
+  border-left: 2px solid #2c3e50;
+}
+
+.cm-s-cambridge .CodeMirror-selected {
+  background: #e8f4fd;
+}
+
+.cm-s-cambridge .cm-keyword {
+  color: #8e44ad;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cm-s-cambridge .cm-string {
+  color: #27ae60;
+}
+
+.cm-s-cambridge .cm-comment {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.cm-s-cambridge .cm-number {
+  color: #e67e22;
+  font-weight: bold;
+}
+
+.cm-s-cambridge .cm-operator {
+  color: #34495e;
+  font-weight: bold;
+}
+
+.cm-s-cambridge .cm-def {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.cm-s-cambridge .cm-variable {
+  color: #2980b9;
+}
+
+.cm-s-cambridge .cm-punctuation {
+  color: #7f8c8d;
+}
+
+/* 专用伪代码主题 - Cambridge Dark */
+.cm-s-cambridge-dark {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+.cm-s-cambridge-dark .CodeMirror-gutters {
+  background: #34495e;
+  border-right: 1px solid #4a5f7a;
+}
+
+.cm-s-cambridge-dark .CodeMirror-linenumber {
+  color: #95a5a6;
+}
+
+.cm-s-cambridge-dark .CodeMirror-cursor {
+  border-left: 2px solid #ecf0f1;
+}
+
+.cm-s-cambridge-dark .CodeMirror-selected {
+  background: #4a5f7a;
+}
+
+.cm-s-cambridge-dark .cm-keyword {
+  color: #bb86fc;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cm-s-cambridge-dark .cm-string {
+  color: #4caf50;
+}
+
+.cm-s-cambridge-dark .cm-comment {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.cm-s-cambridge-dark .cm-number {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.cm-s-cambridge-dark .cm-operator {
+  color: #ecf0f1;
+  font-weight: bold;
+}
+
+.cm-s-cambridge-dark .cm-def {
+  color: #f44336;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.cm-s-cambridge-dark .cm-variable {
+  color: #03dac6;
+}
+
+.cm-s-cambridge-dark .cm-punctuation {
+  color: #bdc3c7;
+}
+
+/* 行号样式 */
+.CodeMirror-linenumbers .CodeMirror-linenumber {
+  padding: 0 8px 0 5px;
+  min-width: 20px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* 深色主题样式 */
+.cm-s-monokai .cm-keyword {
+  color: #f92672;
+  font-weight: bold;
+}
+
+.cm-s-monokai .cm-string {
+  color: #e6db74;
+}
+
+.cm-s-monokai .cm-comment {
+  color: #75715e;
+  font-style: italic;
+}
+
+.cm-s-monokai .cm-number {
+  color: #ae81ff;
+}
+
+.cm-s-monokai .cm-operator {
+  color: #f92672;
+  font-weight: bold;
+}
+
+.cm-s-monokai .cm-variable {
+  color: #f8f8f2;
+}
+
+.cm-s-monokai .cm-punctuation {
+  color: #f8f8f2;
+}
+
+/* 活动行高亮 */
+.CodeMirror-activeline-background {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.cm-s-dark .CodeMirror-activeline-background {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cm-s-cambridge .CodeMirror-activeline-background {
+  background: rgba(142, 68, 173, 0.1);
+}
+
+.cm-s-cambridge-dark .CodeMirror-activeline-background {
+  background: rgba(187, 134, 252, 0.1);
+}
+
+/* 匹配括号高亮 */
+.CodeMirror-matchingbracket {
+  background: rgba(255, 255, 0, 0.3);
+  border: 1px solid rgba(255, 255, 0, 0.6);
+}
+
+.CodeMirror-nonmatchingbracket {
+  background: rgba(255, 0, 0, 0.3);
+  border: 1px solid rgba(255, 0, 0, 0.6);
+}
+
+/* 折叠样式 */
+.CodeMirror-foldmarker {
+  color: blue;
+  text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
+  font-family: arial;
+  line-height: .3;
+  cursor: pointer;
+}
+
+.CodeMirror-foldgutter {
+  width: .7em;
+}
+
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+  cursor: pointer;
+}
+
+.CodeMirror-foldgutter-open:after {
+  content: "\25BC";
+}
+
+.CodeMirror-foldgutter-folded:after {
+  content: "\25B6";
+}
+
+/* 自动完成样式 */
+.CodeMirror-hints {
+  position: absolute;
+  z-index: 10;
+  overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: 2px;
+  border-radius: 3px;
+  border: 1px solid silver;
+  background: white;
+  font-size: 90%;
+  font-family: monospace;
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.CodeMirror-hint {
+  margin: 0;
+  padding: 0 4px;
+  border-radius: 2px;
+  white-space: pre;
+  color: black;
+  cursor: pointer;
+}
+
+.CodeMirror-hint-active {
+  background: #08f;
+  color: white;
+}
+
+.cm-keyword-completion {
+  color: #0066cc;
+  font-weight: bold;
+}
+
+.cm-snippet-completion {
+  color: #cc6600;
+  font-style: italic;
+}
+
+/* 深色主题的自动完成样式 */
+.cm-s-cambridge-dark .CodeMirror-hints {
+  background: #2d3748;
+  border-color: #4a5568;
+  color: #e2e8f0;
+}
+
+.cm-s-cambridge-dark .CodeMirror-hint {
+  color: #e2e8f0;
+}
+
+.cm-s-cambridge-dark .CodeMirror-hint-active {
+  background: #4299e1;
+  color: white;
+}
+
+.cm-s-cambridge-dark .cm-keyword-completion {
+  color: #63b3ed;
+}
+
+.cm-s-cambridge-dark .cm-snippet-completion {
+  color: #f6ad55;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .codemirror-editor {
+    font-size: 12px;
+  }
+  
+  .CodeMirror-line {
+    padding: 0 4px;
+  }
+  
+  .CodeMirror-linenumbers .CodeMirror-linenumber {
+    padding: 0 4px 0 2px;
+    min-width: 15px;
+  }
+  
+  .CodeMirror-foldgutter {
+    width: .5em;
+  }
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .codemirror-editor-wrapper {
+    border-color: #444;
+  }
+}

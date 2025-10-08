@@ -6,10 +6,8 @@ import App from './App';
 // 导入Font Awesome
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-// 导入Prism.js样式
+// 导入Prism.js的CSS主题
 import 'prismjs/themes/prism.css';
-import 'prismjs';
-import 'prismjs/components/prism-javascript';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

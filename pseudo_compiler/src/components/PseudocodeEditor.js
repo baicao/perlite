@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import SyntaxChecker from './SyntaxChecker';
+import CodeMirrorEditor from './CodeMirrorEditor';
 import './PseudocodeEditor.css';
 import PseudocodeFormatter from '../utils/formatter';
 
@@ -13,44 +14,9 @@ const PseudocodeEditor = ({
   errors = [],
   warnings = []
 }) => {
-  const textareaRef = useRef(null);
-  const lineNumbersRef = useRef(null);
-  const [lineNumbers, setLineNumbers] = useState(['1']);
-  const [showSyntaxChecker, setShowSyntaxChecker] = useState(false);
   const [syntaxSuggestions, setSyntaxSuggestions] = useState([]);
   const [showExampleModal, setShowExampleModal] = useState(false);
   const [formatter] = useState(new PseudocodeFormatter());
-
-  // Update line numbers
-  const updateLineNumbers = () => {
-    const lines = code.split('\n');
-    const numbers = lines.map((_, index) => (index + 1).toString());
-    setLineNumbers(numbers);
-    
-    // Sync textarea and line number styles
-    if (textareaRef.current && lineNumbersRef.current) {
-      const textareaStyles = window.getComputedStyle(textareaRef.current);
-      const propertiesToSync = [
-        'fontFamily',
-        'fontSize', 
-        'fontWeight',
-        'lineHeight',
-        'paddingTop',
-        'paddingBottom'
-      ];
-      
-      propertiesToSync.forEach((property) => {
-        lineNumbersRef.current.style[property] = textareaStyles[property];
-      });
-    }
-  };
-
-  // Sync scrolling
-  const handleScroll = () => {
-    if (textareaRef.current && lineNumbersRef.current) {
-      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
-    }
-  };
 
   // Handle keyboard shortcuts
   const handleKeyDown = (e) => {
@@ -394,29 +360,6 @@ OUTPUT "Square root of radius: ", SQR(radius)`
     setShowExampleModal(false);
   };
 
-  useEffect(() => {
-    updateLineNumbers();
-  }, [code]);
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener('scroll', handleScroll);
-      return () => {
-        if (textareaRef.current) {
-          textareaRef.current.removeEventListener('scroll', handleScroll);
-        }
-      };
-    }
-  }, []);
-  
-  // Ensure style sync after component mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      updateLineNumbers();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div className="editor-section">
       <div className="editor-header">
@@ -457,26 +400,14 @@ OUTPUT "Square root of radius: ", SQR(radius)`
       </div>
       
       <div className="editor-container">
-        <div 
-          className="line-numbers" 
-          ref={lineNumbersRef}
-        >
-          {lineNumbers.map((num, index) => (
-            <div key={index} className="line-number">
-              {num}
-            </div>
-          ))}
-        </div>
-        
         <div className="editor-wrapper">
-          <textarea
-            ref={textareaRef}
-            className="editor"
+          <CodeMirrorEditor
             value={code}
-            onChange={(e) => onChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Enter your Pseudocode here...\n\nExample:\nDECLARE x : INTEGER\nDECLARE y : INTEGER\nINPUT 'Enter first number: ', x\nINPUT 'Enter second number: ', y\nOUTPUT 'Sum is: ', x + y"
-            spellCheck={false}
+            onChange={onChange}
+            theme="cambridge"
+            options={{
+              placeholder: "Enter your Pseudocode here...\n\nExample:\nDECLARE x : INTEGER\nDECLARE y : INTEGER\nINPUT 'Enter first number: ', x\nINPUT 'Enter second number: ', y\nOUTPUT 'Sum is: ', x + y"
+            }}
           />
         </div>
       </div>

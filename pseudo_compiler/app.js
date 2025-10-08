@@ -43,86 +43,15 @@ INPUT "请输入一个数字: ", num
 result ← num * 2
 OUTPUT "结果是: ", result`;
         
-        // 添加语法高亮
-        this.setupSyntaxHighlighting();
-        
         // 添加自动完成
         this.setupAutoComplete();
-    }
-
-    // 设置语法高亮
-    setupSyntaxHighlighting() {
-        const editor = this.editor;
-        
-        editor.addEventListener('input', () => {
-            this.highlightSyntax();
-        });
-        
-        editor.addEventListener('scroll', () => {
-            this.syncHighlight();
-        });
-    }
-
-    // 语法高亮实现
-    highlightSyntax() {
-        const code = this.editor.value;
-        const highlightedCode = this.applySyntaxHighlighting(code);
-        
-        // 更新高亮显示层
-        const highlightLayer = document.getElementById('highlight-layer');
-        if (highlightLayer) {
-            highlightLayer.innerHTML = highlightedCode;
-        }
-    }
-
-    // 应用语法高亮
-    applySyntaxHighlighting(code) {
-        // 关键字高亮
-        const keywords = [
-            'DECLARE', 'CONSTANT', 'IF', 'THEN', 'ELSE', 'ELSEIF', 'ENDIF',
-            'FOR', 'TO', 'STEP', 'NEXT', 'WHILE', 'ENDWHILE', 'REPEAT', 'UNTIL',
-            'PROCEDURE', 'ENDPROCEDURE', 'FUNCTION', 'ENDFUNCTION', 'RETURNS',
-            'CALL', 'RETURN', 'INPUT', 'OUTPUT', 'AND', 'OR', 'NOT',
-            'INTEGER', 'REAL', 'STRING', 'CHAR', 'BOOLEAN', 'DATE', 'ARRAY', 'OF',
-            'TRUE', 'FALSE', 'DIV', 'MOD', 'BYREF', 'BYVAL'
-        ];
-        
-        let highlighted = code;
-        
-        // 高亮关键字
-        keywords.forEach(keyword => {
-            const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-            highlighted = highlighted.replace(regex, `<span class="keyword">${keyword}</span>`);
-        });
-        
-        // 高亮字符串
-        highlighted = highlighted.replace(/"([^"]*)"/g, '<span class="string">"$1"</span>');
-        highlighted = highlighted.replace(/'([^']*)'/g, '<span class="string">\`$1\`</span>');
-        
-        // 高亮数字
-        highlighted = highlighted.replace(/\b\d+(\.\d+)?\b/g, '<span class="number">$&</span>');
-        
-        // 高亮注释
-        highlighted = highlighted.replace(/\/\/.*$/gm, '<span class="comment">$&</span>');
-        
-        // 高亮运算符
-        highlighted = highlighted.replace(/[←=<>≤≥≠+\-*/()\[\]{},:;]/g, '<span class="operator">$&</span>');
-        
-        return highlighted;
-    }
-
-    // 同步高亮层滚动
-    syncHighlight() {
-        const highlightLayer = document.getElementById('highlight-layer');
-        if (highlightLayer) {
-            highlightLayer.scrollTop = this.editor.scrollTop;
-            highlightLayer.scrollLeft = this.editor.scrollLeft;
-        }
     }
 
     // 设置自动完成
     setupAutoComplete() {
         const editor = this.editor;
+        
+        if (!editor) return;
         
         editor.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
