@@ -64,7 +64,6 @@ function loadCompilerInIframe() {
             // Replace view-content with iframe
             viewContent.css({
                 'position': 'relative',
-                'height': '100vh',
                 'padding': '0',
                 'overflow': 'hidden'
             });
@@ -245,7 +244,6 @@ function loadCompilerInIframe() {
             // Set up container styling
             viewContent.css({
                 'position': 'relative',
-                'height': '80vh',
                 'padding': '0',
                 'overflow': 'hidden'
             });
@@ -1071,7 +1069,7 @@ function openNavMenu(target, openAll = false) {
 
 
   // set focus to link
-          var searchText = str.replace(/^\//, '').replace(/\.md$/, '');
+          var searchText = target.replace(/^\//, '').replace(/\.md$/, '');
           
           // Find and activate the corresponding navigation link
           $("div.nav-file-title-content").filter(function () {

@@ -18,7 +18,10 @@ if (isset($_GET['mdfile'])) {
 	$requestFile = $_GET['mdfile'];
 	log_message("Request file: " . $requestFile);
 	if (is_string($requestFile) && !empty($requestFile)) {
-		if(free_pages($requestFile)){
+		// Handle special case when mdfile is 'home' - load the index page
+		if ($requestFile === 'home') {
+			parseContent('/' . $index);
+		} elseif(free_pages($requestFile)){
 			parseContent($requestFile);
 		}else{
 			if (!isset($_SESSION['user'])) {
@@ -31,7 +34,10 @@ if (isset($_GET['mdfile'])) {
 			}
 		}
 	}
-}else{
+} elseif (isset($_GET['home'])) {
+	// Handle home request - load the index page
+	parseContent('/' . $index);
+} else {
 	parseContent('/' . $index);
 }
 
